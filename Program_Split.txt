@@ -1,0 +1,20 @@
+Player mechanic
+Movement, abilities, damaging, pickup
+
+Core mechanic
+Saving, rendering, time travelling, level unlocking systems
+
+AI
+Behavior of small mobs and bosses
+
+
+
+
+
+
+
+
+Castros2
+
+Stormys
+
