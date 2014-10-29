@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\BasicBottomPlatformMove.cs" />
      <Compile Include="Assets\RenderingSystem.cs" />
      <Compile Include="Assets\Scripts\BasicCameraFollow.cs" />
      <Compile Include="Assets\Scripts\BasicPlayerMovement.cs" />
