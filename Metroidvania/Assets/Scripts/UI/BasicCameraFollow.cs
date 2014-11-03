@@ -11,7 +11,7 @@ using System.Collections;
 
 public class BasicCameraFollow : MonoBehaviour {
 	public GameObject follow;
-	private int speed = 1;
+	private int speed = 2;
 	private float distanceX;
 	private float distanceY;
 
