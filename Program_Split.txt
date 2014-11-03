@@ -1,8 +1,9 @@
 Player mechanic
-Movement, abilities, damaging, pickup
+Movement, abilities, damaging, pickup level unlocking systems
+
 
 Core mechanic
-Saving, rendering, time travelling, level unlocking systems
+Saving, rendering, time travelling 
 
 AI
 Behavior of small mobs and bosses
@@ -14,7 +15,13 @@ Behavior of small mobs and bosses
 
 
 
-Castros2
 
-Stormys
+Castros2 - player mechanic
+
+Stormys - player mechanic
+
+unheardCarnage - core mechanic
+
+wuw94 - core mechanic
+
 

@@ -1,25 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BasicPlayerMovement.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Player.cs">
     <Files>
-      <File FileName="Assets\Scripts\GlobalVariables.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\BasicPlayerMovement.cs" Line="38" Column="1" />
-      <File FileName="Assets\RenderingSystem.cs" Line="1" Column="1" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BasicPlayerMovement.cs">
-    <Files>
-      <File FileName="Assets/Scripts/GlobalVariables.cs" Line="4" Column="38" />
-      <File FileName="Assets/Scripts/BasicPlayerMovement.cs" Line="5" Column="7" />
-      <File FileName="Assets/RenderingSystem.cs" Line="1" Column="1" />
->>>>>>> 387aa08f709472a1cac0b437b8f495363b5dd1d4
+      <File FileName="Assets/Scripts/Entity/Controllable.cs" Line="5" Column="1" />
+      <File FileName="Assets/Scripts/Entity/AI.cs" Line="5" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Player.cs" Line="5" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
-              <Node name="BasicPlayerMovement.cs" selected="True" />
+              <Node name="Entity" expanded="True">
+                <Node name="Player.cs" selected="True" />
+              </Node>
+              <Node name="FileSystem" expanded="True" />
+              <Node name="UI" expanded="True" />
             </Node>
           </Node>
         </State>

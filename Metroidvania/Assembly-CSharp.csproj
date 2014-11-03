@@ -47,10 +47,24 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\BasicBottomPlatformMove.cs" />
-     <Compile Include="Assets\RenderingSystem.cs" />
-     <Compile Include="Assets\Scripts\BasicCameraFollow.cs" />
-     <Compile Include="Assets\Scripts\BasicPlayerMovement.cs" />
+     <Compile Include="Assets\MoveBackAndForth.cs" />
+     <Compile Include="Assets\Scripts\Entity\AI.cs" />
+     <Compile Include="Assets\Scripts\Entity\BasicPlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
+     <Compile Include="Assets\Scripts\Entity\Immobile.cs" />
+     <Compile Include="Assets\Scripts\Entity\Mobile.cs" />
+     <Compile Include="Assets\Scripts\Entity\Player.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
      <Compile Include="Assets\Scripts\GlobalVariables.cs" />
+     <Compile Include="Assets\Scripts\UI\BasicCameraFollow.cs" />
+     <Compile Include="Assets\Scripts\UI\ButtonManager.cs" />
+     <Compile Include="Assets\Scripts\UI\MenuButtonMethods.cs" />
+     <Compile Include="Assets\Scripts\UI\RenderingSystem.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
