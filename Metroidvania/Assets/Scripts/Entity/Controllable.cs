@@ -1,0 +1,26 @@
+﻿using UnityEngine;
+using System.Collections;
+
+/* Controllable.
+ * Objects that inherit from the Controllable class are able to:
+ * 1. Move based on certain keystrokes
+ */
+
+public class Controllable : Mobile
+{
+	public void checkMovementInputs(CharacterManager c)
+	{
+		if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+		{
+			moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+		}
+		if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+		{
+			moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+		}
+		if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP))
+		{
+			jump(c.jump_speed);
+		}
+	}
+}
