@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Immobile : MonoBehaviour {
+/* Immobile.
+ * Objects that inherit from the immobile class are able to:
+ * -Nothing yet
+ * 
+ * Note:
+ * Later on maybe this class will contain be inherited by scripted events, like levers
+ */
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+public class Immobile : MonoBehaviour
+{
 }

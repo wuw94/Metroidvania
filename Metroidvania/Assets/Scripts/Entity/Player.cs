@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* Player.
+ * Always put this on the player prefab, but make sure there is only one on the scene at any given time.
+ * 
+ */
+
 public class Player : Controllable
 {
-
-	// Use this for initialization
-	void Start () {
-	
+	void Start()
+	{
+		GameManager.SetGameAll(5, 5, 0.5f, 5);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	void FixedUpdate()
+	{
+		checkMovementInputs(GameManager.current_game.progression.character);
 	}
 }

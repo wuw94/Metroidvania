@@ -1,19 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Shaders/LerpShader.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UI/Screens/TitleScreen.cs">
     <Files>
-      <File FileName="Assets/Shaders/LerpShader.shader" Line="33" Column="42" />
+      <File FileName="Assets/Scripts/UI/Screens/TitleScreen.cs" Line="10" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
-              <Node name="FileSystem" expanded="True" />
+              <Node name="UI" expanded="True">
+                <Node name="Screens" expanded="True">
+                  <Node name="TitleScreen.cs" selected="True" />
+                </Node>
+              </Node>
             </Node>
-            <Node name="Shaders" expanded="True">
-              <Node name="LerpShader.shader" selected="True" />
-            </Node>
+            <Node name="Shaders" expanded="True" />
           </Node>
         </State>
       </Pad>

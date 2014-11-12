@@ -2,11 +2,12 @@
 using System.Collections;
 
 /* Game Manager.
- * Stores the game state, to be accessed during saving and loading
+ * Revolves around the static variable, current_game, which stores almost all the game's data
+ * Access the data from anywhere with:
+ * GameManager.current_game
  * 
- * -map_name- stores the name of current map
- * -progression- stores information about how far the player is through the game
- * -player- object of type CharacterManager which stores information about the player
+ * For debugging purposes, a static function will OVERWRITE all current data (or create a game) with new parameters:
+ * GameManager.SetGameAll(...)
  * 
  * auth Wesley Wu
  */
@@ -23,5 +24,19 @@ public sealed class GameManager
 	{
 		this.progression = new ProgressionManager();
 		this.preferences = new PreferenceManager();
+	}
+
+	public static void SetGameAll(float msm, float msag, float msaa, float js)
+	{
+		// Parameters in this order:
+		// 1. move speed maximum
+		// 2. move speed acceleration (ground)
+		// 3. move speed acceleration (air)
+		// 4. jump speed
+		current_game = new GameManager();
+		current_game.progression.character.move_speed_max = msm;
+		current_game.progression.character.move_speed_accel_ground = msag;
+		current_game.progression.character.move_speed_accel_air = msaa;
+		current_game.progression.character.jump_speed = js;
 	}
 }

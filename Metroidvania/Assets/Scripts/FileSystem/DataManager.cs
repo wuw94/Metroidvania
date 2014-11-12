@@ -4,24 +4,29 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-/* Save Load.
- * Allows the game state to be saved via currentGame, which is of type Game
- * Also controls the reading of game files inside the /Saved directory
- * -savedGames- stores a list of game states found in the /Saved directory
- * -Save(string)- stores the current game state into a .gd (game data) file in the /Saved directory
- * -Load(string)- loads a game state from the /Saved directory
- * -file_name- name of file that will be shoved into the /Saved directory
+/* Data Manager.
+ * Data Manager ties closely with GameManager, and is able to:
+ * 1. return a list of game files inside /Saved directory with
+ * 		DataManager.ListGames()
+ * 
+ * 2. Save game state into the /Saved directory with
+ * 		DataManager.Save(file_name)
+ * 
+ * 3. Load a game file inside the /Saved directory with
+ * 		DataManager.Load(file_name)
+ * 
+ * Note:
+ * We want to either cap the amount of files capable of being stored in /Saved or create a scrolling feature later on
  * 
  * auth Wesley Wu
  */
 
-public static class DataManager {
-
-	public static List<GameManager> saved_games = new List<GameManager>();
-
-	private static void UpdateGames() // Helper function that updates the list saved_games
+public static class DataManager
+{
+	public static List<string> ListGames()
 	{
-
+		return new List<string>();
+		//TODO: return a list of strings of the filenames inside /Saved
 	}
 	
 	public static void Save(string file_name)
@@ -30,11 +35,9 @@ public static class DataManager {
 		{
 			Directory.CreateDirectory(Application.persistentDataPath + "/Saved");
 		}
-
-		saved_games.Add(GameManager.current_game);
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.persistentDataPath + "/Saved/" + file_name + ".gd");
-		bf.Serialize(file, DataManager.saved_games);
+		bf.Serialize(file, GameManager.current_game);
 		Debug.Log("File saved at " + Application.persistentDataPath + "/Saved/" + file_name + ".gd");
 		file.Close();
 	}
@@ -46,11 +49,9 @@ public static class DataManager {
 		{
 			BinaryFormatter bf = new BinaryFormatter();
 			FileStream file = File.Open(Application.persistentDataPath + "/Saved/" + file_name + ".gd", FileMode.Open);
-			DataManager.saved_games = (List<GameManager>)bf.Deserialize(file);
+			GameManager.current_game = (GameManager)bf.Deserialize(file);
 			Debug.Log("File loaded at " + Application.persistentDataPath + "/Saved/" + file_name + ".gd");
 			file.Close();
-			GameManager.current_game = saved_games[saved_games.Count-1]; //This is loading the most recent of the game files
 		}
-		Debug.Log (saved_games.Count);
 	}
 }
