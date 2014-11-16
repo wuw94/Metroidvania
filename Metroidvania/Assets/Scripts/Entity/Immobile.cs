@@ -9,6 +9,6 @@ using System.Collections;
  * Later on maybe this class will contain be inherited by scripted events, like levers
  */
 
-public class Immobile : MonoBehaviour
+public class Immobile : Recordable
 {
 }

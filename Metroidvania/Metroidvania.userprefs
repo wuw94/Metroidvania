@@ -1,18 +1,25 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UI/Screens/TitleScreen.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Recordable.cs">
     <Files>
-      <File FileName="Assets/Scripts/UI/Screens/TitleScreen.cs" Line="10" Column="4" />
+      <File FileName="Assets/Scripts/Entity/Recordable.cs" Line="180" Column="33" />
+      <File FileName="Assets/Scripts/Entity/Player.cs" Line="40" Column="15" />
+      <File FileName="Assets/Scripts/Entity/Controllable.cs" Line="41" Column="5" />
+      <File FileName="Assets/Scripts/Entity/Mobile.cs" Line="43" Column="3" />
+      <File FileName="Assets/Scripts/Entity/EntityType.cs" Line="9" Column="17" />
+      <File FileName="Assets/Scripts/Entity/RecordInfo.cs" Line="13" Column="45" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
+              <Node name="Entity" expanded="True">
+                <Node name="Recordable.cs" selected="True" />
+              </Node>
+              <Node name="FileSystem" expanded="True" />
               <Node name="UI" expanded="True">
-                <Node name="Screens" expanded="True">
-                  <Node name="TitleScreen.cs" selected="True" />
-                </Node>
+                <Node name="Screens" expanded="True" />
               </Node>
             </Node>
             <Node name="Shaders" expanded="True" />

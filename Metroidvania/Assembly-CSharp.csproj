@@ -48,9 +48,12 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
+     <Compile Include="Assets\Scripts\Entity\EntityType.cs" />
      <Compile Include="Assets\Scripts\Entity\Immobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Mobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Player.cs" />
+     <Compile Include="Assets\Scripts\Entity\RecordInfo.cs" />
+     <Compile Include="Assets\Scripts\Entity\Recordable.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />
@@ -60,6 +63,7 @@
      <Compile Include="Assets\Scripts\UI\LerpFollow.cs" />
      <Compile Include="Assets\Scripts\UI\RenderingSystem.cs" />
      <Compile Include="Assets\Scripts\UI\Screens\TitleScreen.cs" />
+     <Compile Include="Assets\test.cs" />
      <None Include="Assets\Shaders\Hyperbola_Shader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>

@@ -11,8 +11,9 @@ using System.Collections;
  * Later on we'll implement multiple jumps
  */
 
-public class Mobile : MonoBehaviour
+public class Mobile : Recordable
 {
+	Vector3 savedVelocity;
 	bool grounded = false;
 	string impassabletype = "ImpassableTopBottom";
 
@@ -22,6 +23,24 @@ public class Mobile : MonoBehaviour
 		{
 			grounded = true;
 		}
+	}
+
+	public void MobileNormalUpdate()
+	{
+		rigidbody2D.isKinematic = false;
+	}
+
+	public void MobileRecord()
+	{
+	}
+
+	public void MobileRewind()
+	{
+		rigidbody2D.isKinematic = true;
+	}
+
+	public void MobilePlayback()
+	{
 	}
 	
 	void OnCollisionExit2D(Collision2D col)
