@@ -52,6 +52,10 @@ public class Recordable : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		if (Time.deltaTime > 0.02)
+		{
+			Debug.LogWarning("Something is causing too much CPU consumption, Time.deltaTime > 0.02");
+		}
 		// Change Mode CD
 		if (change_mode_cd > 0)
 		{
@@ -156,10 +160,12 @@ public class Recordable : MonoBehaviour
 			recorded_states[record_index] = new RecordInfo[current_frame_objects.Length];
 			for (int i  = 0; i < current_frame_objects.Length; i++)
 			{
-				recorded_states[record_index][i] = new RecordInfo((int)EntityType.hash_type[current_frame_objects[i].name],0,
-				                                                             current_frame_objects[i].transform.position.x,
-				                                                             current_frame_objects[i].transform.position.y,
-				                                                             0,0);
+				recorded_states[record_index][i] = new RecordInfo(EntityType.extractNameAsNumber(current_frame_objects[i].name),
+				                                                  EntityType.extractNumber(current_frame_objects[i].name),
+				                                                  current_frame_objects[i].transform.position.x,
+				                                                  current_frame_objects[i].transform.position.y,
+				                                                  0,
+				                                                  0);
 			}
 			record_index++;
 			print(record_index);
@@ -171,12 +177,35 @@ public class Recordable : MonoBehaviour
 	{
 		if (record_index >= 0)
 		{
+			// Delete all objects with tag Mutable (they can be destroyed) that don't appear in the list of objects for this frame
+			GameObject[] goM = GameObject.FindGameObjectsWithTag("Mutable");
+			for (int i = 0; i < goM.Length; i++)
+			{
+				bool exists = false;
+				for (int j = 0; j < recorded_states[record_index].Length; j++)
+				{
+					RecordInfo info = recorded_states[record_index][j];
+					if (goM[i].name == EntityType.list_type[info.prefabN] + info.prefabI.ToString())
+					{
+						exists = true;
+					}
+				}
+				if (!exists)
+				{
+					Destroy(goM[i]);
+				}
+			}
 			for (int i = 0; i < recorded_states[record_index].Length; i++)
 			{
 				if (!EntityType.ignore_type.Contains(recorded_states[record_index][i].prefabN))
 				{
 					RecordInfo info = recorded_states[record_index][i];
-					GameObject obj = GameObject.Find(EntityType.list_type[info.prefabN]);
+					GameObject obj = GameObject.Find(EntityType.list_type[info.prefabN] + info.prefabI.ToString());
+					if (obj == null)
+					{
+						obj = (GameObject)Instantiate(Resources.Load("Prefabs/" + info.prefabN, typeof(GameObject)));
+						obj.name = info.prefabN + info.prefabI.ToString();
+					}
 					obj.transform.Translate(info.posX - obj.transform.position.x,
 					                        info.posY - obj.transform.position.y,
 					                        0);

@@ -18,7 +18,6 @@ public class Player : Controllable
 	
 	public override void NormalUpdate()
 	{
-
 		MobileNormalUpdate();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
