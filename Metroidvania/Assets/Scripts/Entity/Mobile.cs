@@ -25,24 +25,6 @@ public class Mobile : Recordable
 		}
 	}
 
-	public void MobileNormalUpdate()
-	{
-		rigidbody2D.isKinematic = false;
-	}
-
-	public void MobileRecord()
-	{
-	}
-
-	public void MobileRewind()
-	{
-		rigidbody2D.isKinematic = true;
-	}
-
-	public void MobilePlayback()
-	{
-	}
-	
 	void OnCollisionExit2D(Collision2D col)
 	{
 		if (col.gameObject.tag == impassabletype)
@@ -98,4 +80,31 @@ public class Mobile : Recordable
 	}
 
 
+
+	
+	public override void NormalUpdate()
+	{
+		rigidbody2D.isKinematic = false;
+	}
+	
+	public override void Record()
+	{
+		recordInfo();
+	}
+
+	public override void RecordAct()
+	{
+		recordInfo();
+	}
+	
+	public override void Rewind()
+	{
+		rigidbody2D.isKinematic = true;
+		readInfo();
+	}
+	
+	public override void Playback()
+	{
+		readInfo();
+	}
 }

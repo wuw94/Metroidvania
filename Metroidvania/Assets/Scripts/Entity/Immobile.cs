@@ -11,4 +11,27 @@ using System.Collections;
 
 public class Immobile : Recordable
 {
+	public override void NormalUpdate()
+	{
+	}
+	
+	public override void Record()
+	{
+		recordInfo();
+	}
+
+	public override void RecordAct()
+	{
+		recordInfo();
+	}
+	
+	public override void Rewind()
+	{
+		readInfo();
+	}
+	
+	public override void Playback()
+	{
+		readInfo();
+	}
 }

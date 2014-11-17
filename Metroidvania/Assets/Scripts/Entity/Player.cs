@@ -18,7 +18,7 @@ public class Player : Controllable
 	
 	public override void NormalUpdate()
 	{
-		MobileNormalUpdate();
+		base.NormalUpdate();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 
@@ -27,24 +27,31 @@ public class Player : Controllable
 
 	public override void Record()
 	{
-		MobileRecord();
+		base.Record();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 
 		Recordable.moved = previousPosition != transform.position;
-		recordInfo();
+		previousPosition = transform.position;
+	}
+
+	public override void RecordAct()
+	{
+		base.RecordAct();
+		checkTimeShift();
+		checkMovementInputs(GameManager.current_game.progression.character);
+
+		Recordable.moved = previousPosition != transform.position;
 		previousPosition = transform.position;
 	}
 
 	public override void Rewind()
 	{
-		MobileRewind();
-		Recordable.readInfo();
+		base.Rewind();
 	}
 
 	public override void Playback()
 	{
-		MobilePlayback();
-		Recordable.readInfo();
+		base.Playback();
 	}
 }

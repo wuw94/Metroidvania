@@ -36,7 +36,7 @@ public class Recordable : MonoBehaviour
 {
 	// For the recording data structure
 	public static readonly int recorded_states_max = 1000;
-	public static RecordInfo[][] recorded_states = new RecordInfo[recorded_states_max][];
+	public RecordInfo[] recorded_states = new RecordInfo[recorded_states_max];
 	public static int recorded_states_filled = 0;
 	public static int record_index = 0;
 	public static int operation_mode = 0;
@@ -73,10 +73,13 @@ public class Recordable : MonoBehaviour
 		}
 		else if (operation_mode == 1)
 		{
-			Record();
 			if (moved)
 			{
 				RecordAct();
+			}
+			else
+			{
+				Record();
 			}
 		}
 		else if (operation_mode == 2)
@@ -122,23 +125,21 @@ public class Recordable : MonoBehaviour
 		print("operation_mode changed, is now " + operation_mode);
 	}
 
-
 	private static void startNormalUpdate()
 	{
-		recorded_states = new RecordInfo[recorded_states_max][];
 	}
 	
 	private static void startRecord()
 	{
 		record_index = 0;
-		for (int i = 0; i < recorded_states.Length; i++)
-		{
-			recorded_states[i] = new RecordInfo[1];
-		}
 	}
 	
 	private static void startRewind()
 	{
+		if (record_index > 0)
+		{
+			record_index--; // There was an indexing error that caused the starting frame have no values, causing a spike
+		}
 		recorded_states_filled = record_index;
 	}
 	
@@ -151,66 +152,31 @@ public class Recordable : MonoBehaviour
 
 	
 
-	// Records each frame, to be accessed with Time Shift
-	public static void recordInfo()
+	// Records each frame of this object at record_index, to be accessed with Time Shift
+	public void recordInfo()
 	{
 		if (operation_mode == 1 && moved && record_index < recorded_states_max - 1)
 		{
-			GameObject[] current_frame_objects = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
-			recorded_states[record_index] = new RecordInfo[current_frame_objects.Length];
-			for (int i  = 0; i < current_frame_objects.Length; i++)
+			recorded_states[record_index] = new RecordInfo(transform.position.x,
+			                                               transform.position.y,
+			                                               0,
+			                                               0);
+			if (GetType() == typeof(Player))
 			{
-				recorded_states[record_index][i] = new RecordInfo(EntityType.extractNameAsNumber(current_frame_objects[i].name),
-				                                                  EntityType.extractNumber(current_frame_objects[i].name),
-				                                                  current_frame_objects[i].transform.position.x,
-				                                                  current_frame_objects[i].transform.position.y,
-				                                                  0,
-				                                                  0);
+				record_index++;
 			}
-			record_index++;
 			print(record_index);
 		}
 	}
 
-	// Reads each frame and edits the state of all of the world's objects to match that of which was recorded
-	public static void readInfo()
+	// Reads each frame and edits the state of this objects to match that of which was recorded at record_index
+	public void readInfo()
 	{
-		if (record_index >= 0)
+		if (record_index > 0)
 		{
-			// Delete all objects with tag Mutable (they can be destroyed) that don't appear in the list of objects for this frame
-			GameObject[] goM = GameObject.FindGameObjectsWithTag("Mutable");
-			for (int i = 0; i < goM.Length; i++)
-			{
-				bool exists = false;
-				for (int j = 0; j < recorded_states[record_index].Length; j++)
-				{
-					RecordInfo info = recorded_states[record_index][j];
-					if (goM[i].name == EntityType.list_type[info.prefabN] + info.prefabI.ToString())
-					{
-						exists = true;
-					}
-				}
-				if (!exists)
-				{
-					Destroy(goM[i]);
-				}
-			}
-			for (int i = 0; i < recorded_states[record_index].Length; i++)
-			{
-				if (!EntityType.ignore_type.Contains(recorded_states[record_index][i].prefabN))
-				{
-					RecordInfo info = recorded_states[record_index][i];
-					GameObject obj = GameObject.Find(EntityType.list_type[info.prefabN] + info.prefabI.ToString());
-					if (obj == null)
-					{
-						obj = (GameObject)Instantiate(Resources.Load("Prefabs/" + info.prefabN, typeof(GameObject)));
-						obj.name = info.prefabN + info.prefabI.ToString();
-					}
-					obj.transform.Translate(info.posX - obj.transform.position.x,
-					                        info.posY - obj.transform.position.y,
-					                        0);
-				}
-			}
+			transform.position = new Vector3(recorded_states[record_index].posX,
+			                                 recorded_states[record_index].posY,
+			                                 transform.position.z);
 		}
 	}
 

@@ -44,4 +44,24 @@ public class Controllable : Mobile
 		}
 	}
 
+	public override void NormalUpdate()
+	{
+		base.NormalUpdate();
+	}
+
+	public override void Record()
+	{
+		base.Record();
+	}
+
+	public override void Rewind()
+	{
+		base.Rewind();
+	}
+
+	public override void Playback()
+	{
+		base.Playback();
+	}
+
 }
