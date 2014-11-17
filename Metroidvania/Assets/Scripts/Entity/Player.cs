@@ -11,6 +11,8 @@ public class Player : Controllable
 {
 	private Vector3 previousPosition;
 
+
+
 	void Start()
 	{
 		GameManager.SetGameAll(5, 5, 0.5f, 5);
@@ -54,4 +56,8 @@ public class Player : Controllable
 	{
 		base.Playback();
 	}
+
+
+
+
 }
