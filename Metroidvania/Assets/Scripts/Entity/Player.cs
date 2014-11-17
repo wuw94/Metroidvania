@@ -11,17 +11,10 @@ public class Player : Controllable
 {
 	private Vector3 previousPosition;
 
-	private ReadSpriteSheet spritesheet; /// Sprite Sheet test
-	private SpriteRenderer sprite; // Sprite Sheet test
-	private int frame; // Sprite Sheet test
+
 
 	void Start()
 	{
-		frame = 0; // Sprite Sheet test
-		spritesheet = GetComponent<ReadSpriteSheet> ();// Sprite Sheet test 
-		sprite = GetComponent<SpriteRenderer> ();// Sprite Sheet test
-		StartCoroutine (SpriteSheetTest ()); // Sprite Sheet Test;
-
 		GameManager.SetGameAll(5, 5, 0.5f, 5);
 	}
 	
@@ -57,13 +50,7 @@ public class Player : Controllable
 		Recordable.readInfo();
 	}
 
-	IEnumerator SpriteSheetTest(){
-		for (int x = 0; x < 20; x++) {
-			
-			sprite.sprite = spritesheet.Frame (frame);
-			yield return new WaitForSeconds (1f);
-			frame += 1;//test texture is too  small so it doesnt fill the collider. Sprite should be correct size;
-		}
-	}
+
+
 
 }
