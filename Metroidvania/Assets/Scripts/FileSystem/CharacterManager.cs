@@ -5,6 +5,15 @@ using System.Collections;
  * Stores information about the player's character
  * 
  * auth Wesley Wu
+ * 
+ * Script Functionalities
+ * 
+ * Global Variables:
+ * move_speed_max - movement speed of max
+ * move_speed_accel_ground - movement speed on ground
+ * move_speed_accel_air - movement speed in air
+ * jump_speed - height level when jumping
+ * 
  */
 
 [System.Serializable]

@@ -10,6 +10,22 @@ using System.Collections;
  * GameManager.SetGameAll(...)
  * 
  * auth Wesley Wu
+ * 
+ * Script Functionalities
+ * 
+ * Method:
+ * SetGameAll() - assigns each variable with the parameter arguments
+ * GameManager() - creates a new object for progression and preferences
+ * 
+ * Variables:
+ * current_game - GameManager variable
+ * progression - ProgressionManager variable
+ * character - CharacterManager variable
+ * 
+ * current_game.progression.character - uses variables from CharacterManager affected by ProgressionManager into GameManager
+ * 
+ * Type:
+ * static - shared class variable across all three managers
  */
 
 [System.Serializable]
