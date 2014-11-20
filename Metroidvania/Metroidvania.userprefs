@@ -1,10 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Switch.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Ground.cs">
     <Files>
-      <File FileName="Assets\Scripts\Ground.cs" Line="7" Column="30" />
-      <File FileName="Assets\Scripts\GroundTrigger.cs" Line="19" Column="3" />
-      <File FileName="Assets\Scripts\Switch.cs" Line="5" Column="23" />
+      <File FileName="Assets\Scripts\GroundTrigger.cs" Line="23" Column="38" />
+      <File FileName="Assets\Scripts\Ground.cs" Line="7" Column="32" />
+      <File FileName="Assets\Scripts\Switch.cs" Line="5" Column="40" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
