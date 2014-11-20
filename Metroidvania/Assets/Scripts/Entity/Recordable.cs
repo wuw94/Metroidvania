@@ -34,6 +34,9 @@ using System.Linq;
 
 public class Recordable : MonoBehaviour
 {
+	// Record data as RecordInfo struct
+	public RecordInfo this_info;
+
 	// For the recording data structure
 	public static readonly int recorded_states_max = 1000;
 	public RecordInfo[] recorded_states = new RecordInfo[recorded_states_max];
@@ -42,13 +45,20 @@ public class Recordable : MonoBehaviour
 	public static int operation_mode = 0;
 	public static readonly int change_mode_cd_max = 100;
 	public static int change_mode_cd = 0;
+	public Vector2 savedVelocity;
+
 
 	// Controls preferences
 	public readonly int rewind_speed = 5;
-
+	public static bool dim = false;
 
 	public static bool moved;
 
+
+	void Start()
+	{
+		this_info = new RecordInfo(transform.position.x, transform.position.y, 0, 0);
+	}
 
 	void FixedUpdate()
 	{
@@ -94,7 +104,7 @@ public class Recordable : MonoBehaviour
 
 
 
-	public static void ChangeOperationMode()
+	public void ChangeOperationMode()
 	{
 		change_mode_cd = change_mode_cd_max;
 		if (operation_mode < 3)
@@ -125,12 +135,16 @@ public class Recordable : MonoBehaviour
 		print("operation_mode changed, is now " + operation_mode);
 	}
 
+
+	// Stuff we want to do just once when entering different mode
 	private static void startNormalUpdate()
 	{
+		dim = false;
 	}
 	
 	private static void startRecord()
 	{
+		dim = true;
 		record_index = 0;
 	}
 	
@@ -145,12 +159,17 @@ public class Recordable : MonoBehaviour
 	
 	private static void startPlayback()
 	{
+		dim = false;
 	}
 
 
 
 
 	
+
+
+
+
 
 	// Records each frame of this object at record_index, to be accessed with Time Shift
 	public void recordInfo()
@@ -165,7 +184,7 @@ public class Recordable : MonoBehaviour
 			{
 				record_index++;
 			}
-			print(record_index);
+			//print(record_index);
 		}
 	}
 
@@ -179,6 +198,8 @@ public class Recordable : MonoBehaviour
 			                                 transform.position.z);
 		}
 	}
+
+
 
 
 

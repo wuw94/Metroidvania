@@ -54,6 +54,11 @@ public class Controllable : Mobile
 		base.Record();
 	}
 
+	public override void RecordAct()
+	{
+		base.RecordAct();
+	}
+
 	public override void Rewind()
 	{
 		base.Rewind();

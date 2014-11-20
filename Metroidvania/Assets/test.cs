@@ -8,7 +8,7 @@ public class test : Immobile
 	{
 		base.NormalUpdate();
 
-		transform.position = new Vector3(transform.position.x + 0.02f,
+		transform.position = new Vector3(transform.position.x + 0.04f,
 		                                 transform.position.y,
 		                                 transform.position.z);
 
@@ -18,7 +18,7 @@ public class test : Immobile
 	{
 		base.RecordAct();
 
-		transform.position = new Vector3(transform.position.x + 0.02f,
+		transform.position = new Vector3(transform.position.x + 0.04f,
 		                                 transform.position.y,
 		                                 transform.position.z);
 
