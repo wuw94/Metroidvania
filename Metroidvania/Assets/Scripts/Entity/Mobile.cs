@@ -37,8 +37,9 @@ using System.Collections;
  * jump - y (jumping) movement when player hits jump key
  */
 
-public class Mobile : MonoBehaviour
+public class Mobile : Recordable
 {
+	Vector3 savedVelocity;
 	bool grounded = false;
 	string impassabletype = "ImpassableTopBottom";
 
@@ -49,7 +50,7 @@ public class Mobile : MonoBehaviour
 			grounded = true;
 		}
 	}
-	
+
 	void OnCollisionExit2D(Collision2D col)
 	{
 		if (col.gameObject.tag == impassabletype)
@@ -103,4 +104,36 @@ public class Mobile : MonoBehaviour
 			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+
+
+	
+	public override void NormalUpdate()
+	{
+		rigidbody2D.isKinematic = false;
+	}
+	
+	public override void Record()
+	{
+		recordInfo();
+	}
+
+	public override void RecordAct()
+	{
+		recordInfo();
+	}
+	
+	public override void Rewind()
+	{
+		rigidbody2D.isKinematic = true;
+		readInfo();
+	}
+	
+	public override void Playback()
+	{
+		readInfo();
+	}
+>>>>>>> origin/master
 }
