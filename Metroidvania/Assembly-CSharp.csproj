@@ -62,6 +62,9 @@
      <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
+     <Compile Include="Assets\Scripts\Ground.cs" />
+     <Compile Include="Assets\Scripts\GroundTrigger.cs" />
+     <Compile Include="Assets\Scripts\Switch.cs" />
      <Compile Include="Assets\Scripts\UI\LerpFollow.cs" />
      <Compile Include="Assets\Scripts\UI\RecordDim.cs" />
      <Compile Include="Assets\Scripts\UI\RenderingSystem.cs" />

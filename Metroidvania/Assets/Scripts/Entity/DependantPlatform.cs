@@ -21,14 +21,7 @@ public class DependantPlatform : Immobile
 
 	void changeCollisions(bool on)
 	{
-		if (on)
-		{
-			transform.collider2D.enabled = true;
-		}
-		else
-		{
-			transform.collider2D.enabled = false;
-		}
+		transform.collider2D.enabled = on;
 	}
 
 

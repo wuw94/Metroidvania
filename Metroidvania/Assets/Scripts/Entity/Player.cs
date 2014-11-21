@@ -5,6 +5,14 @@ using System.Collections;
  * Always put this on the player prefab, but make sure there is only one on the scene at any given time.
  * Not to be put on the clone of player. There's another script for that
  * 
+ * Script Functionalities
+ * 
+ * Functions:
+ * Start() - calls functions when game is started
+ * FixedUpdate() - used for adjusting rigidbody components in fixed consistency
+ * 				   in this case, it maintains consistency on movement speed
+ * GameManager.SetGameAll() - set player stats when game is started up
+ * 
  */
 
 public class Player : Controllable
@@ -15,7 +23,7 @@ public class Player : Controllable
 
 	void Start()
 	{
-		GameManager.SetGameAll(5, 5, 0.5f, 5);
+		GameManager.SetGameAll(10, 5, 0.5f, 5);
 	}
 	
 	public override void NormalUpdate()

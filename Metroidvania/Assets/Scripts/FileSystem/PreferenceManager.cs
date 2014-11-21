@@ -5,6 +5,13 @@ using System.Collections;
  * Stores information about the game preferences:
  * 1. Key bindings
  * 
+ * Script Functionalities:
+ * IN_LEFT - left hotkey
+ * IN_RIGHT - right hotkey
+ * IN_UP - up hotkey
+ * IN_DOWN - down hotkey
+ * IN_JUMP - space hotkey
+ * 
  * auth Wesley Wu
  */
 
