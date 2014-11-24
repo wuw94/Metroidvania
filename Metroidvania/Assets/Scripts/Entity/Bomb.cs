@@ -1,25 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bomb : MonoBehaviour {
-	public float Character_Health;
-	public float ticking_time;
-	public float power = 20.0f;
-	public float radius = 5.0f;
-	public Collider physics_detection;
-	// Use this for initialization
-	void Start () {
+public class Bomb : Recordable
+{
+	public float ticking_time = 10;
+	public float power = 10.0f;
 
+	void Start()
+	{
+		this_info.eventState = 0; // 0 is inactive, 1: countdown, 2: exploding
 	}
 	
 	// Update is called once per frame
-	void Update () {
-				Vector2 explosion_position = transform.position;
-				ticking_time -= Time.deltaTime * 10f;
-				//Collider[] colliding_items = Physics.CheckSphere(explosionPos, radius);
-				if (ticking_time == 0)
-					physics_detection.rigidbody.AddExplosionForce (power, explosion_position, radius, 1.0F);
-					Character_Health = Character_Health - power;
-
-						}
+	void Update ()
+	{
+		if (this_info.eventState == 1)
+		{
+			ticking_time -= Time.deltaTime * 10f;
 		}
+		if (ticking_time <= 0)
+		{
+			this_info.eventState = 2;
+		}
+		//print (GameManager.current_game.progression.character.health);
+	}
+				
+
+	void OnTriggerStay2D(Collider2D col)
+	{
+		if (this_info.eventState == 0 && Input.GetKeyDown(KeyCode.Q))
+		{
+			this_info.eventState = 1;
+		}
+		if (this_info.eventState == 2)
+		{
+			if (col.gameObject.name == "Player")
+			{
+				GameManager.current_game.progression.character.health -= power;
+			}
+		}
+	}
+}

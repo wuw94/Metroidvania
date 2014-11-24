@@ -15,13 +15,14 @@ using System.Collections;
 
 public class DependantPlatform : Immobile
 {
-	public Recordable dependant_on; // Change this to a lever type when we have a lever class
+	public GameObject dependant_on; // Change this to a lever type when we have a lever class
 	public int behavior;
 
 
 	void changeCollisions(bool on)
 	{
 		transform.collider2D.enabled = on;
+		renderer.enabled = on;
 	}
 
 
@@ -29,45 +30,59 @@ public class DependantPlatform : Immobile
 	//--------------------------- Behaviors ---------------------------
 	void behavior0()
 	{
-		if (dependant_on.this_info.eventState == 0) {changeCollisions(false);}
-		else if (dependant_on.this_info.eventState == 1) {changeCollisions(true);}
+		if (dependant_on.GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(false);}
+		else if (dependant_on.GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(true);}
 	}
 
 	void behavior1()
 	{
-		if (dependant_on.this_info.eventState == 0) {changeCollisions(true);}
-		else if (dependant_on.this_info.eventState == 1) {changeCollisions(false);}
+		if (dependant_on.GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(true);}
+		else if (dependant_on.GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(false);}
 	}
 
 
+	void Update()
+	{
+		if (behavior == 0) {behavior0();}
+		else if (behavior == 1){behavior1();}
+	}
+
 
 	//--------------------------- Overrides ---------------------------
+	/*
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
-		/*
 		if (behavior == 0) {behavior0();}
 		else if (behavior == 1){behavior1();}
-		*/
 	}
 	
 	public override void Record()
 	{
 		base.Record();
+		if (behavior == 0) {behavior0();}
+		else if (behavior == 1){behavior1();}
 	}
 	
 	public override void RecordAct()
 	{
 		base.RecordAct();
+		if (behavior == 0) {behavior0();}
+		else if (behavior == 1){behavior1();}
 	}
 	
 	public override void Rewind()
 	{
 		base.Rewind();
+		if (behavior == 0) {behavior0();}
+		else if (behavior == 1){behavior1();}
 	}
 	
 	public override void Playback()
 	{
 		base.Playback();
+		if (behavior == 0) {behavior0();}
+		else if (behavior == 1){behavior1();}
 	}
+	*/
 }

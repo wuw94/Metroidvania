@@ -57,7 +57,7 @@ public class Recordable : MonoBehaviour
 
 	void Start()
 	{
-		this_info = new RecordInfo(transform.position.x, transform.position.y, 0, 0);
+		this_info = new RecordInfo(transform.position.x, transform.position.y, 0, 0,true);
 	}
 
 	void FixedUpdate()
@@ -178,8 +178,9 @@ public class Recordable : MonoBehaviour
 		{
 			recorded_states[record_index] = new RecordInfo(transform.position.x,
 			                                               transform.position.y,
-			                                               0,
-			                                               0);
+			                                               this_info.animState,
+			                                               this_info.eventState,
+			                                               this_info.facingRight);
 			if (GetType() == typeof(Player))
 			{
 				record_index++;
@@ -196,6 +197,9 @@ public class Recordable : MonoBehaviour
 			transform.position = new Vector3(recorded_states[record_index].posX,
 			                                 recorded_states[record_index].posY,
 			                                 transform.position.z);
+			this_info.animState = recorded_states[record_index].animState;
+			this_info.eventState = recorded_states[record_index].eventState;
+			this_info.facingRight = recorded_states[record_index].facingRight;
 		}
 	}
 

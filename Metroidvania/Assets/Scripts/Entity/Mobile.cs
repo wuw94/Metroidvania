@@ -37,10 +37,12 @@ using System.Collections;
  * jump - y (jumping) movement when player hits jump key
  */
 
-public class Mobile : Recordable
+public class Mobile : ReadSpriteSheet
 {
 	bool grounded = false;
 	string tagtype = "Ground";
+	int delay = 7;
+	int delay_time = 0;
 
 	void OnCollisionEnter2D(Collision2D col)
 	{
@@ -68,6 +70,24 @@ public class Mobile : Recordable
 
 	public void moveLeft(float max, float accel_g, float accel_a)
 	{
+		this_info.facingRight = false;
+		if (delay_time <= 0)
+		{
+			delay_time = delay;
+			if (this_info.animState < 6)
+			{
+				this_info.animState++;
+			}
+			else
+			{
+				this_info.animState = 0;
+			}
+		}
+		else
+		{
+			delay_time--;
+		}
+
 		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
 		{
 			if (grounded)
@@ -87,7 +107,25 @@ public class Mobile : Recordable
 
 	public void moveRight(float max, float accel_g, float accel_a)
 	{
-		if (Mathf.Abs (rigidbody2D.velocity.x) < max)
+		this_info.facingRight = true;
+		if (delay_time <= 0)
+		{
+			delay_time = delay;
+			if (this_info.animState < 6)
+			{
+				this_info.animState++;
+			}
+			else
+			{
+				this_info.animState = 0;
+			}
+		}
+		else
+		{
+			delay_time--;
+		}
+
+		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
 		{
 			if (grounded)
 			{
@@ -131,8 +169,8 @@ public class Mobile : Recordable
 	{
 		if (!rigidbody2D.isKinematic)
 		{
-			savedVelocity = transform.rigidbody2D.velocity;
 			rigidbody2D.isKinematic = true;
+			savedVelocity = transform.rigidbody2D.velocity;
 		}
 		recordInfo();
 	}
@@ -150,15 +188,19 @@ public class Mobile : Recordable
 	public override void Rewind()
 	{
 		if (!rigidbody2D.isKinematic)
-		{
-			savedVelocity = transform.rigidbody2D.velocity;
+		{			
 			rigidbody2D.isKinematic = true;
+			savedVelocity = transform.rigidbody2D.velocity;
 		}
 		readInfo();
 	}
 	
 	public override void Playback()
 	{
+		if (!rigidbody2D.isKinematic)
+		{
+			rigidbody2D.isKinematic = true;
+		}
 		readInfo();
 	}
 }

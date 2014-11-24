@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ReadSpriteSheet : MonoBehaviour {
+public class ReadSpriteSheet : Recordable {
 
 	public Texture2D spriteSheet;
 	public Vector2 xy;
@@ -16,7 +16,8 @@ public class ReadSpriteSheet : MonoBehaviour {
 		frame = 0; // Sprite Sheet test
 		spritesheet = GetComponent<ReadSpriteSheet> ();// Sprite Sheet testing
 		sprite = GetComponent<SpriteRenderer> ();// Sprite Sheet testing
-		StartCoroutine (SpriteSheetTest ()); // Sprite Sheet Testing;
+
+		//StartCoroutine (SpriteSheetTest ()); // Sprite Sheet Testing;
 		
 
 	}
@@ -31,6 +32,20 @@ public class ReadSpriteSheet : MonoBehaviour {
 			spriteRect.y = ( ((xy.y - 1) / (xy.y)) -(row / xy.y) ) * spriteSheet.height;
 			return Sprite.Create(spriteSheet,spriteRect,new Vector2(0.5f,0.5f));
 	}
+
+	void Update()
+	{
+		if(this_info.facingRight)
+		{
+			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+		}
+		else
+		{
+			transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+		}
+		GetComponent<SpriteRenderer>().sprite = Frame(this_info.animState); 
+	}
+
 
 	IEnumerator SpriteSheetTest(){ // only for testing
 		for (int x = 0; x < 20; x++) {
