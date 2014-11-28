@@ -19,11 +19,6 @@ public class Immobile : Recordable
 	{
 		recordInfo();
 	}
-
-	public override void RecordAct()
-	{
-		recordInfo();
-	}
 	
 	public override void Rewind()
 	{

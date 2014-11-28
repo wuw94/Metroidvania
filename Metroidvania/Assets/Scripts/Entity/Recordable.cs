@@ -49,12 +49,9 @@ public class Recordable : MonoBehaviour
 
 
 	// Controls preferences
-	public readonly int rewind_speed = 5;
+	public readonly int rewind_speed = 2;
 	public static bool dim = false;
-
-	public static bool moved;
-
-
+	
 	void Start()
 	{
 		this_info = new RecordInfo(transform.position.x, transform.position.y, 0, 0,true);
@@ -83,14 +80,7 @@ public class Recordable : MonoBehaviour
 		}
 		else if (operation_mode == 1)
 		{
-			if (moved)
-			{
-				RecordAct();
-			}
-			else
-			{
-				Record();
-			}
+			Record();
 		}
 		else if (operation_mode == 2)
 		{
@@ -106,33 +96,36 @@ public class Recordable : MonoBehaviour
 
 	public void ChangeOperationMode()
 	{
-		change_mode_cd = change_mode_cd_max;
-		if (operation_mode < 3)
+		if (change_mode_cd == 0)
 		{
-			operation_mode++;
-		}
-		else
-		{
-			operation_mode = 0;
-		}
+			change_mode_cd = change_mode_cd_max;
+			if (operation_mode < 3)
+			{
+				operation_mode++;
+			}
+			else
+			{
+				operation_mode = 0;
+			}
 
-		if (operation_mode == 0)
-		{
-			startNormalUpdate();
+			if (operation_mode == 0)
+			{
+				startNormalUpdate();
+			}
+			else if (operation_mode == 1)
+			{
+				startRecord();
+			}
+			else if (operation_mode == 2)
+			{
+				startRewind();
+			}
+			else if (operation_mode == 3)
+			{
+				startPlayback();
+			}
+			print("operation_mode changed, is now " + operation_mode);
 		}
-		else if (operation_mode == 1)
-		{
-			startRecord();
-		}
-		else if (operation_mode == 2)
-		{
-			startRewind();
-		}
-		else if (operation_mode == 3)
-		{
-			startPlayback();
-		}
-		print("operation_mode changed, is now " + operation_mode);
 	}
 
 
@@ -174,7 +167,7 @@ public class Recordable : MonoBehaviour
 	// Records each frame of this object at record_index, to be accessed with Time Shift
 	public void recordInfo()
 	{
-		if (operation_mode == 1 && moved && record_index < recorded_states_max - 1)
+		if (operation_mode == 1 && record_index < recorded_states_max - 1)
 		{
 			recorded_states[record_index] = new RecordInfo(transform.position.x,
 			                                               transform.position.y,
@@ -219,10 +212,6 @@ public class Recordable : MonoBehaviour
 	public virtual void Record()
 	{
 	}
-	
-	public virtual void RecordAct()
-	{
-	}
 
 	public virtual void Rewind()
 	{
@@ -241,6 +230,7 @@ public class Recordable : MonoBehaviour
 	{
 		if (record_index < recorded_states_filled-1)
 		{
+			//print(GetType()); // we had a problem of playback playing too fast
 			record_index++;
 		}
 		else

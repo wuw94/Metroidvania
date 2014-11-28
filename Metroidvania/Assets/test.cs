@@ -14,13 +14,4 @@ public class test : Immobile
 
 	}
 
-	public override void RecordAct()
-	{
-		base.RecordAct();
-
-		transform.position = new Vector3(transform.position.x + 0.04f,
-		                                 transform.position.y,
-		                                 transform.position.z);
-
-	}
 }

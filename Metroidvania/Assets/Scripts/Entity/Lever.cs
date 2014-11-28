@@ -49,26 +49,7 @@ public class Lever : Immobile
 			}
 		}
 	}
-
-	public override void RecordAct()
-	{
-		base.RecordAct();
-		if (Vector2.Distance(transform.position, player.transform.position) < 5)
-		{
-			if (Input.GetKeyDown(KeyCode.Q))
-			{
-				if (this_info.eventState == 0)
-				{
-					this_info.eventState = 1;
-				}
-				else if (this_info.eventState == 1)
-				{
-					this_info.eventState = 0;
-				}
-			}
-		}
-	}
-
+	
 	public override void Rewind()
 	{
 		base.Rewind();

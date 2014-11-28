@@ -51,19 +51,41 @@ public class Controllable : Mobile
 				jump(c.jump_speed);
 			}
 		}
-		else
-		{
-			rigidbody2D.isKinematic = true;
-		}
 	}
 
 	public void checkTimeShift()
 	{
-		if (Input.GetKeyDown(GameManager.current_game.preferences.IN_TIME_SHIFT))
+		if (Recordable.operation_mode == 0)
 		{
-			if (Recordable.change_mode_cd == 0)
+			if (Input.GetKey(GameManager.current_game.preferences.IN_TIME_SHIFT))
 			{
-				ChangeOperationMode();
+				if (Time.timeScale > 0.3f)
+				{
+					Time.timeScale-= 0.02f;
+				}
+				else
+				{
+					Time.timeScale = 1;
+					ChangeOperationMode();
+				}
+			}
+			else if (Time.timeScale < 1)
+			{
+				Time.timeScale += 0.1f;
+			}
+			else if (Time.timeScale > 1)
+			{
+				Time.timeScale = 1;
+			}
+		}
+		else
+		{
+			if (Input.GetKeyDown(GameManager.current_game.preferences.IN_TIME_SHIFT))
+			{
+				if (Recordable.change_mode_cd == 0)
+				{
+					ChangeOperationMode();
+				}
 			}
 		}
 	}
@@ -76,11 +98,6 @@ public class Controllable : Mobile
 	public override void Record()
 	{
 		base.Record();
-	}
-
-	public override void RecordAct()
-	{
-		base.RecordAct();
 	}
 
 	public override void Rewind()

@@ -17,15 +17,14 @@ using System.Collections;
 
 public class Player : Controllable
 {
-	private Vector3 previousPosition;
 	private bool clone_created = false;
-
-
 
 	void Start()
 	{
 		GameManager.SetGameAll(10, 5, 0.5f, 5);
 		GameManager.current_game.progression.character.health = 100;
+
+		isPlayer = GetType() == typeof(Player);
 	}
 	
 	public override void NormalUpdate()
@@ -33,34 +32,16 @@ public class Player : Controllable
 		base.NormalUpdate();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
-
-		previousPosition = transform.position;
-
 	}
 
 	public override void Record()
 	{
 		base.Record();
 		clone_created = false;
-		Recordable.moved = previousPosition != transform.position;
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
-
-
-		previousPosition = transform.position;
 	}
-
-	public override void RecordAct()
-	{
-		base.RecordAct();
-		Recordable.moved = previousPosition != transform.position;
-		checkTimeShift();
-		checkMovementInputs(GameManager.current_game.progression.character);
-
-
-		previousPosition = transform.position;
-	}
-
+	
 	public override void Rewind()
 	{
 		base.Rewind();

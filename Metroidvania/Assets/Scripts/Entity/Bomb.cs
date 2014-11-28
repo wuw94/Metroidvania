@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bomb : Recordable
+public class Bomb : Immobile
 {
 	public float ticking_time = 10;
 	public float power = 10.0f;

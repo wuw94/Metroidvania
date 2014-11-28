@@ -40,10 +40,12 @@ using System.Collections;
 public class Mobile : ReadSpriteSheet
 {
 	bool grounded = false;
+	bool velocity_assigned = false;
+	public bool isPlayer;
 	string tagtype = "Ground";
-	int delay = 7;
+	int delay = 4;
 	int delay_time = 0;
-
+	
 	void OnCollisionEnter2D(Collision2D col)
 	{
 		if(col.gameObject.tag == tagtype)
@@ -144,63 +146,65 @@ public class Mobile : ReadSpriteSheet
 
 	public void jump(float jumpspeed)
 	{
-		if (rigidbody2D.isKinematic)
-		{
-			rigidbody2D.isKinematic = false;
-		}
 		if (grounded)
 		{
 			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
-			savedVelocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
 		}
+	}
 
+
+	private void manageVelocity()
+	{
+		if (isPlayer)
+		{
+			assignVelocity(0,3);
+		}
+		else
+		{
+			assignVelocity(1,0);
+		}
+	}
+
+	private void assignVelocity(int save_mode, int load_mode)
+	{
+		if (operation_mode == save_mode || operation_mode == load_mode)
+		{
+			if (!velocity_assigned)
+			{
+				transform.rigidbody2D.velocity = savedVelocity;
+				velocity_assigned = true;
+			}
+			else
+			{
+				savedVelocity = transform.rigidbody2D.velocity;
+			}
+		}
+		else
+		{
+			velocity_assigned = false;
+		}
 	}
 
 	public override void NormalUpdate()
 	{
-		if (rigidbody2D.isKinematic)
-		{
-			rigidbody2D.isKinematic = false;
-			transform.rigidbody2D.velocity = savedVelocity;
-		}
+		manageVelocity();
 	}
 	
 	public override void Record()
 	{
-		if (!rigidbody2D.isKinematic)
-		{
-			rigidbody2D.isKinematic = true;
-			savedVelocity = transform.rigidbody2D.velocity;
-		}
+		manageVelocity();
 		recordInfo();
 	}
 
-	public override void RecordAct()
-	{
-		if (rigidbody2D.isKinematic)
-		{
-			rigidbody2D.isKinematic = false;
-			transform.rigidbody2D.velocity = savedVelocity;
-		}
-		recordInfo();
-	}
-	
 	public override void Rewind()
 	{
-		if (!rigidbody2D.isKinematic)
-		{			
-			rigidbody2D.isKinematic = true;
-			savedVelocity = transform.rigidbody2D.velocity;
-		}
+		manageVelocity();
 		readInfo();
 	}
 	
 	public override void Playback()
 	{
-		if (!rigidbody2D.isKinematic)
-		{
-			rigidbody2D.isKinematic = true;
-		}
+		manageVelocity();
 		readInfo();
 	}
 }
