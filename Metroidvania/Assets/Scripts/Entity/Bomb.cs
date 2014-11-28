@@ -4,15 +4,14 @@ using System.Collections;
 public class Bomb : Immobile
 {
 	public float ticking_time = 10;
-	public float power = 10.0f;
+	public int power = 10;
 
 	void Start()
 	{
 		this_info.eventState = 0; // 0 is inactive, 1: countdown, 2: exploding
 	}
 	
-	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (this_info.eventState == 1)
 		{
@@ -22,21 +21,23 @@ public class Bomb : Immobile
 		{
 			this_info.eventState = 2;
 		}
-		//print (GameManager.current_game.progression.character.health);
 	}
-				
 
-	void OnTriggerStay2D(Collider2D col)
+	public override void Action()
 	{
-		if (this_info.eventState == 0 && Input.GetKeyDown(KeyCode.Q))
+		if (this_info.eventState == 0)
 		{
 			this_info.eventState = 1;
 		}
+	}
+
+	void OnTriggerStay2D(Collider2D col)
+	{
 		if (this_info.eventState == 2)
 		{
 			if (col.gameObject.name == "Player")
 			{
-				GameManager.current_game.progression.character.health -= power;
+				GameManager.current_game.progression.character.changeHealth(-power);
 			}
 		}
 	}

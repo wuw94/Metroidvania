@@ -46,43 +46,4 @@ public class DependantPlatform : Immobile
 		if (behavior == 0) {behavior0();}
 		else if (behavior == 1){behavior1();}
 	}
-
-
-	//--------------------------- Overrides ---------------------------
-	/*
-	public override void NormalUpdate()
-	{
-		base.NormalUpdate();
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-	}
-	
-	public override void Record()
-	{
-		base.Record();
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-	}
-	
-	public override void RecordAct()
-	{
-		base.RecordAct();
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-	}
-	
-	public override void Rewind()
-	{
-		base.Rewind();
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-	}
-	
-	public override void Playback()
-	{
-		base.Playback();
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-	}
-	*/
 }

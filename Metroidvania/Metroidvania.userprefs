@@ -1,11 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Controllable.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Bomb.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/Recordable.cs" Line="88" Column="1" />
-      <File FileName="Assets/Scripts/Entity/Player.cs" Line="56" Column="61" />
-      <File FileName="Assets/Scripts/Entity/Controllable.cs" Line="50" Column="5" />
-      <File FileName="Assets/Scripts/Entity/Mobile.cs" Line="128" Column="16" />
+      <File FileName="Assets/Scripts/Entity/Player.cs" Line="45" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Lever.cs" Line="33" Column="1" />
+      <File FileName="Assets/Scripts/Entity/DependantPlatform.cs" Line="48" Column="3" />
+      <File FileName="Assets/Scripts/Entity/Bomb.cs" Line="33" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Controllable.cs" Line="80" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Mobile.cs" Line="50" Column="3" />
+      <File FileName="Assets/Scripts/Entity/Recordable.cs" Line="244" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -18,6 +18,7 @@ using System.Collections;
 public class Player : Controllable
 {
 	private bool clone_created = false;
+	private int heal = 2;
 
 	void Start()
 	{
@@ -26,12 +27,14 @@ public class Player : Controllable
 
 		isPlayer = GetType() == typeof(Player);
 	}
-	
+
+
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
+		GameManager.current_game.progression.character.changeHealth(heal);
 	}
 
 	public override void Record()
@@ -40,11 +43,13 @@ public class Player : Controllable
 		clone_created = false;
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
+		GameManager.current_game.progression.character.changeHealth(heal);
 	}
 	
 	public override void Rewind()
 	{
 		base.Rewind();
+		GameManager.current_game.progression.character.changeHealth(heal);
 	}
 
 	public override void Playback()

@@ -24,8 +24,22 @@ public sealed class CharacterManager
 	public float move_speed_accel_air;
 	public float jump_speed;
 	public float health;
+	public float health_max = 100;
 	
 	public CharacterManager()
 	{
+	}
+
+	public void changeHealth(int amount)
+	{
+		health += amount;
+		if (amount < 0 && health < 0)
+		{
+			health = 0;
+		}
+		else if (amount > health_max && health > health_max)
+		{
+			health = health_max;
+		}
 	}
 }

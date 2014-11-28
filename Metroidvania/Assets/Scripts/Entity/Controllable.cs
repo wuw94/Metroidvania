@@ -33,23 +33,11 @@ using System.Collections;
 
 public class Controllable : Mobile
 {
-
-	public void checkMovementInputs(CharacterManager c)
+	void OnTriggerStay2D(Collider2D col)
 	{
-		if (Recordable.record_index < Recordable.recorded_states_max - 1)
+		if (Input.GetKeyDown(GameManager.current_game.preferences.IN_ACTION))
 		{
-			if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
-			{
-				moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
-			}
-			if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
-			{
-				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
-			}
-			if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP))
-			{
-				jump(c.jump_speed);
-			}
+			col.gameObject.GetComponent<Recordable>().Action();
 		}
 	}
 
@@ -89,6 +77,27 @@ public class Controllable : Mobile
 			}
 		}
 	}
+
+	public void checkMovementInputs(CharacterManager c)
+	{
+		if (Recordable.record_index < Recordable.recorded_states_max - 1)
+		{
+			if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+			{
+				moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
+			if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+			{
+				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
+			if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP))
+			{
+				jump(c.jump_speed);
+			}
+		}
+	}
+
+
 
 	public override void NormalUpdate()
 	{

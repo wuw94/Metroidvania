@@ -238,4 +238,8 @@ public class Recordable : MonoBehaviour
 			ChangeOperationMode();
 		}
 	}
+
+	public virtual void Action()
+	{
+	}
 }
