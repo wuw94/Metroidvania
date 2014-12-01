@@ -9,7 +9,7 @@ using System.Collections;
  * Later on maybe this class will contain be inherited by scripted events, like levers
  */
 
-public class Immobile : Recordable
+public class Immobile : ReadSpriteSheet
 {
 	public override void NormalUpdate()
 	{

@@ -47,19 +47,19 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
-     <Compile Include="Assets\Scripts\Entity\Bomb.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
-     <Compile Include="Assets\Scripts\Entity\EntityType.cs" />
-     <Compile Include="Assets\Scripts\Entity\Health.cs" />
      <Compile Include="Assets\Scripts\Entity\Immobile.cs" />
-     <Compile Include="Assets\Scripts\Entity\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Mobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Player.cs" />
      <Compile Include="Assets\Scripts\Entity\PlayerClone.cs" />
+     <Compile Include="Assets\Scripts\Entity\PlayerRecordingIndicator.cs" />
      <Compile Include="Assets\Scripts\Entity\ReadSpriteSheet.cs" />
      <Compile Include="Assets\Scripts\Entity\RecordInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\Bomb.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />

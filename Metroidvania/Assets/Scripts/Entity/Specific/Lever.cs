@@ -10,10 +10,12 @@ public class Lever : Immobile
 		if (this_info.eventState == 0)
 		{
 			this_info.eventState = 1;
+			this_info.animState = 1;
 		}
 		else if (this_info.eventState == 1)
 		{
 			this_info.eventState = 0;
+			this_info.animState = 0;
 		}
 	}
 	

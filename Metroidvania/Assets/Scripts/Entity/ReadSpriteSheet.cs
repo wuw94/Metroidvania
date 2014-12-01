@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ReadSpriteSheet : Recordable {
-
+	
 	public Texture2D spriteSheet;
 	public Vector2 xy;
 

@@ -18,6 +18,7 @@ using System.Collections;
 public class Player : Controllable
 {
 	private bool clone_created = false;
+	private bool indicator_created = false;
 	private int heal = 2;
 
 	void Start()
@@ -27,11 +28,11 @@ public class Player : Controllable
 
 		isPlayer = GetType() == typeof(Player);
 	}
-
-
+	
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
+		indicator_created = false;
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 		GameManager.current_game.progression.character.changeHealth(heal);
@@ -44,6 +45,14 @@ public class Player : Controllable
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 		GameManager.current_game.progression.character.changeHealth(heal);
+
+		if (!indicator_created)
+		{
+			indicator_created = true;
+			GameObject indicator = (GameObject)Instantiate(Resources.Load("Prefabs/PlayerRecordingIndicator", typeof(GameObject)));
+			indicator.transform.position = transform.position;
+			indicator.GetComponent<PlayerRecordingIndicator>().this_info.animState = this_info.animState;
+		}
 	}
 	
 	public override void Rewind()

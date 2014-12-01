@@ -149,6 +149,7 @@ public class Mobile : ReadSpriteSheet
 		if (grounded)
 		{
 			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
+			grounded = false;
 		}
 	}
 

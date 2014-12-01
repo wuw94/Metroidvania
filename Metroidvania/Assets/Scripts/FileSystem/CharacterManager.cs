@@ -30,16 +30,24 @@ public sealed class CharacterManager
 	{
 	}
 
-	public void changeHealth(int amount)
+	public void changeHealth(float amount)
 	{
 		health += amount;
 		if (amount < 0 && health < 0)
 		{
-			health = 0;
+			manageDeath();
 		}
 		else if (amount > health_max && health > health_max)
 		{
 			health = health_max;
 		}
+	}
+
+	private void manageDeath()
+	{
+		// reset health and stuff to necessary values
+		// restart the stage, and it will deal with reading values
+		Recordable.record_index = 0;
+		Application.LoadLevel(Application.loadedLevelName);
 	}
 }

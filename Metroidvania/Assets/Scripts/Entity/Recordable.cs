@@ -49,12 +49,17 @@ public class Recordable : MonoBehaviour
 
 
 	// Controls preferences
-	public readonly int rewind_speed = 2;
+	public readonly int rewind_speed = 4;
 	public static bool dim = false;
 	
 	void Start()
 	{
 		this_info = new RecordInfo(transform.position.x, transform.position.y, 0, 0,true);
+		recorded_states = new RecordInfo[recorded_states_max];
+		recorded_states_filled = 0;
+		record_index = 0;
+		operation_mode = 0;
+		change_mode_cd = 0;
 	}
 
 	void FixedUpdate()
