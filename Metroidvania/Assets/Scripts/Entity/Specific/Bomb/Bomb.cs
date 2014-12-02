@@ -1,47 +1,83 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* Bomb.
+ * Bomb takes in a delay_time (in 1/50 second) delay before exploding. This timer is affected by recording and rewinding
+ * 
+ * 
+ * Each phase is governed by the value of eventState relative to max
+ * eS = max : inactive
+ * 0 <= eS < max : countdown
+ * eS < 0 : exploding
+ */
+
 public class Bomb : Immobile
 {
-	public float ticking_time = 10;
-	public int power = 10;
+	public int delay_time = 10;
+	public int power = 20;
 
 	void Start()
 	{
-		this_info.eventState = 0; // 0 is inactive, 1: countdown, 2: exploding
+		this_info.eventState = delay_time;
 	}
-	
-	void FixedUpdate ()
+
+	private void doExplosion()
 	{
-		if (this_info.eventState == 1)
-		{
-			ticking_time -= Time.deltaTime * 10f;
-		}
-		if (ticking_time <= 0)
-		{
-			this_info.eventState = 2;
-			Instantiate(Resources.Load("Prefabs/explosion", typeof(GameObject)), transform.position, transform.rotation);
-			Camera.main.GetComponent<LerpFollow>().uptime = 0.5f;
-			Destroy(gameObject);
-		}
+		this_info.eventState = 0;
+		Instantiate(Resources.Load("Prefabs/explosion", typeof(GameObject)), transform.position, transform.rotation);
+		Camera.main.GetComponent<CameraManager>().shake_time = 0.5f;
+		Destroy(gameObject);
 	}
 
 	public override void Action()
 	{
-		if (this_info.eventState == 0)
+		if (this_info.eventState == delay_time)
 		{
-			this_info.eventState = 1;
+			this_info.eventState = delay_time - 1;
 		}
 	}
 
-	void OnTriggerStay2D(Collider2D col)
+	public override void NormalUpdate()
 	{
-		if (this_info.eventState == 2)
+		base.NormalUpdate();
+		if (this_info.eventState < delay_time)
 		{
-			if (col.gameObject.name == "Player")
-			{
-				GameManager.current_game.progression.character.changeHealth(-power);
-			}
+			this_info.eventState--;
+		}
+		if (this_info.eventState < 0)
+		{
+			doExplosion();
+		}
+	}
+
+	public override void Record()
+	{
+		base.Record();
+		if (this_info.eventState < delay_time)
+		{
+			this_info.eventState--;
+		}
+		if (this_info.eventState < 0)
+		{
+			doExplosion();
+		}
+	}
+
+	public override void Rewind()
+	{
+		base.Rewind();
+		if (this_info.eventState < 0)
+		{
+			doExplosion();
+		}
+	}
+
+	public override void Playback()
+	{
+		base.Playback();
+		if (this_info.eventState < 0)
+		{
+			doExplosion();
 		}
 	}
 }

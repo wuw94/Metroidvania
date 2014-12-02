@@ -10,12 +10,16 @@ using System.Collections;
  * auth Wesley Wu
  */
 
-public class LerpFollow : MonoBehaviour
+public class CameraManager : MonoBehaviour
 {
-	public float uptime = 0;
-	public static GameObject follow;
+	// Lerp variables
+	public GameObject follow;
 	public GameObject player;
 	private int speed = 5;
+
+	// Shake variables
+	public float shake_time = 0;
+
 
 	public void returnToPlayer()
 	{
@@ -30,19 +34,28 @@ public class LerpFollow : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		manageLerp();
+		manageShake();
+	}
+
+	private void manageLerp()
+	{
 		transform.position = new Vector3(Mathf.Lerp(transform.position.x, follow.transform.position.x, speed * Time.deltaTime),
 		                                 Mathf.Lerp(transform.position.y, follow.transform.position.y, speed * Time.deltaTime),
 		                                 transform.position.z);
+	}
 
-		if (uptime > 0)
+	private void manageShake()
+	{
+		if (shake_time > 0)
 		{
-			uptime -= Time.deltaTime;
-			Vector2 shake = Random.insideUnitCircle * uptime;
+			shake_time -= Time.deltaTime;
+			Vector2 shake = Random.insideUnitCircle * shake_time;
 			Camera.main.transform.position += new Vector3(shake.x, shake.y, 0);
 		}
-		else if (uptime < 0)
+		else if (shake_time < 0)
 		{
-			uptime = 0;
+			shake_time = 0;
 		}
 	}
 }

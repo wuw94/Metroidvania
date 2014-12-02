@@ -5,7 +5,11 @@ public class RecordDim : MonoBehaviour {
 
 	void Update()
 	{
-		if (Mathf.Abs(renderer.material.color.r - (Time.timeScale)) > 0.01f)
+		if (Recordable.dim)
+		{
+			renderer.material.color = new Color(0.2f,0.2f,0.2f,renderer.material.color.a);
+		}
+		else if (Mathf.Abs(renderer.material.color.r - (Time.timeScale)) > 0.01f)
 		{
 			renderer.material.color = new Color(Mathf.Lerp(renderer.material.color.r, Time.timeScale, Time.deltaTime * 4),
 			                                    Mathf.Lerp(renderer.material.color.g, Time.timeScale, Time.deltaTime * 8),
