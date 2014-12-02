@@ -10,7 +10,9 @@ using System.Collections;
  * auth Wesley Wu
  */
 
-public class LerpFollow : MonoBehaviour {
+public class LerpFollow : MonoBehaviour
+{
+	public float uptime = 0;
 	public static GameObject follow;
 	public GameObject player;
 	private int speed = 5;
@@ -31,5 +33,16 @@ public class LerpFollow : MonoBehaviour {
 		transform.position = new Vector3(Mathf.Lerp(transform.position.x, follow.transform.position.x, speed * Time.deltaTime),
 		                                 Mathf.Lerp(transform.position.y, follow.transform.position.y, speed * Time.deltaTime),
 		                                 transform.position.z);
+
+		if (uptime > 0)
+		{
+			uptime -= Time.deltaTime;
+			Vector2 shake = Random.insideUnitCircle * uptime;
+			Camera.main.transform.position += new Vector3(shake.x, shake.y, 0);
+		}
+		else if (uptime < 0)
+		{
+			uptime = 0;
+		}
 	}
 }

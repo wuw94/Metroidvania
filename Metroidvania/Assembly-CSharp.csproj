@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AudioManager.cs" />
+     <Compile Include="Assets\ScreenShake.cs" />
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
@@ -57,7 +59,8 @@
      <Compile Include="Assets\Scripts\Entity\ReadSpriteSheet.cs" />
      <Compile Include="Assets\Scripts\Entity\RecordInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable.cs" />
-     <Compile Include="Assets\Scripts\Entity\Specific\Bomb.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Bomb.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Explosion.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
@@ -75,10 +78,15 @@
      <Compile Include="Assets\Scripts\UI\RenderingSystem.cs" />
      <Compile Include="Assets\Scripts\UI\Screens\TitleScreen.cs" />
      <Compile Include="Assets\test.cs" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Shaders\Hyperbola_Shader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

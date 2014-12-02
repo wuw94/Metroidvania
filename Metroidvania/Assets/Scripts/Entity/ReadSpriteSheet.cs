@@ -22,28 +22,31 @@ public class ReadSpriteSheet : Recordable {
 
 	}
 	public Sprite Frame(int frame)
-	{	
-			int frame_number = (frame >= 0 && frame <= ((xy.x * xy.y) - 1)) ? frame : 0; // returns first frame if frame number to big or small;
-			int row = (frame_number / (int)xy.x);
-			Rect spriteRect = new Rect ();
-			spriteRect.width = (spriteSheet.width / xy.x); 
-			spriteRect.height = (spriteSheet.height / xy.y); 
-			spriteRect.x = ((frame_number % xy.x)/xy.x) * spriteSheet.width; 
-			spriteRect.y = ( ((xy.y - 1) / (xy.y)) -(row / xy.y) ) * spriteSheet.height;
-			return Sprite.Create(spriteSheet,spriteRect,new Vector2(0.5f,0.5f));
+	{
+		int frame_number = (frame >= 0 && frame <= ((xy.x * xy.y) - 1)) ? frame : 0; // returns first frame if frame number to big or small;
+		int row = (frame_number / (int)xy.x);
+		Rect spriteRect = new Rect ();
+		spriteRect.width = (spriteSheet.width / xy.x); 
+		spriteRect.height = (spriteSheet.height / xy.y); 
+		spriteRect.x = ((frame_number % xy.x)/xy.x) * spriteSheet.width; 
+		spriteRect.y = ( ((xy.y - 1) / (xy.y)) -(row / xy.y) ) * spriteSheet.height;
+		return Sprite.Create(spriteSheet,spriteRect,new Vector2(0.5f,0.5f));
 	}
 
 	void Update()
 	{
-		if(this_info.facingRight)
+		if (spriteSheet != null)
 		{
-			transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+			if(this_info.facingRight)
+			{
+				transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+			}
+			else
+			{
+				transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+			}
+			GetComponent<SpriteRenderer>().sprite = Frame(this_info.animState);
 		}
-		else
-		{
-			transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-		}
-		GetComponent<SpriteRenderer>().sprite = Frame(this_info.animState); 
 	}
 
 

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{AFCC3D41-448B-4245-FC46-0F700F501F6D}") = "Metroidvania", "Assembly-CSharp.csproj", "{7B39237E-EB72-FD6B-2E8B-43A009CC29FC}"
 EndProject
+Project("{AFCC3D41-448B-4245-FC46-0F700F501F6D}") = "Metroidvania", "Assembly-UnityScript-firstpass.unityproj", "{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,11 +15,15 @@ Global
 		{7B39237E-EB72-FD6B-2E8B-43A009CC29FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B39237E-EB72-FD6B-2E8B-43A009CC29FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B39237E-EB72-FD6B-2E8B-43A009CC29FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A0ADE0-3BCD-1AF7-BC2D-B40F9CF01FE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																																																																							GlobalSection(MonoDevelopProperties) = preSolution
+																																																																																																																																														GlobalSection(MonoDevelopProperties) = preSolution
 =======
 																																																																																							GlobalSection(MonoDevelopProperties) = preSolution
 >>>>>>> origin/master

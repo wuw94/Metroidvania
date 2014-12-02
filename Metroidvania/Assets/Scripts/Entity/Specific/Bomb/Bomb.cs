@@ -20,6 +20,9 @@ public class Bomb : Immobile
 		if (ticking_time <= 0)
 		{
 			this_info.eventState = 2;
+			Instantiate(Resources.Load("Prefabs/explosion", typeof(GameObject)), transform.position, transform.rotation);
+			Camera.main.GetComponent<LerpFollow>().uptime = 0.5f;
+			Destroy(gameObject);
 		}
 	}
 
