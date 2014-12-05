@@ -10,10 +10,9 @@ public class Wall : Immobile {
 	
 	// Update is called once per frame
 	void Update () {
-		Action ();
 	}
 
-	public override void Action()
+	public override void Damage(float amount)
 	{
 		Destroy(gameObject);
 	}
