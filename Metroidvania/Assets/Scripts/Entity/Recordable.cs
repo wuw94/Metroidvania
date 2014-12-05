@@ -39,17 +39,17 @@ public class Recordable : MonoBehaviour
 
 	// For the recording data structure
 	public static readonly int recorded_states_max = 1000;
-	public RecordInfo[] recorded_states = new RecordInfo[recorded_states_max];
+	protected RecordInfo[] recorded_states = new RecordInfo[recorded_states_max];
 	public static int recorded_states_filled = 0;
 	public static int record_index = 0;
 	public static int operation_mode = 0;
 	public static readonly int change_mode_cd_max = 100;
 	public static int change_mode_cd = 0;
-	public Vector2 savedVelocity;
+	protected Vector2 savedVelocity;
 
 
 	// Controls preferences
-	public readonly int rewind_speed = 4;
+	private readonly int rewind_speed = 4;
 	public static bool dim = false;
 	
 	void Start()
@@ -165,11 +165,18 @@ public class Recordable : MonoBehaviour
 
 	
 
+	public RecordInfo[] getRecordedStates()
+	{
+		return recorded_states;
+	}
 
+	public void setRecordedStates(RecordInfo[] new_recorded_states)
+	{
+		recorded_states = new_recorded_states;
+	}
 
+	//------------------------------ Record/Read ------------------------------
 
-
-	// Records each frame of this object at record_index, to be accessed with Time Shift
 	public void recordInfo()
 	{
 		if (operation_mode == 1 && record_index < recorded_states_max - 1)
@@ -183,11 +190,9 @@ public class Recordable : MonoBehaviour
 			{
 				record_index++;
 			}
-			//print(record_index);
 		}
 	}
 
-	// Reads each frame and edits the state of this objects to match that of which was recorded at record_index
 	public void readInfo()
 	{
 		if (record_index > 0)
@@ -200,12 +205,6 @@ public class Recordable : MonoBehaviour
 			this_info.facingRight = recorded_states[record_index].facingRight;
 		}
 	}
-
-
-
-
-
-
 
 
 	//------------------------------ OVERRIDE FUNCTIONS ------------------------------
@@ -245,6 +244,10 @@ public class Recordable : MonoBehaviour
 	}
 
 	public virtual void Action()
+	{
+	}
+
+	public virtual void Damage(float amount)
 	{
 	}
 }

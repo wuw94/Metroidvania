@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 /* Controllable.
@@ -82,17 +82,21 @@ public class Controllable : Mobile
 	{
 		if (Recordable.record_index < Recordable.recorded_states_max - 1)
 		{
-			if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+			if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP) && grounded)
+			{
+				jump(c.jump_speed);
+			}
+			else if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
 			{
 				moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+			else if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
 			{
 				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP))
+			else
 			{
-				jump(c.jump_speed);
+				noInput();
 			}
 		}
 	}

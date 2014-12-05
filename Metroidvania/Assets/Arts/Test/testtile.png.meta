@@ -1,34 +1,36 @@
 fileFormatVersion: 2
-guid: cdf977175261bb648962e0f92d643990
+guid: 1dbcf21b3f57843e28ff76f0f0293aa8
 TextureImporter:
   fileIDToRecycleName:
-    21300000: player-sprites_0
-    21300002: player-sprites_1
-    21300004: player-sprites_2
-    21300006: player-sprites_3
-    21300008: player-sprites_4
-    21300010: player-sprites_5
-    21300012: player-sprites_6
-    21300014: player-sprites_7
-    21300016: player-sprites_8
-    21300018: player-sprites_9
-    21300020: player-sprites_10
-    21300022: player-sprites_11
-    21300024: player-sprites_12
-    21300026: player-sprites_13
-    21300028: player-sprites_14
-    21300030: player-sprites_15
-    21300032: player-sprites_16
-    21300034: player-sprites_17
-    21300036: player-sprites_18
-    21300038: player-sprites_19
-    21300040: player-sprites_20
-    21300042: player-sprites_21
-    21300044: player-sprites_22
+    21300000: testtile_0
+    21300002: testtile_1
+    21300004: testtile_2
+    21300006: testtile_3
+    21300008: testtile_4
+    21300010: testtile_5
+    21300012: testtile_6
+    21300014: testtile_7
+    21300016: testtile_8
+    21300018: testtile_9
+    21300020: testtile_10
+    21300022: testtile_11
+    21300024: testtile_12
+    21300026: testtile_13
+    21300028: testtile_14
+    21300030: testtile_15
+    21300032: testtile_16
+    21300034: testtile_17
+    21300036: testtile_18
+    21300038: testtile_19
+    21300040: testtile_20
+    21300042: testtile_21
+    21300044: testtile_22
+    21300046: testtile_23
+    21300048: testtile_24
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -45,10 +47,10 @@ TextureImporter:
   generateCubemap: 0
   seamlessCubemap: 0
   textureFormat: -1
-  maxTextureSize: 1024
+  maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -60,239 +62,259 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: player-sprites_0
+    - name: testtile_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 176
-        width: 60
-        height: 70
+        x: 0
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_1
+    - name: testtile_1
       rect:
         serializedVersion: 2
-        x: 85
-        y: 176
-        width: 60
-        height: 70
+        x: 256
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_2
+    - name: testtile_2
       rect:
         serializedVersion: 2
-        x: 170
-        y: 176
-        width: 55
-        height: 70
+        x: 512
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_3
+    - name: testtile_3
       rect:
         serializedVersion: 2
-        x: 250
-        y: 176
-        width: 55
-        height: 70
+        x: 768
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_4
+    - name: testtile_4
       rect:
         serializedVersion: 2
-        x: 330
-        y: 176
-        width: 55
-        height: 70
+        x: 1024
+        y: 1024
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_5
+    - name: testtile_5
       rect:
         serializedVersion: 2
-        x: 410
-        y: 176
-        width: 60
-        height: 70
+        x: 0
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_6
+    - name: testtile_6
       rect:
         serializedVersion: 2
-        x: 490
-        y: 176
-        width: 60
-        height: 70
+        x: 256
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_7
+    - name: testtile_7
       rect:
         serializedVersion: 2
-        x: 570
-        y: 176
-        width: 60
-        height: 70
+        x: 512
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_8
+    - name: testtile_8
       rect:
         serializedVersion: 2
-        x: 650
-        y: 176
-        width: 60
-        height: 70
+        x: 768
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_9
+    - name: testtile_9
       rect:
         serializedVersion: 2
-        x: 730
-        y: 176
-        width: 60
-        height: 70
+        x: 1024
+        y: 768
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_10
+    - name: testtile_10
       rect:
         serializedVersion: 2
-        x: 810
-        y: 176
-        width: 60
-        height: 70
+        x: 0
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_11
+    - name: testtile_11
       rect:
         serializedVersion: 2
-        x: 890
-        y: 176
-        width: 60
-        height: 70
+        x: 256
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_12
+    - name: testtile_12
       rect:
         serializedVersion: 2
-        x: 10
-        y: 96
-        width: 60
-        height: 70
+        x: 512
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_13
+    - name: testtile_13
       rect:
         serializedVersion: 2
-        x: 90
-        y: 96
-        width: 60
-        height: 70
+        x: 768
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_14
+    - name: testtile_14
       rect:
         serializedVersion: 2
-        x: 170
-        y: 96
-        width: 60
-        height: 70
+        x: 1024
+        y: 512
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_15
+    - name: testtile_15
       rect:
         serializedVersion: 2
-        x: 250
-        y: 96
-        width: 55
-        height: 70
+        x: 0
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_16
+    - name: testtile_16
       rect:
         serializedVersion: 2
-        x: 330
-        y: 96
-        width: 60
-        height: 65
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_17
+    - name: testtile_17
       rect:
         serializedVersion: 2
-        x: 410
-        y: 96
-        width: 55
-        height: 70
+        x: 512
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_18
+    - name: testtile_18
       rect:
         serializedVersion: 2
-        x: 490
-        y: 96
-        width: 50
-        height: 75
+        x: 768
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_19
+    - name: testtile_19
       rect:
         serializedVersion: 2
-        x: 570
-        y: 96
-        width: 55
-        height: 70
+        x: 1024
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_20
+    - name: testtile_20
       rect:
         serializedVersion: 2
-        x: 650
-        y: 96
-        width: 60
-        height: 65
+        x: 0
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_21
+    - name: testtile_21
       rect:
         serializedVersion: 2
-        x: 730
-        y: 96
-        width: 55
-        height: 70
+        x: 256
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: player-sprites_22
+    - name: testtile_22
       rect:
         serializedVersion: 2
-        x: 810
-        y: 96
-        width: 50
-        height: 75
+        x: 512
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: testtile_23
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: testtile_24
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

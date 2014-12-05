@@ -13,12 +13,20 @@ using System.Collections;
 
 public class Bomb : Immobile
 {
-	public int delay_time = 10;
+	public int delay_time = 25;
 	public int power = 20;
+	private Color new_color;
 
 	void Start()
 	{
+		new_color = renderer.material.color;
 		this_info.eventState = delay_time;
+	}
+
+	void Update()
+	{
+		new_color.a = (this_info.eventState == delay_time)?1:0.5f;
+		renderer.material.color = new_color;
 	}
 
 	private void doExplosion()

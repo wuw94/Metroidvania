@@ -46,8 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AudioManager.cs" />
-     <Compile Include="Assets\ScreenShake.cs" />
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
@@ -63,6 +61,8 @@
      <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Explosion.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
+     <Compile Include="Assets\Scripts\Entity\TileEngine\TileDisplay.cs" />
+     <Compile Include="Assets\Scripts\Entity\TileEngine\TileManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />
@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\Ground.cs" />
      <Compile Include="Assets\Scripts\GroundTrigger.cs" />
      <Compile Include="Assets\Scripts\Switch.cs" />
+     <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />
      <Compile Include="Assets\Scripts\UI\RecordDim.cs" />

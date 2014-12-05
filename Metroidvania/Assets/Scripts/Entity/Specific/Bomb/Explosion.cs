@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Explosion : Immobile
 {
-	public int power = 3;
+	public int power = 50;
 
 	void OnTriggerStay2D(Collider2D col)
 	{
-		if (col.gameObject.name == "Player")
+		if (col.gameObject.GetComponent<Recordable>() != null)
 		{
-			GameManager.current_game.progression.character.changeHealth(-power);
+			col.gameObject.GetComponent<Recordable>().Damage(power * (GetComponent<CircleCollider2D>().radius - Vector2.Distance(col.gameObject.transform.position, transform.position)));
 		}
 	}
 }

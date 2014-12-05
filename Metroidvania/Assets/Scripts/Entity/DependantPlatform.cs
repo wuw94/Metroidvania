@@ -15,7 +15,7 @@ using System.Collections;
 
 public class DependantPlatform : Immobile
 {
-	public GameObject dependant_on; // Change this to a lever type when we have a lever class
+	public GameObject[] dependant_on; // Change this to a lever type when we have a lever class
 	public int behavior;
 
 
@@ -30,20 +30,24 @@ public class DependantPlatform : Immobile
 	//--------------------------- Behaviors ---------------------------
 	void behavior0()
 	{
-		if (dependant_on.GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(false);}
-		else if (dependant_on.GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(true);}
+		if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(false);}
+		else if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(true);}
 	}
 
 	void behavior1()
 	{
-		if (dependant_on.GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(true);}
-		else if (dependant_on.GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(false);}
+		if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(true);}
+		else if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(false);}
 	}
 
+	void behavior2()
+	{
+	}
 
 	void Update()
 	{
 		if (behavior == 0) {behavior0();}
 		else if (behavior == 1){behavior1();}
+		else if (behavior == 2){behavior2();}
 	}
 }

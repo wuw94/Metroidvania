@@ -28,6 +28,12 @@ public class Player : Controllable
 
 		isPlayer = GetType() == typeof(Player);
 	}
+
+
+	public override void Damage(float amount)
+	{
+		GameManager.current_game.progression.character.changeHealth(-amount);
+	}
 	
 	public override void NormalUpdate()
 	{
@@ -68,7 +74,7 @@ public class Player : Controllable
 		{
 			clone_created = true;
 			GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs/PlayerClone", typeof(GameObject)));
-			clone.GetComponent<PlayerClone>().recorded_states = recorded_states;
+			clone.GetComponent<PlayerClone>().setRecordedStates(recorded_states);
 		}
 	}
 

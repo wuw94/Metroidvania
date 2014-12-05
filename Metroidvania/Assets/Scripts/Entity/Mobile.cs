@@ -39,12 +39,25 @@ using System.Collections;
 
 public class Mobile : ReadSpriteSheet
 {
-	bool grounded = false;
+	// Start and end frames to loop through, inclusive
+	// Use the same number if there's only one frame
+	public Vector2 still_frames;
+	public int still_frame_delay;
+
+	public Vector2 run_frames;
+	public int run_frame_delay;
+
+	public Vector2 jump_frames;
+	public int jump_frame_delay;
+
+	public Vector2 attack_frames;
+	public int attack_frame_delay;
+
+	protected bool grounded = false;
 	bool velocity_assigned = false;
-	public bool isPlayer;
+	protected bool isPlayer;
 	string tagtype = "Ground";
-	int delay = 4;
-	int delay_time = 0;
+	int delay_time = 0; // actual timer that's ticking
 	
 	void OnCollisionEnter2D(Collision2D col)
 	{
@@ -70,25 +83,22 @@ public class Mobile : ReadSpriteSheet
 		}
 	}
 
-	public void moveLeft(float max, float accel_g, float accel_a)
+	public void noInput()
 	{
-		this_info.facingRight = false;
-		if (delay_time <= 0)
+		if (grounded)
 		{
-			delay_time = delay;
-			if (this_info.animState < 6)
-			{
-				this_info.animState++;
-			}
-			else
-			{
-				this_info.animState = 0;
-			}
+			animate(still_frames, still_frame_delay);
 		}
 		else
 		{
-			delay_time--;
+			animate(jump_frames, jump_frame_delay);
 		}
+	}
+
+	public void moveLeft(float max, float accel_g, float accel_a)
+	{
+		this_info.facingRight = false;
+		animate(run_frames, run_frame_delay);
 
 		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
 		{
@@ -110,22 +120,7 @@ public class Mobile : ReadSpriteSheet
 	public void moveRight(float max, float accel_g, float accel_a)
 	{
 		this_info.facingRight = true;
-		if (delay_time <= 0)
-		{
-			delay_time = delay;
-			if (this_info.animState < 6)
-			{
-				this_info.animState++;
-			}
-			else
-			{
-				this_info.animState = 0;
-			}
-		}
-		else
-		{
-			delay_time--;
-		}
+		animate(run_frames, run_frame_delay);
 
 		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
 		{
@@ -150,6 +145,48 @@ public class Mobile : ReadSpriteSheet
 		{
 			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
 			grounded = false;
+		}
+	}
+
+	private void animate(Vector2 loop, int delay)
+	{
+		if (grounded)
+		{
+			if (delay_time <= 0)
+			{
+				delay_time = delay;
+				if (this_info.animState < loop.y)
+				{
+					this_info.animState++;
+				}
+				else
+				{
+					this_info.animState = (int)loop.x;
+				}
+			}
+			else
+			{
+				delay_time--;
+			}
+		}
+		else
+		{
+			if (delay_time <= 0)
+			{
+				delay_time = delay;
+				if (this_info.animState < jump_frames.y)
+				{
+					this_info.animState++;
+				}
+				else
+				{
+					this_info.animState = (int)jump_frames.x;
+				}
+			}
+			else
+			{
+				delay_time--;
+			}
 		}
 	}
 
