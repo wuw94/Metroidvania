@@ -94,6 +94,10 @@ public class Controllable : Mobile
 			{
 				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
+			else if (Input.GetKey(GameManager.current_game.preferences.IN_ATTACK))
+			{
+				Attack(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
 			else
 			{
 				noInput();
