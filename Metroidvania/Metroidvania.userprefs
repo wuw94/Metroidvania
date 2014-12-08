@@ -1,8 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/DependantPlatform.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Specific/Bomb/Bomb.cs">
     <Files>
+      <File FileName="Assets/Scripts/Entity/Specific/Bomb/Bomb.cs" Line="40" Column="27" />
       <File FileName="Assets/Scripts/Entity/DependantPlatform.cs" Line="51" Column="40" />
+      <File FileName="Assets/Scripts/Entity/Controllable.cs" Line="40" Column="55" />
+      <File FileName="Assets/Scripts/Entity/Player.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,8 +13,12 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
               <Node name="Entity" expanded="True">
+                <Node name="Specific" expanded="True">
+                  <Node name="Bomb" expanded="True">
+                    <Node name="Bomb.cs" selected="True" />
+                  </Node>
+                </Node>
                 <Node name="TileEngine" expanded="True" />
-                <Node name="DependantPlatform.cs" selected="True" />
               </Node>
             </Node>
           </Node>
