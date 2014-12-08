@@ -138,7 +138,12 @@ public class Mobile : ReadSpriteSheet
 			rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 		}
 	}
+	public void Attack(float max, float accel_g, float accel_a)
+	{
+		animate(attack_frames, attack_frame_delay);
+		
 
+	}
 	public void jump(float jumpspeed)
 	{
 		if (grounded)
@@ -189,7 +194,6 @@ public class Mobile : ReadSpriteSheet
 			}
 		}
 	}
-
 
 	private void manageVelocity()
 	{
