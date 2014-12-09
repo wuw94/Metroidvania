@@ -39,6 +39,7 @@ public class Player : Controllable
 	{
 		base.NormalUpdate();
 		indicator_created = false;
+		checkAction();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 		GameManager.current_game.progression.character.changeHealth(heal);
@@ -48,6 +49,7 @@ public class Player : Controllable
 	{
 		base.Record();
 		clone_created = false;
+		checkAction();
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 		GameManager.current_game.progression.character.changeHealth(heal);

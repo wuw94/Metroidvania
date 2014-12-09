@@ -70,9 +70,9 @@
      <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
-     <Compile Include="Assets\Scripts\Ground.cs" />
-     <Compile Include="Assets\Scripts\GroundTrigger.cs" />
-     <Compile Include="Assets\Scripts\Switch.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\TileEditor.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\TileEditorManager.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\TileGenerator.cs" />
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />
