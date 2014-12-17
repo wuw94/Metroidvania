@@ -47,7 +47,7 @@ public class TileEditor : MonoBehaviour
 
 	public void setTileType()
 	{
-		tile_type = tile_type_input.value;
+		//tile_type = tile_type_input.value;
 	}
 
 	public void reposition()

@@ -36,11 +36,11 @@ public class TileManager : MonoBehaviour
 		{
 			is_Editor_Scene = true;
 		}
-		TR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(2,2,0), transform.rotation);
+		TR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(1,1,0), transform.rotation);
 		TR.GetComponent<TileDisplay>().rotation = 0;
 		TR.transform.parent = transform;
 
-		BR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(2,0,0), transform.rotation);
+		BR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(1,0,0), transform.rotation);
 		BR.GetComponent<TileDisplay>().rotation = 0;
 		BR.transform.parent = transform;
 
@@ -48,7 +48,7 @@ public class TileManager : MonoBehaviour
 		BL.GetComponent<TileDisplay>().rotation = 0;
 		BL.transform.parent = transform;
 
-		TL = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(0,2,0), transform.rotation);
+		TL = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(0,1,0), transform.rotation);
 		TL.GetComponent<TileDisplay>().rotation = 0;
 		TL.transform.parent = transform;
 

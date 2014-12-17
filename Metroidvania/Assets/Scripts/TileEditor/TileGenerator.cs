@@ -16,7 +16,7 @@ public class TileGenerator : MonoBehaviour
 			tiles[i] = new GameObject[columns];
 			for (int j = 0; j < columns; j++)
 			{
-				tiles[i][j] = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position + new Vector3(4*j,4*i,0), transform.rotation);
+				tiles[i][j] = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position + new Vector3(2*j,2*i,0), transform.rotation);
 			}
 		}
 		for (int i = 1; i < rows-1; i++)

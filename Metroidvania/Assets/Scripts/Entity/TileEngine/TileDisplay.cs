@@ -12,9 +12,9 @@ public class TileDisplay : MonoBehaviour
 
 	void Start()
 	{
-		transform.localScale = new Vector3(2/(renderer.bounds.max.x - renderer.bounds.min.x),
-		                                   2/(renderer.bounds.max.y - renderer.bounds.min.y),
-		                                   2);
+		transform.localScale = new Vector3(1/(renderer.bounds.max.x - renderer.bounds.min.x),
+		                                   1/(renderer.bounds.max.y - renderer.bounds.min.y),
+		                                   1);
 	}
 	
 	public void setImage(Texture2D img, int rot)
