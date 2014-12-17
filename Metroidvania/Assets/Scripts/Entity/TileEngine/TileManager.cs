@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TileManager : MonoBehaviour
 {
+
 	public string type = "GrassTile";
 	public bool is_active;
 	private bool is_Editor_Scene = false;

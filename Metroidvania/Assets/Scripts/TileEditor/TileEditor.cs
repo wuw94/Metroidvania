@@ -11,6 +11,8 @@ public class TileEditor : MonoBehaviour
 	public UnityEngine.UI.InputField tile_type_input;
 	public UnityEngine.UI.InputField save_path_input;
 
+	public float camera_speed = 0.5f;
+
 	public string tile_type = "";
 	string save_path = "TestSceneTileEditor";
 
@@ -18,19 +20,19 @@ public class TileEditor : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.RightArrow))
 		{
-			transform.position += new Vector3(1,0,0);
+			transform.position += new Vector3(camera_speed,0,0);
 		}
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
-			transform.position += new Vector3(-1,0,0);
+			transform.position += new Vector3(-camera_speed,0,0);
 		}
 		if (Input.GetKey(KeyCode.UpArrow))
 		{
-			transform.position += new Vector3(0,1,0);
+			transform.position += new Vector3(0,camera_speed,0);
 		}
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
-			transform.position += new Vector3(0,-1,0);
+			transform.position += new Vector3(0,-camera_speed,0);
 		}
 		manageZoom();
 	}

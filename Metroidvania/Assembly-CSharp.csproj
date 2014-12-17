@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileDisplay.cs" />
+     <Compile Include="Assets\Scripts\Entity\TileEngine\TileInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileManager.cs" />
      <Compile Include="Assets\Scripts\Entity\Wall.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
