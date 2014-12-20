@@ -11,7 +11,7 @@ public class TileEditor : MonoBehaviour
 	public UnityEngine.UI.InputField tile_type_input;
 	public UnityEngine.UI.InputField save_path_input;
 
-	public float camera_speed = 0.5f;
+	private float camera_speed;
 
 	public string tile_type = "";
 	string save_path = "TestSceneTileEditor";
@@ -44,6 +44,7 @@ public class TileEditor : MonoBehaviour
 		{
 			GetComponent<Camera>().orthographicSize = 0.01f;
 		}
+		camera_speed = GetComponent<Camera>().orthographicSize/30;
 	}
 	
 

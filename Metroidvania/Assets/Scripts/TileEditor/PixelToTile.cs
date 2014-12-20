@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TileGenerator : MonoBehaviour
+/*
+ * Important!
+ * This is an outdated class, we're not using this anymore, but keep this here because I want to look at it for reference
+ * -Wes
+ */
+
+public class PixelToTile : MonoBehaviour
 {
-	private int tile_rows = 5;
-	private int tile_columns = 5;
+	private int tile_rows = 20;
+	private int tile_columns = 20;
 	private readonly int pixel_to_units = 100;
 	private TileInfo[][] tiles; // [row][column]
 	private string type = "GrassTile";
@@ -41,6 +47,9 @@ public class TileGenerator : MonoBehaviour
 
 	void Start()
 	{
+		System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
+
 		transform.localScale = new Vector3(0.5f, 0.5f, 1); // we scale down because each tile is essentially 2x2 textures
 		big_texture = new Texture2D(2 * pixel_to_units * tile_columns, 2 * pixel_to_units * tile_rows);
 		test_pix = ((Texture2D)Resources.Load("Tiles/GrassTile/Inner_Corner")).GetPixels32();
@@ -48,8 +57,11 @@ public class TileGenerator : MonoBehaviour
 		InstantiateAllAsActive();
 		InstantiateResources();
 
+		stopwatch.Start();
 
 		UpdateAllTiles();
+		stopwatch.Stop();
+		Debug.Log("Time taken: " + stopwatch.Elapsed);
 
 
 
@@ -69,14 +81,30 @@ public class TileGenerator : MonoBehaviour
 
 		if (Input.GetMouseButton(0))
 		{
-			tiles[tempy][tempx].active = true;
-			UpdateTile(tempy, tempx);
+			if (!tiles[tempy][tempx].active)
+			{
+				tiles[tempy][tempx].active = true;
+				UpdateTile(tempy, tempx);
+				ApplyTexture();
+			}
 		}
 		if (Input.GetMouseButton(1))
 		{
-			tiles[tempy][tempx].active = false;
-			UpdateTile(tempy, tempx);
+			if (tiles[tempy][tempx].active)
+			{
+				tiles[tempy][tempx].active = false;
+				UpdateTile(tempy, tempx);
+				ApplyTexture();
+			}
 		}
+	}
+
+	private void ApplyTexture()
+	{
+		big_texture.Apply();
+		GetComponent<SpriteRenderer>().sprite = Sprite.Create(big_texture,
+		                                                      new Rect(0, 0, big_texture.width, big_texture.height),
+		                                                      new Vector2(0, 0));
 	}
 
 
@@ -86,9 +114,13 @@ public class TileGenerator : MonoBehaviour
 		{
 			for (int c = 0; c < tile_columns; c++)
 			{
-				UpdateTile(r,c);
+				updateTR(r, c);
+				updateBR(r, c);
+				updateBL(r, c);
+				updateTL(r, c);
 			}
 		}
+		ApplyTexture();
 	}
 
 	private void InstantiateResources()
@@ -152,15 +184,11 @@ public class TileGenerator : MonoBehaviour
 				}
 			}
 		}
-
-		big_texture.Apply();
-		GetComponent<SpriteRenderer>().sprite = Sprite.Create(big_texture,
-		                                                      new Rect(0, 0, big_texture.width, big_texture.height),
-		                                                      new Vector2(0, 0));
 	}
 
 	private void draw(int row, int column, int offset_x, int offset_y, Color32[] pix, int rotation)
 	{
+		// we want to use SetPixels32() later
 		if (rotation == 0)
 		{
 			for (int i = 0; i < pix.Length; i++)
