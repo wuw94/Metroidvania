@@ -72,6 +72,8 @@
      <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector2.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector3.cs" />
      <Compile Include="Assets\Scripts\TileEditor\PixelToTile.cs" />
      <Compile Include="Assets\Scripts\TileEditor\TileEditor.cs" />
      <Compile Include="Assets\Scripts\TileEditor\TileEditorManager.cs" />

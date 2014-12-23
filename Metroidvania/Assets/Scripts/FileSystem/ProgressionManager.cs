@@ -11,15 +11,26 @@ using System.Collections;
  * auth Wesley Wu
  */
 
+/// <summary>
+/// Stores information about how far the player is into the story line.
+/// </summary>
+/// <param name="filename"></param>
 [System.Serializable]
 public sealed class ProgressionManager
 {
+	/// <summary>
+	/// Your game's character data.
+	/// </summary>
 	public CharacterManager character;
-	public Map map; // Eventually we'll store all the game's map into a list of this class
+	
+	public Map intro_map; // Eventually we'll store all the game's map into a list of this class
 
+	/// <summary>
+	/// Constructor.
+	/// </summary>
 	public ProgressionManager()
 	{
 		this.character = new CharacterManager();
-		this.map = new Map();
+		this.intro_map = new Map("Intro");
 	}
 }

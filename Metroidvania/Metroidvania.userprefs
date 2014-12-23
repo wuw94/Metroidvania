@@ -1,11 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/TileEngine/TileManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TileEditor/TileEditor.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/TileEngine/TileDisplay.cs" Line="38" Column="3" />
-      <File FileName="Assets/Scripts/Entity/TileEngine/TileContainer.cs" Line="11" Column="67" />
-      <File FileName="Assets/Scripts/Entity/TileEngine/TileInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Entity/TileEngine/TileManager.cs" Line="23" Column="33" />
+      <File FileName="Assets/Scripts/TileEditor/TileEditor.cs" Line="181" Column="61" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -13,14 +10,17 @@
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
               <Node name="Entity" expanded="True">
-                <Node name="TileEngine" expanded="True">
-                  <Node name="TileManager.cs" selected="True" />
-                </Node>
+                <Node name="TileEngine" expanded="True" />
               </Node>
-              <Node name="TileEditor" expanded="True" />
+              <Node name="FileSystem" expanded="True">
+                <Node name="Pseudo Classes" expanded="True" />
+              </Node>
+              <Node name="TileEditor" expanded="True">
+                <Node name="TileEditor.cs" selected="True" />
+              </Node>
+              <Node name="UI" expanded="True" />
             </Node>
           </Node>
-          <Node name="Assembly-UnityScript-firstpass" expanded="True" />
         </State>
       </Pad>
     </Pads>

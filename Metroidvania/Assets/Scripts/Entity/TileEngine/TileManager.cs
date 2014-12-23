@@ -1,13 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TileManager : MonoBehaviour
+/* TileManager.
+ * 
+ * IMPORTANT! Do not put this script on any object. RenderingSystem will do it for you
+ * 
+ * TileManger keeps track of all tile rendering, including:
+ * - Loading all needed textures from the resources folder
+ * - Loading the current map tiles into this class's tile base.
+ * - Changing appearance of individual tiles based on its neighbors
+ * - Creating or deleting tile GameObjects based on camera size and position
+ * - Consumption and updating of the tile buffer
+ * 
+ */
+
+public class TileManager : RenderingSystem
 {
+	private int default_rows = 100; // default number of rows
+	private int default_columns = 100; // default number of columns
 
-
-	private int tile_rows = 100;
-	private int tile_columns = 100;
-	private TileInfo[][] tiles; // [row][column], contains information about all tiles.
+	public TileInfo[][] tiles; // [row][column], contains information about all tiles.
 	
 	private ArrayList tile_pool = new ArrayList();
 	private Hashtable displayed_tiles = new Hashtable();
@@ -18,55 +30,60 @@ public class TileManager : MonoBehaviour
 	private readonly int[] clockwise_row_logic = new int[]{1,1,0,-1,-1,-1,0,1};
 	private readonly int[] clockwise_column_logic = new int[]{0,1,1,1,0,-1,-1,-1};
 
-	private Vector3 screen_size; // width, height, orthographic size
-	private float unit_width;
-	private float unit_height;
-	
-	// x:left, y:right, z:bottom, w:top
-	private Vector4 unit_absolute; // amount of tiles that could be shown absolutely (disregard being outside tile bounds)
-	private Vector4 unit_shown; // amount of tiles that are shown (considering being outside tile bounds)
-	// unit_shown is guaranteed to be within the bounds of row/columns
+	public bool read_done = false;
+	private GameObject tile_folder;
 
 
-	
 	void Start()
 	{
-		LoadResources();
-		CreateTiles();
+		tile_folder = new GameObject();
+		tile_folder.name = "Tiles";
 	}
 
 
-	void Update ()
+	void Update()
+	{}
+
+
+	/* LoadAll()
+	 * - Loads a new map
+	 */
+	public void LoadAll()
 	{
-		if (screen_size != new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, Camera.main.orthographicSize))
+		if (read_done)
 		{
-			OnSizeChanged();
+			Debug.LogWarning("There is already a map");
 		}
-		if (unit_absolute.x != Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(Camera.main.ScreenToViewportPoint(new Vector3(0,0,0))).x) ||
-		    unit_absolute.z != Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(Camera.main.ScreenToViewportPoint(new Vector3(0,0,0))).y))
+		else
 		{
-			OnScreenMoved();
+			LoadResources();
+			CreateTiles();
+			StartCoroutine("UpdateShownTiles");
+			StartCoroutine("UpdateTileBuffer");
+			StartCoroutine("UnloadTilePool");
+			read_done = true;
 		}
+	}
 
-
-		StartCoroutine("UpdateShownTiles");
-		StartCoroutine("UpdateTileBuffer");
-
-
-		if (Application.loadedLevelName == "TileEditor")
+	
+	/* LoadAll(Map new_map)
+	 * - Takes what is needed from a new_map parameter, loads the rest around it.
+	 * - Needed: tiles
+	 */
+	public void LoadAll(Map new_map)
+	{
+		if (read_done)
 		{
-			if (Input.GetKey(KeyCode.Q))
-			{
-				int mouseX = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-				int mouseY = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-				UpdateTiles(mouseY, mouseX, true);
-			}
-			if (Input.GetKey(KeyCode.W))
-			{
-				int mouseX = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-				int mouseY = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-				UpdateTiles(mouseY, mouseX, false);
-			}
+			Debug.LogWarning("There is already a map");
+		}
+		else
+		{
+			LoadResources();
+			CreateTiles(new_map.tiles);
+			StartCoroutine("UpdateShownTiles");
+			StartCoroutine("UpdateTileBuffer");
+			StartCoroutine("UnloadTilePool");
+			read_done = true;
 		}
 	}
 
@@ -88,66 +105,70 @@ public class TileManager : MonoBehaviour
 	}
 
 
-	/* UpdateTileBuffer()
-	 * - Increases the tile_pool to match the amount of tiles we need to display
-	 * - Called once per update
-	 */
-	private IEnumerator UpdateTileBuffer()
-	{
-		if (tile_pool.Count + displayed_tiles.Count < (unit_absolute.y-unit_absolute.x) * (unit_absolute.w-unit_absolute.z))
-		{
-			tile_pool.Add((GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position, transform.rotation));
-		}
-		return null;
-	}
-
-
 	/* CreateTiles()
 	 * - Creates the TileInfo double array and sets the values to true.
-	 * - Later we'll need to modify this function to be able to load tiles from other sources
 	 */
 	private void CreateTiles()
 	{
-		tiles = new TileInfo[tile_rows][];
-		for (int i = 0; i < tile_rows; i++)
+		tiles = new TileInfo[default_rows][];
+		for (int i = 0; i < default_rows; i++)
 		{
-			tiles[i] = new TileInfo[tile_columns];
-			for (int j = 0; j < tile_columns; j++)
+			tiles[i] = new TileInfo[default_columns];
+			for (int j = 0; j < default_columns; j++)
 			{
 				tiles[i][j] = new TileInfo(true, 0);
 			}
 		}
 	}
 
-
-	/* OnSizeChanged()
-	 * - When the camera size changes.
+	
+	/* CreateTiles(string filename)
+	 * - sets tiles to the object read from filename
 	 */
-	private void OnSizeChanged()
+	private void CreateTiles(TileInfo[][] new_tiles)
 	{
-		screen_size.x = Camera.main.pixelWidth;
-		screen_size.y = Camera.main.pixelHeight;
-		screen_size.z = Camera.main.orthographicSize;
-		unit_height = Camera.main.orthographicSize * 2;
-		unit_width = Camera.main.aspect * unit_height;
-		UpdateShownTiles();
+		tiles = new_tiles;
+	}
+	
+	
+
+	/* UpdateTileBuffer()
+	 * - Increases the tile_pool to match the amount of tiles we need to display
+	 */
+	private IEnumerator UpdateTileBuffer()
+	{
+		while (true)
+		{
+			while (tile_pool.Count == 0 || tile_pool.Count + displayed_tiles.Count < (unit_shown.y-unit_shown.x) * (unit_shown.w-unit_shown.z))
+			{
+				GameObject new_tile = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position, transform.rotation);
+				tile_pool.Add(new_tile);
+				new_tile.transform.parent = tile_folder.transform;
+
+			}
+			yield return null;
+		}
 	}
 
 
-	/* OnScreenMoved()
-	 * - When the camera changes its position
+	/* UnloadTilePool()
+	 * - Slowly destroys tiles that are not being used
 	 */
-	private void OnScreenMoved()
+	private IEnumerator UnloadTilePool()
 	{
-		unit_absolute.x = Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(new Vector3(0,0,0)).x);
-		unit_absolute.y = Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth,Camera.main.pixelHeight,0)).x);
-		unit_absolute.z = Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(new Vector3(0,0,0)).y);
-		unit_absolute.w = Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth,Camera.main.pixelHeight,0)).y);
-		unit_shown.x = Mathf.Clamp(unit_absolute.x-1, 0, tile_columns);
-		unit_shown.y = Mathf.Clamp(unit_absolute.y+1, 0, tile_columns);
-		unit_shown.z = Mathf.Clamp(unit_absolute.z-1, 0, tile_rows);
-		unit_shown.w = Mathf.Clamp(unit_absolute.w+1, 0, tile_rows);
-		UpdateShownTiles();
+		while (true)
+		{
+			if (tile_pool.Count > displayed_tiles.Count / 2)
+			{
+				for (int i = 0; i < tile_pool.Count/2; i++)
+				{
+					GameObject t = (GameObject)tile_pool[0];
+					tile_pool.RemoveAt(0);
+					Destroy(t);
+				}
+			}
+			yield return null;
+		}
 	}
 
 
@@ -157,35 +178,38 @@ public class TileManager : MonoBehaviour
 	 */
 	private IEnumerator UpdateShownTiles()
 	{
-		for (int i = (int)unit_shown.x; i < (int)unit_shown.y; i++)
+		while (true)
 		{
-			for (int j = (int)unit_shown.z; j < (int)unit_shown.w; j++)
+			for (int i = (int)unit_shown.x; i < (int)unit_shown.y; i++)
 			{
-				Vector2 coordinate = new Vector2(j,i);
-				if (!displayed_tiles.Contains(coordinate) && (tile_pool.Count > 0))
+				for (int j = (int)unit_shown.z; j < (int)unit_shown.w; j++)
 				{
-					displayed_tiles.Add(coordinate, tile_pool[0]);
-					tile_pool.RemoveAt(0);
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = tiles[j][i].active;
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
-					((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,transform.position.z);
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
-
-					UpdateTiles(j,i,tiles[j][i].active);
-				}
-				if (displayed_tiles.Contains(coordinate) && !((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().IsVisible())
-				{
-					((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(false);
-					tile_pool.Add(displayed_tiles[coordinate]);
-					displayed_tiles.Remove(coordinate);
+					Vector2 coordinate = new Vector2(j,i);
+					if (!displayed_tiles.Contains(coordinate) && tile_pool.Count > 0)
+					{
+						displayed_tiles.Add(coordinate, tile_pool[0]);
+						tile_pool.RemoveAt(0);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = tiles[j][i].active;
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
+						((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,0);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
+						
+						UpdateTiles(j,i,tiles[j][i].active);
+					}
+					if (displayed_tiles.Contains(coordinate) && !((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().IsVisible())
+					{
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(false);
+						tile_pool.Add(displayed_tiles[coordinate]);
+						displayed_tiles.Remove(coordinate);
+					}
 				}
 			}
+			yield return null;
 		}
-		return null;
 	}
-
+	
 
 	/* GetNeighbors(int row, int column)
 	 * - Returns a bool[] of neighboring states
@@ -207,7 +231,7 @@ public class TileManager : MonoBehaviour
 	 * - Not to be confused with UpdateShownTiles()
 	 * - Call this each time you're changing a tile, so the surrounding tiles know how to change their appearance
 	 */
-	private void UpdateTiles(int row, int column, bool change_to)
+	public void UpdateTiles(int row, int column, bool change_to)
 	{
 		Vector2 coordinate = new Vector2(row, column);
 

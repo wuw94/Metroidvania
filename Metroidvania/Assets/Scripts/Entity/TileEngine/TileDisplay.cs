@@ -12,8 +12,6 @@ using System.Collections;
 public class TileDisplay : MonoBehaviour
 {
 	private Texture2D tile_image;
-	public int rows;
-	public int columns;
 	private Rect display_rect = new Rect();
 	private Vector2 pivot = new Vector2(0.5f, 0.5f);
 	public int rotation;
