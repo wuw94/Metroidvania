@@ -16,11 +16,6 @@ using System.Collections;
 
 public class TileManager : RenderingSystem
 {
-	private int default_rows = 100; // default number of rows
-	private int default_columns = 100; // default number of columns
-
-	public TileInfo[][] tiles; // [row][column], contains information about all tiles.
-	
 	private ArrayList tile_pool = new ArrayList();
 	private Hashtable displayed_tiles = new Hashtable();
 
@@ -57,10 +52,9 @@ public class TileManager : RenderingSystem
 		else
 		{
 			LoadResources();
-			CreateTiles();
-			StartCoroutine("UpdateShownTiles");
-			StartCoroutine("UpdateTileBuffer");
-			StartCoroutine("UnloadTilePool");
+			StartCoroutine(UpdateShownTiles());
+			StartCoroutine(UpdateTileBuffer());
+			StartCoroutine(UnloadTilePool());
 			read_done = true;
 		}
 	}
@@ -79,10 +73,9 @@ public class TileManager : RenderingSystem
 		else
 		{
 			LoadResources();
-			CreateTiles(new_map.tiles);
-			StartCoroutine("UpdateShownTiles");
-			StartCoroutine("UpdateTileBuffer");
-			StartCoroutine("UnloadTilePool");
+			StartCoroutine(UpdateShownTiles());
+			StartCoroutine(UpdateTileBuffer());
+			StartCoroutine(UnloadTilePool());
 			read_done = true;
 		}
 	}
@@ -105,31 +98,9 @@ public class TileManager : RenderingSystem
 	}
 
 
-	/* CreateTiles()
-	 * - Creates the TileInfo double array and sets the values to true.
-	 */
-	private void CreateTiles()
-	{
-		tiles = new TileInfo[default_rows][];
-		for (int i = 0; i < default_rows; i++)
-		{
-			tiles[i] = new TileInfo[default_columns];
-			for (int j = 0; j < default_columns; j++)
-			{
-				tiles[i][j] = new TileInfo(true, 0);
-			}
-		}
-	}
 
 	
-	/* CreateTiles(string filename)
-	 * - sets tiles to the object read from filename
-	 */
-	private void CreateTiles(TileInfo[][] new_tiles)
-	{
-		tiles = new_tiles;
-	}
-	
+
 	
 
 	/* UpdateTileBuffer()
@@ -191,12 +162,13 @@ public class TileManager : RenderingSystem
 						tile_pool.RemoveAt(0);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = tiles[j][i].active;
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active;
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
 						((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,0);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
-						
-						UpdateTiles(j,i,tiles[j][i].active);
+
+
+						UpdateTiles(j,i,((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active);
 					}
 					if (displayed_tiles.Contains(coordinate) && !((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().IsVisible())
 					{
@@ -220,7 +192,7 @@ public class TileManager : RenderingSystem
 		bool[] n = new bool[8];
 		for (int i = 0; i < 8; i++)
 		{
-			try {n[i] = tiles[row+clockwise_row_logic[i]][column+clockwise_column_logic[i]].active;}
+			try {n[i] = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[row+clockwise_row_logic[i]][column+clockwise_column_logic[i]].active;}
 			catch {n[i] = false;}
 		}
 		return n;
@@ -236,7 +208,7 @@ public class TileManager : RenderingSystem
 		Vector2 coordinate = new Vector2(row, column);
 
 		if (!displayed_tiles.Contains(coordinate)) {return;}
-		tiles[row][column].active = change_to;
+		((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[row][column].active = change_to;
 
 		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = change_to;
 		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row,column));

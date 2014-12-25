@@ -11,7 +11,6 @@ using System.IO;
  */
 public class TileEditor : MonoBehaviour
 {
-	private Map current_map; // The current map being edited
 	private string map_name = ""; // name of map
 	private GameObject spawn_point_indicator;
 	private GameObject tile_indicator;
@@ -26,6 +25,7 @@ public class TileEditor : MonoBehaviour
 
 	void Start()
 	{
+		ReformatGame();
 		spawn_point_indicator = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/SpawnPointIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
 		spawn_point_indicator.gameObject.renderer.material.color = new Color(1,1,1,0);
 		tile_indicator = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/TileIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
@@ -64,6 +64,9 @@ public class TileEditor : MonoBehaviour
 	}
 
 
+	/// <summary>
+	/// Window shown in the beginning of Tile Editor. Define the map name, and whether to load or create a new Map.
+	/// </summary>
 	void IntroWindowFunction(int windowID)
 	{
 		GUI.Label(new Rect(40,20,window_rect.width, 40), "Define a map name to load:");
@@ -71,6 +74,7 @@ public class TileEditor : MonoBehaviour
 		
 		if (GUI.Button(new Rect(10,60,100,40), "New"))
 		{
+			GameManager.current_game.progression.maps.Add("TileEditorMap", new Map());
 			GetComponent<TileManager>().LoadAll();
 			GetComponent<RenderingSystem>().LoadedDone();
 		}
@@ -78,7 +82,7 @@ public class TileEditor : MonoBehaviour
 		{
 			try
 			{
-				current_map = new Map(map_name);
+				GameManager.current_game.progression.maps.Add("TileEditorMap", new Map(map_name));
 			}
 			catch
 			{
@@ -86,15 +90,19 @@ public class TileEditor : MonoBehaviour
 				throw;
 			}
 
-			GetComponent<TileManager>().LoadAll(current_map);
+			GetComponent<TileManager>().LoadAll((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])); //TODO
 			GetComponent<RenderingSystem>().LoadedDone();
 
-			spawn_point_indicator.transform.position = new Vector2(current_map.spawn_point.x, current_map.spawn_point.y);
+			spawn_point_indicator.transform.position = new Vector2(((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.x,
+			                                                       ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.y);
 		}
 	}
 
 
 
+	/// <summary>
+	/// Window shown when Tab pressed when editing tile.
+	/// </summary>
 	void TabWindowFunction(int windowID)
 	{
 		// Left side
@@ -205,6 +213,7 @@ public class TileEditor : MonoBehaviour
 				if (paint_mode[paint_mode_index] == "Spawn")
 				{
 					spawn_point_indicator.transform.position = new Vector2(mouseX,mouseY);
+					((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point = new Vector2(mouseX, mouseY);
 					spawn_point_indicator.renderer.material.color = new Color(1,1,1,0.5f);
 				}
 			}
@@ -217,6 +226,7 @@ public class TileEditor : MonoBehaviour
 				if (paint_mode[paint_mode_index] == "Spawn")
 				{
 					spawn_point_indicator.transform.position = new Vector2(mouseX,mouseY);
+					((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point = new Vector2(mouseX, mouseY);
 					spawn_point_indicator.renderer.material.color = new Color(1,1,1,0.5f);
 				}
 			}
@@ -228,29 +238,33 @@ public class TileEditor : MonoBehaviour
 	}
 
 
+	/// <summary>
+	/// When TileEditor scene is being run, game needs to be reformatted to allow new editing capabilities
+	/// </summary>
+	private void ReformatGame()
+	{
+		Debug.Log("TileEditor Scene detected. Reformatting current_game session...");
+		GameManager.current_game = new GameManager();
+		GameManager.current_game.progression.loaded_map = "TileEditorMap";
+		Debug.Log("Done");
+	}
+
+
 	public void SaveScene()
 	{
 		print(Application.dataPath + "/Scenes/TileEditorScenes/" + map_name + ".unity");
 	}
 
 
-	/* Save()
-	 * - Called when "Save Map" button is pressed.
-	 * - Gets current tiles from TileManager
-	 * - Gets spawn_point coordinates
-	 * 
-	 */
+	/// <summary>
+	/// Called when "Save Map" button is pressed.
+	/// </summary>
 	private void Save()
 	{
-		Map new_map = new Map();
-		new_map.name = map_name;
-		new_map.tiles = GetComponent<TileManager>().tiles;
-		new_map.spawn_point = new Vector2((int)spawn_point_indicator.transform.position.x, (int)spawn_point_indicator.transform.position.y);
-		
 		// Serialize Map object into a file
 		BinaryFormatter bf = new BinaryFormatter();
 		FileStream file = File.Create(Application.dataPath + "/Maps/" + map_name + ".md");
-		bf.Serialize(file, new_map);
+		bf.Serialize(file, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 		Debug.Log("Saved: " + Application.dataPath + "/Maps/" + map_name + ".md");
 		file.Close();
 	}

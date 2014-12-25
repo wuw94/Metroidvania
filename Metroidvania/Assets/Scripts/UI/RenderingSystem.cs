@@ -48,8 +48,8 @@ public class RenderingSystem : MonoBehaviour
 	public void LoadedDone()
 	{
 		tiles_loaded = true;
-		StartCoroutine("CheckSizeChanged");
-		StartCoroutine("CheckScreenMoved");
+		StartCoroutine(CheckSizeChanged());
+		StartCoroutine(CheckScreenMoved());
 	}
 
 
@@ -80,9 +80,9 @@ public class RenderingSystem : MonoBehaviour
 	}
 
 
-	/* OnSizeChanged()
-	 * - When the camera size changes. (From zooming in and out or changing aspect ratio
-	 */
+	/// <summary>
+	/// Raises the size changed event.
+	/// </summary>
 	public virtual void OnSizeChanged()
 	{
 		screen_size.x = Camera.main.pixelWidth;
@@ -90,9 +90,9 @@ public class RenderingSystem : MonoBehaviour
 		screen_size.z = Camera.main.orthographicSize;
 	}
 
-	/* OnScreenMoved()
-	 * - When the camera changes its position
-	 */
+	/// <summary>
+	/// Raises the screen moved event.
+	/// </summary>
 	public virtual void OnScreenMoved()
 	{
 		unit_absolute.x = Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(new Vector3(0,0,0)).x);
@@ -100,9 +100,9 @@ public class RenderingSystem : MonoBehaviour
 		unit_absolute.z = Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(new Vector3(0,0,0)).y);
 		unit_absolute.w = Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth,Camera.main.pixelHeight,0)).y);
 
-		unit_shown.x = Mathf.Clamp(unit_absolute.x-1, 0, tile_manager.tiles[0].Length);
-		unit_shown.y = Mathf.Clamp(unit_absolute.y+1, 0, tile_manager.tiles[0].Length);
-		unit_shown.z = Mathf.Clamp(unit_absolute.z-1, 0, tile_manager.tiles.Length);
-		unit_shown.w = Mathf.Clamp(unit_absolute.w+1, 0, tile_manager.tiles.Length);
+		unit_shown.x = Mathf.Clamp(unit_absolute.x-1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[0].Length);
+		unit_shown.y = Mathf.Clamp(unit_absolute.y+1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[0].Length);
+		unit_shown.z = Mathf.Clamp(unit_absolute.z-1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles.Length);
+		unit_shown.w = Mathf.Clamp(unit_absolute.w+1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles.Length);
 	}
 }

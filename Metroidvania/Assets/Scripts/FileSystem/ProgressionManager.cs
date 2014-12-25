@@ -22,8 +22,17 @@ public sealed class ProgressionManager
 	/// Your game's character data.
 	/// </summary>
 	public CharacterManager character;
-	
-	public Map intro_map; // Eventually we'll store all the game's map into a list of this class
+
+	/// <summary>
+	/// Dictionary of this game's maps.
+	/// string Key, Map value
+	/// </summary>
+	public Hashtable maps;
+
+	/// <summary>
+	/// Name of currently loaded map
+	/// </summary>
+	public string loaded_map;
 
 	/// <summary>
 	/// Constructor.
@@ -31,6 +40,6 @@ public sealed class ProgressionManager
 	public ProgressionManager()
 	{
 		this.character = new CharacterManager();
-		this.intro_map = new Map("Intro");
+		this.maps = new Hashtable();
 	}
 }
