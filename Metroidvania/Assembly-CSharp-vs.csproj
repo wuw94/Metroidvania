@@ -80,8 +80,10 @@
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />
+     <Compile Include="Assets\Scripts\UI\MyUnitySingleton.cs" />
      <Compile Include="Assets\Scripts\UI\RecordDim.cs" />
      <Compile Include="Assets\Scripts\UI\RenderingSystem.cs" />
+     <Compile Include="Assets\Scripts\UI\Screens\ClickToContinue.cs" />
      <Compile Include="Assets\Scripts\UI\Screens\TitleScreen.cs" />
      <Compile Include="Assets\test.cs" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />

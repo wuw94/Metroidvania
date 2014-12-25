@@ -44,7 +44,7 @@ public sealed class CharacterManager
 		health += amount;
 		if (amount < 0 && health < 0)
 		{
-			manageDeath();
+				manageDeath();
 		}
 		else if (amount > health_max && health > health_max)
 		{
