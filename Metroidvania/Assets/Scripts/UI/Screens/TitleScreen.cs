@@ -12,19 +12,26 @@ using System.Collections;
 
 
 public class TitleScreen : MonoBehaviour
-{
+{	
 	public void NewGame(string sceneToChangeTo)
 	{
 		GameManager.current_game = new GameManager();
 
-		Application.LoadLevel(sceneToChangeTo);
+		Application.LoadLevel (sceneToChangeTo);
 	}
 
 	public void LoadGame()
 	{
+		Application.LoadLevel ("Prototype Level");
 	}
 
 	public void Options()
 	{
+		Application.LoadLevel ("OptionsScreen");
+	}
+
+	public void Back()
+	{
+		Application.LoadLevel("TitleScreen");
 	}
 }

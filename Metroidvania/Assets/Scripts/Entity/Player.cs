@@ -9,8 +9,6 @@ using System.Collections;
  * 
  * Functions:
  * Start() - calls functions when game is started
- * FixedUpdate() - used for adjusting rigidbody components in fixed consistency
- * 				   in this case, it maintains consistency on movement speed
  * GameManager.SetGameAll() - set player stats when game is started up
  * 
  */
