@@ -1,297 +1,256 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TileManager : MonoBehaviour
-{
-	public bool is_active;
-	public GameObject[] neighbors = new GameObject[8];
-	
-	private bool[] neighbor_states = new bool[8]; // starting at 0:top, clockwise to 7:topleft
-	private ArrayList neighbor_active = new ArrayList(); // contains ints of all the active neighbors
-	private ArrayList neighbor_inactive = new ArrayList(); // contains ints of all the inactive neighbors
+/* TileManager.
+ * 
+ * IMPORTANT! Do not put this script on any object. RenderingSystem will do it for you
+ * 
+ * TileManger keeps track of all tile rendering, including:
+ * - Loading all needed textures from the resources folder
+ * - Loading the current map tiles into this class's tile base.
+ * - Changing appearance of individual tiles based on its neighbors
+ * - Creating or deleting tile GameObjects based on camera size and position
+ * - Consumption and updating of the tile buffer
+ * 
+ */
 
-	private GameObject TR;
-	private GameObject BR;
-	private GameObject BL;
-	private GameObject TL;
+public class TileManager : RenderingSystem
+{
+	private int default_rows = 100; // default number of rows
+	private int default_columns = 100; // default number of columns
+
+	public TileInfo[][] tiles; // [row][column], contains information about all tiles.
+	
+	private ArrayList tile_pool = new ArrayList();
+	private Hashtable displayed_tiles = new Hashtable();
+
+	private Hashtable textures = new Hashtable();
+	private readonly string[] tile_type = new string[]{"GrassTile"};
+	private readonly string[] tile_unload = new string[]{"Inner_Concave","Inner_Corner","Inner_Side_Right","Inner_Side_Top","Inner_Surround","Outer_Concave","Outer_Corner","Outer_Side_Right","Outer_Side_Top","Outer_Surround"};
+	private readonly int[] clockwise_row_logic = new int[]{1,1,0,-1,-1,-1,0,1};
+	private readonly int[] clockwise_column_logic = new int[]{0,1,1,1,0,-1,-1,-1};
+
+	public bool read_done = false;
+	private GameObject tile_folder;
+
 
 	void Start()
 	{
-		is_active = true;
-		TR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(2,2,0), transform.rotation);
-		TR.transform.parent = transform;
-		BR = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(2,0,0), transform.rotation);
-		BR.transform.parent = transform;
-		BL = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(0,0,0), transform.rotation);
-		BL.transform.parent = transform;
-		TL = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MicroTile", typeof(GameObject)), transform.position + new Vector3(0,2,0), transform.rotation);
-		TL.transform.parent = transform;
+		tile_folder = new GameObject();
+		tile_folder.name = "Tiles";
 	}
+
 
 	void Update()
+	{}
+
+
+	/* LoadAll()
+	 * - Loads a new map
+	 */
+	public void LoadAll()
 	{
-		updateNeighborStates();
-		updateTR();
-		updateBR();
-		updateBL();
-		updateTL();
+		if (read_done)
+		{
+			Debug.LogWarning("There is already a map");
+		}
+		else
+		{
+			LoadResources();
+			CreateTiles();
+			StartCoroutine("UpdateShownTiles");
+			StartCoroutine("UpdateTileBuffer");
+			StartCoroutine("UnloadTilePool");
+			read_done = true;
+		}
 	}
 
-	void updateNeighborStates()
+	
+	/* LoadAll(Map new_map)
+	 * - Takes what is needed from a new_map parameter, loads the rest around it.
+	 * - Needed: tiles
+	 */
+	public void LoadAll(Map new_map)
 	{
-		neighbor_active.Clear();
-		neighbor_inactive.Clear();
+		if (read_done)
+		{
+			Debug.LogWarning("There is already a map");
+		}
+		else
+		{
+			LoadResources();
+			CreateTiles(new_map.tiles);
+			StartCoroutine("UpdateShownTiles");
+			StartCoroutine("UpdateTileBuffer");
+			StartCoroutine("UnloadTilePool");
+			read_done = true;
+		}
+	}
+
+
+	/* LoadResources()
+	 * - Loads all the tile textures we need from the Resources folder
+	 * - Refer to tile_unload to see what names to give these files
+	 */
+	private void LoadResources()
+	{
+		foreach (string type in tile_type)
+		{
+			textures.Add(type, new Texture2D[10]);
+			for (int i = 0; i < 10; i++)
+			{
+				((Texture2D[])textures[type])[i] = (Texture2D)Resources.Load("Tiles/"+type+"/"+tile_unload[i]);
+			}
+		}
+	}
+
+
+	/* CreateTiles()
+	 * - Creates the TileInfo double array and sets the values to true.
+	 */
+	private void CreateTiles()
+	{
+		tiles = new TileInfo[default_rows][];
+		for (int i = 0; i < default_rows; i++)
+		{
+			tiles[i] = new TileInfo[default_columns];
+			for (int j = 0; j < default_columns; j++)
+			{
+				tiles[i][j] = new TileInfo(true, 0);
+			}
+		}
+	}
+
+	
+	/* CreateTiles(string filename)
+	 * - sets tiles to the object read from filename
+	 */
+	private void CreateTiles(TileInfo[][] new_tiles)
+	{
+		tiles = new_tiles;
+	}
+	
+	
+
+	/* UpdateTileBuffer()
+	 * - Increases the tile_pool to match the amount of tiles we need to display
+	 */
+	private IEnumerator UpdateTileBuffer()
+	{
+		while (true)
+		{
+			while (tile_pool.Count == 0 || tile_pool.Count + displayed_tiles.Count < (unit_shown.y-unit_shown.x) * (unit_shown.w-unit_shown.z))
+			{
+				GameObject new_tile = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position, transform.rotation);
+				tile_pool.Add(new_tile);
+				new_tile.transform.parent = tile_folder.transform;
+
+			}
+			yield return null;
+		}
+	}
+
+
+	/* UnloadTilePool()
+	 * - Slowly destroys tiles that are not being used
+	 */
+	private IEnumerator UnloadTilePool()
+	{
+		while (true)
+		{
+			if (tile_pool.Count > displayed_tiles.Count / 2)
+			{
+				for (int i = 0; i < tile_pool.Count/2; i++)
+				{
+					GameObject t = (GameObject)tile_pool[0];
+					tile_pool.RemoveAt(0);
+					Destroy(t);
+				}
+			}
+			yield return null;
+		}
+	}
+
+
+	/* UpdateShownTiles()
+	 * - Looks at how much the camera is showing and modifies displayed_tiles and tile_pool
+	 * - Changes to the appearance of tiles is covered in this function
+	 */
+	private IEnumerator UpdateShownTiles()
+	{
+		while (true)
+		{
+			for (int i = (int)unit_shown.x; i < (int)unit_shown.y; i++)
+			{
+				for (int j = (int)unit_shown.z; j < (int)unit_shown.w; j++)
+				{
+					Vector2 coordinate = new Vector2(j,i);
+					if (!displayed_tiles.Contains(coordinate) && tile_pool.Count > 0)
+					{
+						displayed_tiles.Add(coordinate, tile_pool[0]);
+						tile_pool.RemoveAt(0);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = tiles[j][i].active;
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
+						((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,0);
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
+						
+						UpdateTiles(j,i,tiles[j][i].active);
+					}
+					if (displayed_tiles.Contains(coordinate) && !((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().IsVisible())
+					{
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(false);
+						tile_pool.Add(displayed_tiles[coordinate]);
+						displayed_tiles.Remove(coordinate);
+					}
+				}
+			}
+			yield return null;
+		}
+	}
+	
+
+	/* GetNeighbors(int row, int column)
+	 * - Returns a bool[] of neighboring states
+	 * - 8 values, clockwise starting at 12:00
+	 */
+	private bool[] GetNeighbors(int row, int column)
+	{
+		bool[] n = new bool[8];
 		for (int i = 0; i < 8; i++)
 		{
-			if (neighbors[i] != null)
-			{
-				neighbor_states[i] = neighbors[i].GetComponent<TileManager>().is_active;
-				if (neighbor_states[i])
-				{
-					neighbor_active.Add(i);
-				}
-				else
-				{
-					neighbor_inactive.Add(i);
-				}
-			}
-			else
-			{
-				neighbor_inactive.Add(i);
-			}
+			try {n[i] = tiles[row+clockwise_row_logic[i]][column+clockwise_column_logic[i]].active;}
+			catch {n[i] = false;}
 		}
+		return n;
 	}
 
-	bool intersects(int[] small, ArrayList large)
+
+	/* UpdateTiles(int row, int column, bool change_to)
+	 * - Not to be confused with UpdateShownTiles()
+	 * - Call this each time you're changing a tile, so the surrounding tiles know how to change their appearance
+	 */
+	public void UpdateTiles(int row, int column, bool change_to)
 	{
-		for (int i = 0; i < small.Length; i++)
+		Vector2 coordinate = new Vector2(row, column);
+
+		if (!displayed_tiles.Contains(coordinate)) {return;}
+		tiles[row][column].active = change_to;
+
+		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = change_to;
+		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row,column));
+
+		try
 		{
-			if (!large.Contains(small[i]))
+			((GameObject)displayed_tiles[new Vector2(row,column)]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row,column));
+			((GameObject)displayed_tiles[new Vector2(row,column)]).GetComponent<TileContainer>().updateAll();
+			for (int i = 0; i < 8; i++)
 			{
-				return false;
+				((GameObject)displayed_tiles[new Vector2(row+clockwise_row_logic[i],column+clockwise_column_logic[i])]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row+clockwise_row_logic[i],column+clockwise_column_logic[i]));
+				((GameObject)displayed_tiles[new Vector2(row+clockwise_row_logic[i],column+clockwise_column_logic[i])]).GetComponent<TileContainer>().updateAll();
 			}
 		}
-		return true;
-	}
-
-	void updateTR()
-	{
-
-		if (is_active)
-		{
-			if (intersects(new int[]{0,2}, neighbor_inactive)) // corner
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(0,4);
-			}
-			else if (intersects(new int[]{0,1,2}, neighbor_active)) // inside
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(2,2);
-			}
-			else if (intersects(new int[]{1}, neighbor_inactive) && 
-			         intersects(new int[]{0,2}, neighbor_active)) // concave
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(3,3);
-			}
-			else if (intersects(new int[]{0}, neighbor_inactive)) // top side
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(4,4);
-			}
-			else if (intersects(new int[]{2}, neighbor_inactive)) // right side
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(0,3);
-			}
-
-		}
-		else
-		{
-			if (intersects(new int[]{0,1,2}, neighbor_inactive)) // empty
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(4,0);
-			}
-			else if (intersects(new int[]{0,2}, neighbor_active)) // concave
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(2,1);
-			}
-			else if (intersects(new int[]{0,2}, neighbor_inactive) &&
-			    intersects(new int[]{1}, neighbor_active)) // corner
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(1,0);
-			}
-			else if (intersects(new int[]{2}, neighbor_inactive) &&
-			         intersects(new int[]{0}, neighbor_active)) // bottom
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(3,2);
-			}
-			else if (intersects(new int[]{0}, neighbor_inactive) &&
-			         intersects(new int[]{2}, neighbor_active)) // left
-			{
-				TR.GetComponent<TileDisplay>().frame = new Vector2(4,2);
-			}
-		}
-	}
-
-	void updateBR()
-	{
-		if (is_active)
-		{
-			if (intersects(new int[]{2,4}, neighbor_inactive)) // corner
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(1,4);
-			}
-			else if (intersects(new int[]{2,3,4}, neighbor_active)) // inside
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(2,2);
-			}
-			else if (intersects(new int[]{3}, neighbor_inactive) &&
-			         intersects(new int[]{2,4}, neighbor_active)) // concave
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(4,3);
-			}
-			else if (intersects(new int[]{2}, neighbor_inactive)) // right side
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(0,3);
-			}
-			else if (intersects(new int[]{4}, neighbor_inactive)) // bottom side
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(1,3);
-			}
-
-		}
-		else
-		{
-			if (intersects(new int[]{2,3,4}, neighbor_inactive)) // empty
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(4,0);
-			}
-			else if (intersects(new int[]{2,4}, neighbor_active)) // concave
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(3,1);
-			}
-			else if (intersects(new int[]{2,4}, neighbor_inactive) &&
-			         intersects(new int[]{3}, neighbor_active)) // corner
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(2,0);
-			}
-			else if (intersects(new int[]{4}, neighbor_inactive) &&
-			         intersects(new int[]{2}, neighbor_active)) // left
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(4,2);
-			}
-			else if (intersects(new int[]{2}, neighbor_inactive) &&
-			         intersects(new int[]{4}, neighbor_active)) // bottom
-			{
-				BR.GetComponent<TileDisplay>().frame = new Vector2(0,1);
-			}
-		}
-	}
-
-	void updateBL()
-	{
-		if (is_active)
-		{
-			if (intersects(new int[]{4,6}, neighbor_inactive)) // corner
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(2,4);
-			}
-			else if (intersects(new int[]{4,5,6}, neighbor_active)) // inside
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(2,2);
-			}
-			else if (intersects(new int[]{5}, neighbor_inactive) &&
-			         intersects(new int[]{4,6}, neighbor_active)) // concave
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(0,2);
-			}
-			else if (intersects(new int[]{4}, neighbor_inactive)) // bottom side
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(1,3);
-			}
-			else if (intersects(new int[]{6}, neighbor_inactive)) // left side
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(2,3);
-			}
-
-		}
-		else
-		{
-			if (intersects(new int[]{4,5,6}, neighbor_inactive)) // empty
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(4,0);
-			}
-			else if (intersects(new int[]{4,6}, neighbor_active)) // concave
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(4,1);
-			}
-			else if (intersects(new int[]{4,6}, neighbor_inactive) &&
-			         intersects(new int[]{5}, neighbor_active)) // corner
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(3,0);
-			}
-			else if (intersects(new int[]{6}, neighbor_inactive) &&
-			         intersects(new int[]{4}, neighbor_active)) // top
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(0,1);
-			}
-			else if (intersects(new int[]{4}, neighbor_inactive) &&
-			         intersects(new int[]{6}, neighbor_active)) // right
-			{
-				BL.GetComponent<TileDisplay>().frame = new Vector2(1,1);
-			}
-		}
-	}
-
-	void updateTL()
-	{
-		if (is_active)
-		{
-			if (intersects(new int[]{6,0}, neighbor_inactive)) // corner
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(3,4);
-			}
-			else if (intersects(new int[]{6,7,0}, neighbor_active)) // inside
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(2,2);
-			}
-			else if (intersects(new int[]{7}, neighbor_inactive) &&
-			         intersects(new int[]{6,0}, neighbor_active)) // concave
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(1,2);
-			}
-			else if (intersects(new int[]{6}, neighbor_inactive)) // left side
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(2,3);
-			}
-			else if (intersects(new int[]{0}, neighbor_inactive)) // top side
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(4,4);
-			}
-
-		}
-		else
-		{
-			if (intersects(new int[]{6,7,0}, neighbor_inactive)) // empty
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(4,0);
-			}
-			else if (intersects(new int[]{6,0}, neighbor_active)) // concave
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(0,0);
-			}
-			else if (intersects(new int[]{6,0}, neighbor_inactive) &&
-			         intersects(new int[]{7}, neighbor_active)) // corner
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(4,0);
-			}
-			else if (intersects(new int[]{0}, neighbor_inactive) &&
-			         intersects(new int[]{6}, neighbor_active)) // right
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(1,1);
-			}
-			else if (intersects(new int[]{6}, neighbor_inactive) &&
-			         intersects(new int[]{0}, neighbor_active)) // bottom
-			{
-				TL.GetComponent<TileDisplay>().frame = new Vector2(0,1);
-			}
-		}
+		catch{}
 	}
 }

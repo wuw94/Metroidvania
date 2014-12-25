@@ -28,7 +28,10 @@ public static class DataManager
 		return new List<string>();
 		//TODO: return a list of strings of the filenames inside /Saved
 	}
-	
+
+	/// <summary>
+	/// Save current game into the /Saved directory.
+	/// </summary>
 	public static void Save(string file_name)
 	{
 		if (!Directory.Exists(Application.persistentDataPath + "/Saved")) // Create a directory /Saved if it doesn't already exist
@@ -42,6 +45,9 @@ public static class DataManager
 		file.Close();
 	}
 
+	/// <summary>
+	/// Load a game file inside the /Saved directory as the current game.
+	/// </summary>
 	public static void Load(string file_name)
 	{
 		GameManager.current_game = new GameManager();

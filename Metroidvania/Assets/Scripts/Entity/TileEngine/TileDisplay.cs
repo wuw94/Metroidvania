@@ -1,53 +1,42 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* TileDisplay
+ * 
+ * 0.5f unit width, 0.5f unit height
+ * One of the 4 corners of a tile. It adjusts its scaling automatically on Start()
+ * Given a setImage(Texture2D img, int rot) call, will replace its old image and rotation
+ * 
+ */
+
 public class TileDisplay : MonoBehaviour
 {
-	public Texture2D tile_sheet;
-	public int rows;
-	public int columns;
+	private Texture2D tile_image;
 	private Rect display_rect = new Rect();
-	public Vector2 frame;
+	private Vector2 pivot = new Vector2(0.5f, 0.5f);
+	public int rotation;
 
 
 	void Start()
 	{
-		display_rect.width = (float)tile_sheet.width / columns;
-		display_rect.height = (float)tile_sheet.height / rows;
-		transform.localScale = new Vector3(2/(renderer.bounds.max.x - renderer.bounds.min.x),
-		                                   2/(renderer.bounds.max.y - renderer.bounds.min.y),
-		                                   2);
-	}
-
-	void Update()
-	{
-		display_rect.x = (float)tile_sheet.width / columns * frame.x;
-		display_rect.y = (float)tile_sheet.height / rows * frame.y;
-		GetComponent<SpriteRenderer>().sprite = Sprite.Create(tile_sheet, display_rect, Vector2.zero);
-
-	}
-
-
-	/*
-	public override void NormalUpdate()
-	{
-		base.NormalUpdate();
-
+		transform.localScale = new Vector3(0.5f/(renderer.bounds.max.x - renderer.bounds.min.x),
+		                                   0.5f/(renderer.bounds.max.y - renderer.bounds.min.y),
+		                                   1);
 	}
 	
-	public override void Record()
+	public void setImage(Texture2D img, int rot)
 	{
-		base.Record();
+		rotation = rot;
+		display_rect.width = img.width;
+		display_rect.height = img.height;
+		GetComponent<SpriteRenderer>().sprite = Sprite.Create(img, display_rect, pivot);
+		Quaternion quat = Quaternion.identity;
+		quat.eulerAngles = new Vector3(0,0,rotation);
+		transform.rotation = quat;
 	}
-	
-	public override void Rewind()
+
+	public bool IsVisible()
 	{
-		base.Rewind();
+		return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
 	}
-	
-	public override void Playback()
-	{
-		base.Playback();
-	}
-	*/
 }

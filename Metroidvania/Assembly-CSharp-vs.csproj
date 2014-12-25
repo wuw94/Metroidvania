@@ -61,7 +61,9 @@
      <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Explosion.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
+     <Compile Include="Assets\Scripts\Entity\TileEngine\TileContainer.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileDisplay.cs" />
+     <Compile Include="Assets\Scripts\Entity\TileEngine\TileInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileManager.cs" />
      <Compile Include="Assets\Scripts\Entity\Wall.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
@@ -70,9 +72,11 @@
      <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
-     <Compile Include="Assets\Scripts\Ground.cs" />
-     <Compile Include="Assets\Scripts\GroundTrigger.cs" />
-     <Compile Include="Assets\Scripts\Switch.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector2.cs" />
+     <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector3.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\PixelToTile.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\TileEditor.cs" />
+     <Compile Include="Assets\Scripts\TileEditor\TileEditorManager.cs" />
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />

@@ -33,11 +33,108 @@ using System.Collections;
 
 public class Controllable : Mobile
 {
-	void OnTriggerStay2D(Collider2D col)
+	private bool IN_ACTION = false;
+	private bool can_check_action = true;
+	private bool IN_TIME_SHIFT = false;
+	private bool can_check_time_shift = true;
+	private bool IN_LEFT = false;
+	private bool IN_RIGHT = false;
+	private bool IN_JUMP = false;
+	private bool IN_ATTACK = false;
+
+	private ArrayList current_collisions = new ArrayList();
+
+	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (Input.GetKeyDown(GameManager.current_game.preferences.IN_ACTION))
+		if (!current_collisions.Contains(col))
 		{
-			col.gameObject.GetComponent<Recordable>().Action();
+			current_collisions.Add(col);
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (current_collisions.Contains(col))
+		{
+			current_collisions.Remove(col);
+		}
+	}
+
+
+	void OnGUI()
+	{
+		if (Event.current.type == EventType.KeyDown)
+		{
+			if (Event.current.keyCode == GameManager.current_game.preferences.IN_ACTION && can_check_action)
+			{
+				IN_ACTION = true;
+				can_check_action = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_TIME_SHIFT && can_check_time_shift)
+			{
+				IN_TIME_SHIFT = true;
+				can_check_time_shift = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_LEFT)
+			{
+				IN_LEFT = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_RIGHT)
+			{
+				IN_RIGHT = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP)
+			{
+				IN_JUMP = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
+			{
+				IN_ATTACK = true;
+			}
+		}
+		else if (Event.current.type == EventType.KeyUp)
+		{
+			if (Event.current.keyCode == GameManager.current_game.preferences.IN_ACTION)
+			{
+				IN_ACTION = false;
+				can_check_action = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_TIME_SHIFT)
+			{
+				IN_TIME_SHIFT = false;
+				can_check_time_shift = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_LEFT)
+			{
+				IN_LEFT = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_RIGHT)
+			{
+				IN_RIGHT = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP)
+			{
+				IN_JUMP = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
+			{
+				IN_ATTACK = false;
+			}
+		}
+	}
+
+	public void checkAction()
+	{
+		if (IN_ACTION)
+		{
+			IN_ACTION = false;
+			for (int i = 0; i < current_collisions.Count; i++)
+			{
+				if (((Collider2D)current_collisions[i]).gameObject.GetComponent<Recordable>() != null)
+				{
+					((Collider2D)current_collisions[i]).gameObject.GetComponent<Recordable>().Action();
+				}
+			}
 		}
 	}
 
@@ -45,7 +142,7 @@ public class Controllable : Mobile
 	{
 		if (Recordable.operation_mode == 0)
 		{
-			if (Input.GetKey(GameManager.current_game.preferences.IN_TIME_SHIFT))
+			if (IN_TIME_SHIFT)
 			{
 				if (Time.timeScale > 0.3f)
 				{
@@ -54,6 +151,7 @@ public class Controllable : Mobile
 				else
 				{
 					Time.timeScale = 1;
+					IN_TIME_SHIFT = false;
 					ChangeOperationMode();
 				}
 			}
@@ -68,7 +166,7 @@ public class Controllable : Mobile
 		}
 		else
 		{
-			if (Input.GetKeyDown(GameManager.current_game.preferences.IN_TIME_SHIFT))
+			if (IN_TIME_SHIFT)
 			{
 				if (Recordable.change_mode_cd == 0)
 				{
@@ -82,17 +180,21 @@ public class Controllable : Mobile
 	{
 		if (Recordable.record_index < Recordable.recorded_states_max - 1)
 		{
-			if (Input.GetKey(GameManager.current_game.preferences.IN_JUMP) && grounded)
+			if (IN_JUMP && grounded)
 			{
 				jump(c.jump_speed);
 			}
-			else if (Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+			else if (IN_LEFT)
 			{
 				moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			else if (Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+			else if (IN_RIGHT)
 			{
 				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
+			else if (IN_ATTACK)
+			{
+				Attack(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
 			else
 			{

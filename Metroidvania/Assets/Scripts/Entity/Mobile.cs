@@ -53,6 +53,7 @@ public class Mobile : ReadSpriteSheet
 	public Vector2 attack_frames;
 	public int attack_frame_delay;
 
+	protected bool is_attacking = false;
 	protected bool grounded = false;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
@@ -138,7 +139,11 @@ public class Mobile : ReadSpriteSheet
 			rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 		}
 	}
+	public void Attack(float max, float accel_g, float accel_a)
+	{
+		animate(attack_frames, attack_frame_delay);
 
+	}
 	public void jump(float jumpspeed)
 	{
 		if (grounded)
@@ -155,7 +160,11 @@ public class Mobile : ReadSpriteSheet
 			if (delay_time <= 0)
 			{
 				delay_time = delay;
-				if (this_info.animState < loop.y)
+				if (this_info.animState < loop.x || this_info.animState > loop.y)
+				{
+					this_info.animState = (int)loop.x;
+				}
+				else if (this_info.animState < loop.y)
 				{
 					this_info.animState++;
 				}
@@ -189,7 +198,6 @@ public class Mobile : ReadSpriteSheet
 			}
 		}
 	}
-
 
 	private void manageVelocity()
 	{

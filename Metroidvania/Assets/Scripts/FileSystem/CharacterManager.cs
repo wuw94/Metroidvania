@@ -16,6 +16,9 @@ using System.Collections;
  * 
  */
 
+/// <summary>
+/// Stores information about the character.
+/// </summary>
 [System.Serializable]
 public sealed class CharacterManager
 {
@@ -25,11 +28,17 @@ public sealed class CharacterManager
 	public float jump_speed;
 	public float health;
 	public float health_max = 100;
-	
+
+	/// <summary>
+	/// Constructor.
+	/// </summary>
 	public CharacterManager()
 	{
 	}
 
+	/// <summary>
+	/// Changes health of player. Give it a negative amount if you want to damage the character.
+	/// </summary>
 	public void changeHealth(float amount)
 	{
 		health += amount;
@@ -43,6 +52,9 @@ public sealed class CharacterManager
 		}
 	}
 
+	/// <summary>
+	/// Cleans up data when player dies.
+	/// </summary>
 	private void manageDeath()
 	{
 		// reset health and stuff to necessary values
