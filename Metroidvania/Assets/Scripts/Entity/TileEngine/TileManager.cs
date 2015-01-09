@@ -103,9 +103,9 @@ public class TileManager : RenderingSystem
 
 	
 
-	/* UpdateTileBuffer()
-	 * - Increases the tile_pool to match the amount of tiles we need to display
-	 */
+	/// <summary>
+	/// Increases the tile_pool to match the amount of tiles we need to display
+	/// </summary>
 	private IEnumerator UpdateTileBuffer()
 	{
 		while (true)
@@ -115,7 +115,6 @@ public class TileManager : RenderingSystem
 				GameObject new_tile = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position, transform.rotation);
 				tile_pool.Add(new_tile);
 				new_tile.transform.parent = tile_folder.transform;
-
 			}
 			yield return null;
 		}
@@ -163,10 +162,10 @@ public class TileManager : RenderingSystem
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active;
+						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().collider2D.enabled = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active;
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
 						((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,0);
 						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
-
 
 						UpdateTiles(j,i,((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active);
 					}
@@ -181,7 +180,7 @@ public class TileManager : RenderingSystem
 			yield return null;
 		}
 	}
-	
+
 
 	/* GetNeighbors(int row, int column)
 	 * - Returns a bool[] of neighboring states

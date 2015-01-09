@@ -1,26 +1,22 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FileSystem/Map.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Mobile.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/TileEngine/TileManager.cs" Line="211" Column="8" />
-      <File FileName="Assets/Scripts/FileSystem/ProgressionManager.cs" Line="43" Column="31" />
-      <File FileName="Assets/Scripts/FileSystem/Map.cs" Line="96" Column="2" />
-      <File FileName="Assets/Scripts/FileSystem/Pseudo Classes/PseudoVector2.cs" Line="1" Column="1" />
-      <File FileName="Assets/test.cs" Line="52" Column="5" />
-      <File FileName="Assets/Scripts/UI/RenderingSystem.cs" Line="103" Column="1" />
+      <File FileName="Assets/test.cs" Line="19" Column="25" />
+      <File FileName="Assets/Scripts/Entity/Player.cs" Line="24" Column="14" />
+      <File FileName="Assets/Scripts/Entity/Mobile.cs" Line="101" Column="15" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True" selected="True">
+          <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
               <Node name="Entity" expanded="True">
                 <Node name="TileEngine" expanded="True" />
+                <Node name="Mobile.cs" selected="True" />
               </Node>
-              <Node name="FileSystem" expanded="True">
-                <Node name="Pseudo Classes" expanded="True" />
-              </Node>
-              <Node name="TileEditor" expanded="True" />
+              <Node name="FileSystem" expanded="True" />
+              <Node name="Tools" expanded="True" />
               <Node name="UI" expanded="True" />
             </Node>
           </Node>

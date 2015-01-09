@@ -20,6 +20,7 @@ public class Map : ISerializable
 	
 	private int default_rows = 100;
 	private int default_columns = 100;
+
 	
 	/// <summary>
 	/// XY data of where the player will be placed upon entering map.
@@ -44,7 +45,7 @@ public class Map : ISerializable
 		FileStream file = null;
 		try
 		{
-			Debug.Log("Converting File: " + Application.dataPath + "/Maps/" + filename + ".md");
+			Debug.Log("Reading File: " + Application.dataPath + "/Maps/" + filename + ".md");
 			BinaryFormatter bf = new BinaryFormatter();
 			file = File.Open(Application.dataPath + "/Maps/" + filename + ".md", FileMode.Open);
 			Map map_data = (Map)bf.Deserialize(file);

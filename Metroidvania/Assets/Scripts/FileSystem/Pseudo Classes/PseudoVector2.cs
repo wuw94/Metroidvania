@@ -38,7 +38,7 @@ public sealed class PseudoVector2
 	}
 
 	/// <summary>
-	/// Audomatic conversion from PseudoVector2 to Vector2
+	/// Automatic conversion from PseudoVector2 to Vector2
 	/// </summary>
 	/// <param name="rValue"></param>
 	/// <returns></returns>
@@ -48,7 +48,7 @@ public sealed class PseudoVector2
 	}
 
 	/// <summary>
-	/// Audomatic conversion from Vector2 to PseudoVector2
+	/// Automatic conversion from Vector2 to PseudoVector2
 	/// </summary>
 	/// <param name="rValue"></param>
 	/// <returns></returns>

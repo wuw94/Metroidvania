@@ -68,7 +68,6 @@ public sealed class GameManager
 		// 2. move speed acceleration (ground)
 		// 3. move speed acceleration (air)
 		// 4. jump speed
-		current_game = new GameManager();
 		current_game.progression.character.move_speed_max = msm;
 		current_game.progression.character.move_speed_accel_ground = msag;
 		current_game.progression.character.move_speed_accel_air = msaa;

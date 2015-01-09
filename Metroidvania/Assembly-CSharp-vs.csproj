@@ -46,7 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Custom\CustomCircle.cs" />
+     <Compile Include="Assets\Scripts\Custom\CustomRect.cs" />
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
+     <Compile Include="Assets\Scripts\Entity\CollisionManager.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\Immobile.cs" />
@@ -73,10 +76,8 @@
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector2.cs" />
-     <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector3.cs" />
-     <Compile Include="Assets\Scripts\TileEditor\PixelToTile.cs" />
-     <Compile Include="Assets\Scripts\TileEditor\TileEditor.cs" />
-     <Compile Include="Assets\Scripts\TileEditor\TileEditorManager.cs" />
+     <Compile Include="Assets\Scripts\Tools\LevelTester.cs" />
+     <Compile Include="Assets\Scripts\Tools\TileEditor.cs" />
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />

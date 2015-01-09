@@ -15,7 +15,7 @@ public class CameraManager : MonoBehaviour
 	// Lerp variables
 	public GameObject follow;
 	public GameObject player;
-	private int speed = 5;
+	private float speed = 5;
 
 	// Shake variables
 	public float shake_time = 0;
@@ -40,8 +40,8 @@ public class CameraManager : MonoBehaviour
 
 	private void manageLerp()
 	{
-		transform.position = new Vector3(Mathf.Lerp(transform.position.x, follow.transform.position.x, speed * Time.deltaTime),
-		                                 Mathf.Lerp(transform.position.y, follow.transform.position.y, speed * Time.deltaTime),
+		transform.position = new Vector3(Mathf.Lerp(transform.position.x, follow.transform.position.x, speed),
+		                                 Mathf.Lerp(transform.position.y, follow.transform.position.y, speed),
 		                                 transform.position.z);
 	}
 

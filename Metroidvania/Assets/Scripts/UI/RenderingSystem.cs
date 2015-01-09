@@ -30,18 +30,23 @@ public class RenderingSystem : MonoBehaviour
 
 	private TileManager tile_manager;
 	private TileEditor tile_editor;
-	private CameraManager camera_manager;
+	private LevelTester level_tester;
 
-	public bool tile_editor_mode = false;
 	public bool tiles_loaded = false;
 
 
 	void Start()
 	{
-		tile_editor_mode = Application.loadedLevelName == "TileEditor";
-		tile_manager = tile_editor_mode ? (TileManager)gameObject.AddComponent("TileManager") : null;
-		camera_manager = tile_editor_mode ? null : (CameraManager)gameObject.AddComponent("CameraManager");
-		if (tile_editor_mode) {tile_editor = (TileEditor)gameObject.AddComponent("TileEditor");}
+		tile_manager = (TileManager)gameObject.AddComponent("TileManager");
+		if (Application.loadedLevelName == "LevelTester")
+		{
+		level_tester = (LevelTester)gameObject.AddComponent("LevelTester");
+		}
+		if (Application.loadedLevelName == "TileEditor")
+		{
+			tile_editor = (TileEditor)gameObject.AddComponent("TileEditor");
+		}
+
 	}
 
 

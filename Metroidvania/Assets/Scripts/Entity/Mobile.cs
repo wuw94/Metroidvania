@@ -53,36 +53,39 @@ public class Mobile : ReadSpriteSheet
 	public Vector2 attack_frames;
 	public int attack_frame_delay;
 
+	/// <summary>
+	/// Rectangular collider of this object.
+	/// </summary>
+	public CustomRect collider_r = null;
+
+	/// <summary>
+	/// Circle collider of this object.
+	/// </summary>
+	public CustomCircle collider_c = null;
+
+	/// <summary>
+	/// Similar to isTrigger option for colliders. If correction == true, will correct its position when collision happens.
+	/// </summary>
+	public bool correction;
+
+	/// <summary>
+	/// Mass of Mobile object, determines how much they will move when collided upon.
+	/// </summary>
+	public float mass;
+
 	protected bool is_attacking = false;
 	protected bool grounded = false;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
 	string tagtype = "Ground";
 	int delay_time = 0; // actual timer that's ticking
+
+	// for collision type checking
+	public Transform ground_check;
+	private float check_radius = 0.1f;
+	public LayerMask foreground;
 	
-	void OnCollisionEnter2D(Collision2D col)
-	{
-		if(col.gameObject.tag == tagtype)
-		{
-			grounded = true;
-		}
-	}
-
-	void OnCollisionStay2D(Collision2D col)
-	{
-		if (col.gameObject.tag == tagtype)
-		{
-			grounded = true;
-		}
-	}
-
-	void OnCollisionExit2D(Collision2D col)
-	{
-		if (col.gameObject.tag == tagtype)
-		{
-			grounded = false;
-		}
-	}
+	
 
 	public void noInput()
 	{
@@ -148,8 +151,11 @@ public class Mobile : ReadSpriteSheet
 	{
 		if (grounded)
 		{
-			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + jumpspeed);
-			grounded = false;
+			if (rigidbody2D.velocity.y < jumpspeed)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
+			}
+
 		}
 	}
 
@@ -231,8 +237,15 @@ public class Mobile : ReadSpriteSheet
 		}
 	}
 
+	private void checkCollisions()
+	{
+		Collider2D c = Physics2D.OverlapCircle(ground_check.position, check_radius, foreground);
+		grounded = c != null && c.GetComponent<TileContainer>() != null && c.GetComponent<TileContainer>().is_active;
+	}
+
 	public override void NormalUpdate()
 	{
+		checkCollisions();
 		manageVelocity();
 	}
 	

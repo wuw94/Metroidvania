@@ -21,7 +21,8 @@ public class Player : Controllable
 
 	void Start()
 	{
-		GameManager.SetGameAll(10, 5, 0.5f, 5);
+		//GameManager.current_game = new GameManager();
+		GameManager.SetGameAll(3, 3, 0.5f, 12);
 		GameManager.current_game.progression.character.health = 100;
 
 		isPlayer = GetType() == typeof(Player);
@@ -41,6 +42,7 @@ public class Player : Controllable
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.character);
 		GameManager.current_game.progression.character.changeHealth(heal);
+		//Debug.Log(grounded);
 	}
 
 	public override void Record()
