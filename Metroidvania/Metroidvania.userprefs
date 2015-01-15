@@ -2,18 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tools\TextGenerator.cs">
     <Files>
-      <File FileName="Assets\Scripts\Tools\TextGenerator.cs" Line="5" Column="89" />
-      <File FileName="Assets\Scripts\Tools\TextGenerator.cs" Line="24" Column="1" />
-      <File FileName="Assets\Scripts\Tools\TileEditor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Tools\TextGenerator.cs" Line="16" Column="21" />
+      <File FileName="Assets\Scripts\Tools\TileEditor.cs" Line="38" Column="11" />
       <File FileName="Assets\test.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Entity\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Entity\Mobile.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
+              <Node name="Entity" expanded="True" />
               <Node name="Tools" expanded="True">
                 <Node name="TextGenerator.cs" selected="True" />
               </Node>
