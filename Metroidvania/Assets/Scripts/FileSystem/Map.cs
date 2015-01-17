@@ -26,6 +26,11 @@ public class Map : ISerializable
 	/// XY data of where the player will be placed upon entering map.
 	/// </summary>
 	public PseudoVector2 spawn_point;
+
+	/// <summary>
+	/// Hashtable of entities (enemies, levers, bombs, items, ladders). Access the entity by entering the class type
+	/// </summary>
+	public Hashtable entity = new Hashtable();
 	
 	/// <summary>
 	/// Default constructor for creating a new Map. Use this when designing maps to receive a blank template.
@@ -137,6 +142,7 @@ public class Map : ISerializable
 				field.SetValue(this, field.GetValue(new Map()));
 			}
 		}
+		Debug.Log(entity);
 	}
 	
 

@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\Entity\CollisionManager.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
+     <Compile Include="Assets\Scripts\Entity\EntityTypes.cs" />
      <Compile Include="Assets\Scripts\Entity\Immobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Mobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Player.cs" />
@@ -63,6 +64,7 @@
      <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Bomb.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Bomb\Explosion.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Lever.cs" />
+     <Compile Include="Assets\Scripts\Entity\Specific\LeverInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\Specific\Spike.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileContainer.cs" />
      <Compile Include="Assets\Scripts\Entity\TileEngine\TileDisplay.cs" />
@@ -76,8 +78,11 @@
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\Pseudo Classes\PseudoVector2.cs" />
-     <Compile Include="Assets\Scripts\Tools\LevelTester.cs" />
-     <Compile Include="Assets\Scripts\Tools\TileEditor.cs" />
+     <Compile Include="Assets\Scripts\Tools\TextGenerator.cs" />
+     <Compile Include="Assets\Scripts\Tools\TileEditor\Indicators\Indicator.cs" />
+     <Compile Include="Assets\Scripts\Tools\TileEditor\Indicators\LeverIndicator.cs" />
+     <Compile Include="Assets\Scripts\Tools\TileEditor\LevelTester.cs" />
+     <Compile Include="Assets\Scripts\Tools\TileEditor\TileEditor.cs" />
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />
