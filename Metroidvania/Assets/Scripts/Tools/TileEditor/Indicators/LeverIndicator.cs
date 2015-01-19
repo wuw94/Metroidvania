@@ -4,28 +4,34 @@ using System.Collections.Generic;
 
 public class LeverIndicator : Indicator
 {
-	public LeverInfo info = new LeverInfo();
-	public TileEditor te;
+	public List<GameObject> affecting = new List<GameObject>();
+	public bool displaying = false;
 
 	void Start()
 	{
-		te = Camera.main.GetComponent<TileEditor>();
 	}
 	
-	void Update () {
-	}
-
-	void OnMouseDown()
+	void Update ()
 	{
-		display_info = true;
+		if (Camera.main.GetComponent<TileEditor>().selection != null && Camera.main.GetComponent<TileEditor>().selection.Equals(gameObject))
+		{
+			displaying = true;
+		}
+		else
+		{
+			displaying = false;
+		}
 	}
 	
 	void OnDrawGizmos()
 	{
-		for (int i = 0; i < info.affecting.Count; i++)
+		Gizmos.color = Color.magenta;
+		if (displaying)
 		{
-			Gizmos.DrawLine(((List<GameObject>)te.indicators[EntityTypes.Interactive])[info.self].transform.position,
-			                ((List<GameObject>)te.indicators[EntityTypes.Interactive])[info.affecting[i]].transform.position);
+			foreach (GameObject g in affecting)
+			{
+				Gizmos.DrawLine(transform.position + new Vector3(0.5f,0.5f,0), g.transform.position + new Vector3(0.5f,0.5f,0));
+			}
 		}
 	}
 }

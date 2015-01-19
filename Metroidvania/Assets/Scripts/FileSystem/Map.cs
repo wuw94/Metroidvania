@@ -13,24 +13,25 @@ using System;
 [System.Serializable]
 public class Map : ISerializable
 {
+
 	/// <summary>
 	/// Tile data, stored as [row][column]
 	/// </summary>
 	public TileInfo[][] tiles;
 	
-	private int default_rows = 100;
-	private int default_columns = 100;
+	private int default_tile_x = 100;
+	private int default_tile_y = 100;
 
 	
 	/// <summary>
 	/// XY data of where the player will be placed upon entering map.
 	/// </summary>
-	public PseudoVector2 spawn_point;
+	public PseudoVector2 spawn_point = new PseudoVector2(0,0);
 
 	/// <summary>
 	/// Hashtable of entities (enemies, levers, bombs, items, ladders). Access the entity by entering the class type
 	/// </summary>
-	public Hashtable entity = new Hashtable();
+	public Dictionary<EntityTypes, List<System.ValueType>> entity = new Dictionary<EntityTypes, List<System.ValueType>>();
 	
 	/// <summary>
 	/// Default constructor for creating a new Map. Use this when designing maps to receive a blank template.
@@ -38,7 +39,6 @@ public class Map : ISerializable
 	public Map()
 	{
 		CreateTiles();
-		spawn_point = new PseudoVector2(0,0);
 	}
 	
 	/// <summary>
@@ -78,11 +78,11 @@ public class Map : ISerializable
 	/// </summary>
 	private void CreateTiles()
 	{
-		tiles = new TileInfo[default_rows][];
-		for (int i = 0; i < default_rows; i++)
+		tiles = new TileInfo[default_tile_x][];
+		for (int i = 0; i < default_tile_x; i++)
 		{
-			tiles[i] = new TileInfo[default_columns];
-			for (int j = 0; j < default_columns; j++)
+			tiles[i] = new TileInfo[default_tile_y];
+			for (int j = 0; j < default_tile_y; j++)
 			{
 				tiles[i][j] = new TileInfo(true, 0);
 			}
@@ -98,6 +98,7 @@ public class Map : ISerializable
 	{
 		this.tiles = map_data.tiles;
 		this.spawn_point = map_data.spawn_point;
+		this.entity = map_data.entity;
 	}
 
 
@@ -142,7 +143,6 @@ public class Map : ISerializable
 				field.SetValue(this, field.GetValue(new Map()));
 			}
 		}
-		Debug.Log(entity);
 	}
 	
 

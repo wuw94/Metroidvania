@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* Progression Manager.
  * Stores information about how far the player is into the story line
@@ -27,7 +28,7 @@ public sealed class ProgressionManager
 	/// Dictionary of this game's maps.
 	/// string Key, Map value
 	/// </summary>
-	public Hashtable maps;
+	public Dictionary<string, Map> maps;
 
 	/// <summary>
 	/// Name of currently loaded map
@@ -40,6 +41,6 @@ public sealed class ProgressionManager
 	public ProgressionManager()
 	{
 		this.character = new CharacterManager();
-		this.maps = new Hashtable();
+		this.maps = new Dictionary<string, Map>();
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* TileManager.
  * 
@@ -16,14 +17,15 @@ using System.Collections;
 
 public class TileManager : RenderingSystem
 {
-	private ArrayList tile_pool = new ArrayList();
-	private Hashtable displayed_tiles = new Hashtable();
+	private Object tile_resource = Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject));
+	private List<TileContainer> tile_pool = new List<TileContainer>();
+	private Dictionary<Vector2, TileContainer> displayed_tiles = new Dictionary<Vector2, TileContainer>();
 
-	private Hashtable textures = new Hashtable();
-	private readonly string[] tile_type = new string[]{"GrassTile"};
+	private Dictionary<string, Texture2D[]> textures = new Dictionary<string, Texture2D[]>();
+	public static readonly string[] tile_type = new string[]{"GrassTile"};
 	private readonly string[] tile_unload = new string[]{"Inner_Concave","Inner_Corner","Inner_Side_Right","Inner_Side_Top","Inner_Surround","Outer_Concave","Outer_Corner","Outer_Side_Right","Outer_Side_Top","Outer_Surround"};
-	private readonly int[] clockwise_row_logic = new int[]{1,1,0,-1,-1,-1,0,1};
-	private readonly int[] clockwise_column_logic = new int[]{0,1,1,1,0,-1,-1,-1};
+	private readonly int[] clockwise_x_logic = new int[]{0,1,1,1,0,-1,-1,-1};
+	private readonly int[] clockwise_y_logic = new int[]{1,1,0,-1,-1,-1,0,1};
 
 	public bool read_done = false;
 	private GameObject tile_folder;
@@ -92,7 +94,7 @@ public class TileManager : RenderingSystem
 			textures.Add(type, new Texture2D[10]);
 			for (int i = 0; i < 10; i++)
 			{
-				((Texture2D[])textures[type])[i] = (Texture2D)Resources.Load("Tiles/"+type+"/"+tile_unload[i]);
+				textures[type][i] = (Texture2D)Resources.Load("Tiles/"+type+"/"+tile_unload[i]);
 			}
 		}
 	}
@@ -112,8 +114,8 @@ public class TileManager : RenderingSystem
 		{
 			while (tile_pool.Count == 0 || tile_pool.Count + displayed_tiles.Count < (unit_shown.y-unit_shown.x) * (unit_shown.w-unit_shown.z))
 			{
-				GameObject new_tile = (GameObject)Instantiate(Resources.Load("Prefabs/Tiles/MacroTile", typeof(GameObject)), transform.position, transform.rotation);
-				tile_pool.Add(new_tile);
+				GameObject new_tile = (GameObject)Instantiate(tile_resource);
+				tile_pool.Add(new_tile.GetComponent<TileContainer>());
 				new_tile.transform.parent = tile_folder.transform;
 			}
 			yield return null;
@@ -132,9 +134,9 @@ public class TileManager : RenderingSystem
 			{
 				for (int i = 0; i < tile_pool.Count/2; i++)
 				{
-					GameObject t = (GameObject)tile_pool[0];
+					TileContainer t = tile_pool[0];
 					tile_pool.RemoveAt(0);
-					Destroy(t);
+					Destroy(t.gameObject);
 				}
 			}
 			yield return null;
@@ -150,28 +152,30 @@ public class TileManager : RenderingSystem
 	{
 		while (true)
 		{
+			Vector2 coordinate;
 			for (int i = (int)unit_shown.x; i < (int)unit_shown.y; i++)
 			{
 				for (int j = (int)unit_shown.z; j < (int)unit_shown.w; j++)
 				{
-					Vector2 coordinate = new Vector2(j,i);
-					if (!displayed_tiles.Contains(coordinate) && tile_pool.Count > 0)
+					coordinate.x = i;
+					coordinate.y = j;
+					if (!displayed_tiles.ContainsKey(coordinate) && tile_pool.Count > 0)
 					{
 						displayed_tiles.Add(coordinate, tile_pool[0]);
 						tile_pool.RemoveAt(0);
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(true);
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetTexture((Texture2D[])textures[tile_type[0]]);
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active;
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().collider2D.enabled = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active;
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(j,i));
-						((GameObject)displayed_tiles[coordinate]).transform.position = new Vector3(i,j,0);
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().updateAll();
+						displayed_tiles[coordinate].SetDisplaying(true);
+						displayed_tiles[coordinate].SetTexture((Texture2D[])textures[tile_type[0]]);
+						displayed_tiles[coordinate].is_active = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
+						displayed_tiles[coordinate].collider2D.enabled = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
+						displayed_tiles[coordinate].SetNeighbors(GetNeighbors(coordinate));
+						displayed_tiles[coordinate].transform.position = coordinate;
+						displayed_tiles[coordinate].updateAll();
 
-						UpdateTiles(j,i,((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[j][i].active);
+						UpdateTiles(coordinate,GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active);
 					}
-					if (displayed_tiles.Contains(coordinate) && !((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().IsVisible())
+					if (displayed_tiles.ContainsKey(coordinate) && !displayed_tiles[coordinate].IsVisible())
 					{
-						((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetDisplaying(false);
+						displayed_tiles[coordinate].SetDisplaying(false);
 						tile_pool.Add(displayed_tiles[coordinate]);
 						displayed_tiles.Remove(coordinate);
 					}
@@ -186,12 +190,23 @@ public class TileManager : RenderingSystem
 	 * - Returns a bool[] of neighboring states
 	 * - 8 values, clockwise starting at 12:00
 	 */
-	private bool[] GetNeighbors(int row, int column)
+	private bool[] GetNeighbors(Vector2 coordinate)
 	{
 		bool[] n = new bool[8];
 		for (int i = 0; i < 8; i++)
 		{
-			try {n[i] = ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[row+clockwise_row_logic[i]][column+clockwise_column_logic[i]].active;}
+			try {n[i] = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)coordinate.x+clockwise_x_logic[i]][(int)coordinate.y+clockwise_y_logic[i]].active;}
+			catch {n[i] = false;}
+		}
+		return n;
+	}
+
+	private bool[] GetNeighbors(int x, int y)
+	{
+		bool[] n = new bool[8];
+		for (int i = 0; i < 8; i++)
+		{
+			try {n[i] = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[x+clockwise_x_logic[i]][y+clockwise_y_logic[i]].active;}
 			catch {n[i] = false;}
 		}
 		return n;
@@ -202,24 +217,21 @@ public class TileManager : RenderingSystem
 	 * - Not to be confused with UpdateShownTiles()
 	 * - Call this each time you're changing a tile, so the surrounding tiles know how to change their appearance
 	 */
-	public void UpdateTiles(int row, int column, bool change_to)
+	public void UpdateTiles(Vector2 coordinate, bool change_to)
 	{
-		Vector2 coordinate = new Vector2(row, column);
-
-		if (!displayed_tiles.Contains(coordinate)) {return;}
-		((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[row][column].active = change_to;
-
-		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().is_active = change_to;
-		((GameObject)displayed_tiles[coordinate]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row,column));
+		if (!displayed_tiles.ContainsKey(coordinate)) {return;}
+		GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)coordinate.x][(int)coordinate.y].active = change_to;
+		displayed_tiles[coordinate].is_active = change_to;
+		displayed_tiles[coordinate].SetNeighbors(GetNeighbors(coordinate));
 
 		try
 		{
-			((GameObject)displayed_tiles[new Vector2(row,column)]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row,column));
-			((GameObject)displayed_tiles[new Vector2(row,column)]).GetComponent<TileContainer>().updateAll();
+			displayed_tiles[coordinate].SetNeighbors(GetNeighbors(coordinate));
+			displayed_tiles[coordinate].updateAll();
 			for (int i = 0; i < 8; i++)
 			{
-				((GameObject)displayed_tiles[new Vector2(row+clockwise_row_logic[i],column+clockwise_column_logic[i])]).GetComponent<TileContainer>().SetNeighbors(GetNeighbors(row+clockwise_row_logic[i],column+clockwise_column_logic[i]));
-				((GameObject)displayed_tiles[new Vector2(row+clockwise_row_logic[i],column+clockwise_column_logic[i])]).GetComponent<TileContainer>().updateAll();
+				displayed_tiles[new Vector2(coordinate.x+clockwise_x_logic[i],coordinate.y+clockwise_y_logic[i])].SetNeighbors(GetNeighbors((int)coordinate.x+clockwise_x_logic[i],(int)coordinate.y+clockwise_y_logic[i]));
+				displayed_tiles[new Vector2(coordinate.x+clockwise_x_logic[i],coordinate.y+clockwise_y_logic[i])].updateAll();
 			}
 		}
 		catch{}

@@ -13,25 +13,73 @@ using System.Threading;
  */
 public class TileEditor : MonoBehaviour
 {
+	public class Tool
+	{
+		public int index = 0;
+	}
+	public class Tools : Tool
+	{
+		public TerrainTool terrain_tool = new TerrainTool();
+		public SpawnTool spawn_tool = new SpawnTool();
+		public InteractiveTool interactive_tool = new InteractiveTool();
+
+		public class TerrainTool : Tool
+		{
+			public TileTool tile_tool = new TileTool();
+		
+			public class TileTool : Tool
+			{
+			}
+		}
+
+		public class SpawnTool : Tool
+		{
+		}
+
+		public class InteractiveTool : Tool
+		{
+			public LeverTool lever_tool = new LeverTool();
+
+			public class LeverTool : Tool
+			{
+				public bool adding = false;
+				public List<string> addable = new List<string>{"LeverIndicator(Clone)"};
+			}
+		}
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	private string map_name = ""; // name of map
-	private GameObject selection = null;
-	
-	public Hashtable indicators = new Hashtable();
 
-	//------------------<Tools>------------------
-	private EntityTypes[] tools = new EntityTypes[]{EntityTypes.Tile, EntityTypes.Spawn, EntityTypes.Interactive};
-	private int tools_index = 0;
+	// Selection
+	public GameObject selection = null;
+	private List<string> possible_selection = new List<string>(){"SpawnPointIndicator(Clone)","LeverIndicator(Clone)"};
+	private bool is_dragging = false;
+	private Vector2 click_offset = new Vector2(0.5f,0.5f);
 
-	// Terrains tools
-	private int terrain_tool_index = 0;
 
-	// Tile tool
+	public Dictionary<EntityTypes, List<GameObject>> indicators = new Dictionary<EntityTypes, List<GameObject>>();
+
+	private Tools tools = new Tools();
+
 	private string[] tile_types = new string[]{"GrassTile", "Test"};
-	private int tile_tool_index = 0;
-
-	// Interactive tools
-	private int interactive_tool_index = 0;
-	//-----------------</Tools>------------------
 
 	private bool show_tab = true;
 	private Rect full_window_rect = new Rect(0,0,Screen.width,Screen.height); // for displaying GUI
@@ -44,11 +92,15 @@ public class TileEditor : MonoBehaviour
 	void Start()
 	{
 		ReformatGame();
-		indicators[EntityTypes.Spawn] = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/SpawnPointIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
-		((GameObject)indicators[EntityTypes.Spawn]).gameObject.renderer.material.color = new Color(1,1,1,0);
-		indicators[EntityTypes.Tile] = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/TileIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
-		((GameObject)indicators[EntityTypes.Tile]).gameObject.renderer.material.color = new Color(1,1,1,0.1f);
-		indicators[EntityTypes.Interactive] = new List<GameObject>();
+		foreach (EntityTypes t in System.Enum.GetValues(typeof(EntityTypes)))
+		{
+			indicators.Add(t, new List<GameObject>());
+		}
+		indicators[EntityTypes.Spawn].Add((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/SpawnPointIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation));
+		indicators[EntityTypes.Spawn][0].gameObject.renderer.material.color = new Color(1,1,1,0);
+		indicators[EntityTypes.Tile].Add((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/TileIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation));
+		indicators[EntityTypes.Tile][0].gameObject.renderer.material.color = new Color(1,1,1,0.1f);
+		//indicators[EntityTypes.Interactive] = new List<GameObject>();
 		StartCoroutine(UpdateFPS());
 	}
 
@@ -66,7 +118,10 @@ public class TileEditor : MonoBehaviour
 				int mouseY = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
 				GUI.Label(new Rect(Input.mousePosition.x + 10,Screen.height - Input.mousePosition.y + 10,100, 20), "(" + mouseX + ", " + mouseY + ")");
 			}
-			right_window_rect = GUI.Window(1, right_window_rect, DescriptionWindowFunction, "Info");
+			if (selection != null)
+			{
+				right_window_rect = GUI.Window(1, right_window_rect, DescriptionWindowFunction, "Info");
+			}
 		}
 		else
 		{
@@ -110,11 +165,11 @@ public class TileEditor : MonoBehaviour
 				throw;
 			}
 
-			GetComponent<TileManager>().LoadAll((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])); //TODO
+			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 			GetComponent<RenderingSystem>().LoadedDone();
 
-			((GameObject)indicators[EntityTypes.Spawn]).transform.position = new Vector2(((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.x,
-			                                                       ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.y);
+			indicators[EntityTypes.Spawn][0].transform.position = new Vector2(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].spawn_point.x,
+			                                                                  GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].spawn_point.y);
 		}
 	}
 
@@ -125,7 +180,8 @@ public class TileEditor : MonoBehaviour
 	/// </summary>
 	void TabWindowFunction(int windowID)
 	{
-		// Left side
+		GUI.Label(new Rect(600, 20, 180, 20), "Tiles in view: " + (RenderingSystem.unit_shown.y - RenderingSystem.unit_shown.x) * (RenderingSystem.unit_shown.w - RenderingSystem.unit_shown.z));
+		GUI.Label(new Rect(600, 40, 180, 20), "FPS: " + FPS);
 		GUI.Label(new Rect(5,20,full_window_rect.width, 40), "Loaded Map:\n   <" + map_name + ".md>");
 		if (GUI.Button(new Rect(5,60,100,40), "Save")) // Save Map object into file
 		{
@@ -155,15 +211,15 @@ public class TileEditor : MonoBehaviour
 		//-----------------------------<Tier 1 Options>-----------------------------
 		if (GUI.Button(new Rect(20,260,100,20), "Terrains"))
 		{
-			tools_index = 0;
+			tools.index = 0;
 		}
 		if (GUI.Button(new Rect(20,280,100,20), "Spawn"))
 		{
-			tools_index = 1;
+			tools.index = 1;
 		}
 		if (GUI.Button(new Rect(20,300,100,20), "Interactive"))
 		{
-			tools_index = 2;
+			tools.index = 2;
 		}
 		if (GUI.Button(new Rect(20,320,100,20), "n/a"))
 		{
@@ -183,7 +239,7 @@ public class TileEditor : MonoBehaviour
 		if (GUI.Button(new Rect(20,420,100,20), "n/a"))
 		{
 		}
-		GUI.Label(new Rect(10,260+20*tools_index,10, 20), "x");
+		GUI.Label(new Rect(10,260+20*tools.index,10, 20), "x");
 		//----------------------------</Tier 1 Options>-----------------------------
 
 		GUI.Label(new Rect(20, 160, Screen.width/2-5, 20), "<TAB> - show/hide instructions");
@@ -191,50 +247,49 @@ public class TileEditor : MonoBehaviour
 		GUI.Label(new Rect(20, 200, Screen.width/2-5, 20), "<Mouse Scroll> - Zoom in/out");
 		GUI.Label(new Rect(20, 220, Screen.width/2-5, 20), "Specific tools details to the right");
 
-		if (tools_index == 0) // Terrain tools
+		if (tools.index == 0) // Terrain tools
 		{
 			if (GUI.Button(new Rect(140,260,100,20), "Tile"))
 			{
-				terrain_tool_index = 0;
+				tools.terrain_tool.index = 0;
 			}
 			if (GUI.Button(new Rect(140,280,100,20), "n/a"))
 			{
 			}
-			if (terrain_tool_index == 0)
+			if (tools.terrain_tool.index == 0)
 			{
-				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Tile <" + tile_types[tile_tool_index] + ">");
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Tile <" + TileManager.tile_type[tools.terrain_tool.tile_tool.index] + ">");
 				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
 				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to disable at mouse position");
 				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates or removes tiles at mouse location");
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "- Switch tile type with second tier option");
-				if (GUI.Button(new Rect(260,260,100,20), tile_types[0]))
+				for (int i = 0; i < TileManager.tile_type.Length; i++)
 				{
-					tile_tool_index = 0;
+					if (GUI.Button(new Rect(260,260 + i*20,100,20), TileManager.tile_type[i]))
+					{
+						tools.terrain_tool.tile_tool.index = i;
+					}
 				}
-				if (GUI.Button(new Rect(260,280,100,20), tile_types[1]))
-				{
-					tile_tool_index = 1;
-				}
-				GUI.Label(new Rect(250,260+20*tile_tool_index,10, 20), "x");
+				GUI.Label(new Rect(250,260+20*tools.terrain_tool.tile_tool.index,10, 20), "x");
 			}
-			GUI.Label(new Rect(130,260+20*terrain_tool_index,10, 20), "x");
+			GUI.Label(new Rect(130,260+20*tools.terrain_tool.index,10, 20), "x");
 		}
-		else if (tools_index == 1)
+		else if (tools.index == 1)
 		{
 			GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Spawn Location");
 			GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> or <W> to place at mouse position");
 			GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "- Sets the default spawn location for a player entering this map");
 		}
-		else if (tools_index == 2)
+		else if (tools.index == 2)
 		{
 			if (GUI.Button(new Rect(140,260,100,20), "Lever"))
 			{
-				interactive_tool_index = 0;
+				tools.interactive_tool.index = 0;
 			}
 			if (GUI.Button(new Rect(140,280,100,20), "n/a"))
 			{
 			}
-			if (interactive_tool_index == 0)
+			if (tools.interactive_tool.index == 0)
 			{
 				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Lever");
 				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
@@ -242,30 +297,38 @@ public class TileEditor : MonoBehaviour
 				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Left click a lever to open a menu for assigning");
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  the entities affected by a particular lever");
 			}
-			GUI.Label(new Rect(130,260+20*interactive_tool_index,10, 20), "x");
+			GUI.Label(new Rect(130,260+20*tools.interactive_tool.index,10, 20), "x");
 		}
+		GUI.Label(new Rect(10,left_window_rect.height - 20, 500, 20), "Memory Allocated: " + System.GC.GetTotalMemory(false).ToString());
 	}
 
 
 	void DescriptionWindowFunction(int windowID)
 	{
-		GUI.Label(new Rect(20, 20, 180, 20), "Tiles in view: " + (RenderingSystem.unit_shown.y - RenderingSystem.unit_shown.x) * (RenderingSystem.unit_shown.w - RenderingSystem.unit_shown.z));
-		GUI.Label(new Rect(20, 40, 180, 20), "FPS: " + FPS);
 		if (selection != null)
 		{
-			GUI.Label(new Rect(40, 100, 180, 20), "Press ESC to deselect");
-			GUI.Label(new Rect(20, 140, 180, 20), "Position: (" + selection.transform.position.x + ", " + selection.transform.position.y + ")");
+			GUI.Label(new Rect(40, 40, 180, 20), "Press ESC to deselect");
+			GUI.Label(new Rect(20, 80, 180, 20), "Position: (" + selection.transform.position.x + ", " + selection.transform.position.y + ")");
 			if (selection.name == "LeverIndicator(Clone)")
 			{
-				GUI.Label(new Rect(10, 80, 180, 20), "Selected: Lever");
-			}
-			else if (selection.name == "MacroTile(Clone)")
-			{
-				GUI.Label(new Rect(10, 80, 180, 20), "Selected: Tile");
+				GUI.Label(new Rect(10, 20, 180, 20), "Selected: Lever");
+				GUI.Label(new Rect(10, 120, 180, 20), "Affects: " + selection.GetComponent<LeverIndicator>().affecting.Count + " items");
+				if (GUI.Button(new Rect(140,124,38,16), tools.interactive_tool.lever_tool.adding ? "?" : "add"))
+				{
+					tools.interactive_tool.lever_tool.adding = !tools.interactive_tool.lever_tool.adding;
+				}
+				for (int i = 0; i < selection.GetComponent<LeverIndicator>().affecting.Count; i++)
+				{
+					GUI.Label(new Rect(20, 140 + 20*i, 180, 20), "Item(" + selection.GetComponent<LeverIndicator>().affecting[i].transform.position.x + ", " + selection.GetComponent<LeverIndicator>().affecting[i].transform.position.y + ")");
+					if (GUI.Button(new Rect(150,144 + 20*i,20,16), "x"))
+					{
+						selection.GetComponent<LeverIndicator>().affecting.RemoveAt(i);
+					}
+				}
 			}
 			else if (selection.name == "SpawnPointIndicator(Clone)")
 			{
-				GUI.Label(new Rect(10, 80, 180, 20), "Selected: Spawn Location");
+				GUI.Label(new Rect(10, 20, 180, 20), "Selected: Spawn Location");
 			}
 		}
 	}
@@ -299,19 +362,27 @@ public class TileEditor : MonoBehaviour
 
 	void manageZoom()
 	{
-		if (Input.GetAxis("Mouse ScrollWheel") <= 0 || Time.deltaTime < 0.15f)
+		if (Input.GetKey(KeyCode.Minus))
 		{
-			GetComponent<Camera>().orthographicSize += Input.GetAxis("Mouse ScrollWheel");
+			Camera.main.orthographicSize -= 2;
+		}
+		else if (Input.GetKey(KeyCode.Equals) && Time.deltaTime < 0.15f)
+		{
+			Camera.main.orthographicSize += 2;
+		}
+		else if (Input.GetAxis("Mouse ScrollWheel") <= 0 || Time.deltaTime < 0.15f)
+		{
+			Camera.main.orthographicSize += Input.GetAxis("Mouse ScrollWheel");
 		}
 		else
 		{
 			Debug.LogWarning("Restricted from zooming out due to lag! Frame rate: " + 1/Time.deltaTime);
 		}
-		if (GetComponent<Camera>().orthographicSize < 0)
+		if (Camera.main.orthographicSize < 0)
 		{
-			GetComponent<Camera>().orthographicSize = 0.01f;
+			Camera.main.orthographicSize = 0.01f;
 		}
-		camera_speed = GetComponent<Camera>().orthographicSize/30;
+		camera_speed = Camera.main.orthographicSize/30;
 	}
 
 
@@ -319,26 +390,62 @@ public class TileEditor : MonoBehaviour
 	{
 		if (GetComponent<TileManager>().read_done)
 		{
-			int mouseX = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x);
-			int mouseY = (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-			((GameObject)indicators[EntityTypes.Tile]).transform.position = new Vector3(mouseX, mouseY, -9);
+			Vector2 mouse = new Vector2((int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x),
+			                            (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y));
+			indicators[EntityTypes.Tile][0].transform.position = new Vector3(mouse.x, mouse.y, -9);
 
-			Tool_Selection(mouseX, mouseY);
-			Tool_Tile(mouseX, mouseY);
-			Tool_Spawn(mouseX, mouseY);
-			Tool_Lever(mouseX, mouseY);
+			Tool_Selection(mouse);
+			Tool_Tile(mouse);
+			Tool_Spawn(mouse);
+			Tool_Lever(mouse);
 		}
 	}
 
-	private void Tool_Selection(int mouseX, int mouseY)
+	private void Tool_Selection(Vector2 mouse)
 	{
 		if (Input.GetMouseButton(0))
 		{
 			RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
-			if (selection == null && hit.collider != null)
+
+			if (tools.interactive_tool.lever_tool.adding)
 			{
-				selection = hit.collider.gameObject;
-				UnityEditor.Selection.objects = new GameObject[]{selection};
+				if (hit.collider != null && tools.interactive_tool.lever_tool.addable.Contains(hit.collider.name))
+				{
+					tools.interactive_tool.lever_tool.adding = false;
+					selection.GetComponent<LeverIndicator>().affecting.Add(hit.collider.gameObject);
+				}
+			}
+			else
+			{
+			
+				if (!is_dragging && selection != null && hit.collider != null && selection.Equals(hit.collider.gameObject))
+				{
+					is_dragging = true;
+				}
+				if (selection == null && hit.collider != null)
+				{
+					if (possible_selection.Contains(hit.collider.gameObject.name))
+					{
+						selection = hit.collider.gameObject;
+						UnityEditor.Selection.objects = new GameObject[]{selection};
+					}
+				}
+				if (is_dragging)
+				{
+					selection.transform.position = new Vector3((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - click_offset.x),
+					                                           (Camera.main.ScreenToWorldPoint(Input.mousePosition).y - click_offset.y),
+					                                           selection.transform.position.z);
+				}
+			}
+		}
+		else
+		{
+			is_dragging = false;
+			if (selection != null)
+			{
+				selection.transform.position = new Vector3(Mathf.RoundToInt(selection.transform.position.x),
+				                                           Mathf.RoundToInt(selection.transform.position.y),
+				                                           selection.transform.position.z);
 			}
 		}
 		if (Input.GetKey(KeyCode.Escape))
@@ -348,54 +455,50 @@ public class TileEditor : MonoBehaviour
 		}
 	}
 	
-	private void Tool_Tile(int mouseX, int mouseY)
+	private void Tool_Tile(Vector2 mouse)
 	{
-		if (tools_index == 0 && tile_tool_index == 0) // Tile tool
+		if (tools.index == 0 && tools.terrain_tool.tile_tool.index == 0) // Tile tool
 		{
 			if (Input.GetKey(KeyCode.Q))
 			{
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
-					GetComponent<TileManager>().UpdateTiles(mouseY, mouseX, true);
+					GetComponent<TileManager>().UpdateTiles(mouse, true);
 				}
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
-				GetComponent<TileManager>().UpdateTiles(mouseY, mouseX, false);
+				GetComponent<TileManager>().UpdateTiles(mouse, false);
 			}
 		}
 	}
 
-	private void Tool_Spawn(int mouseX, int mouseY)
+	private void Tool_Spawn(Vector2 mouse)
 	{
-		((GameObject)indicators[EntityTypes.Spawn]).renderer.material.color = new Color(1,1,1,1);
-		if (tools_index == 1) // Spawn tool
+		indicators[EntityTypes.Spawn][0].renderer.material.color = new Color(1,1,1,1);
+		if (tools.index == 1) // Spawn tool
 		{
 			if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.W))
 			{
-				((GameObject)indicators[EntityTypes.Spawn]).transform.position = new Vector2(mouseX,mouseY);
-				((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point = new Vector2(mouseX, mouseY);
-				((GameObject)indicators[EntityTypes.Spawn]).renderer.material.color = new Color(1,1,1,0.5f);
+				indicators[EntityTypes.Spawn][0].transform.position = mouse;
+				((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point = mouse;
+				indicators[EntityTypes.Spawn][0].renderer.material.color = new Color(1,1,1,0.5f);
 			}
 		}
 	}
 
-	private void Tool_Lever(int mouseX, int mouseY)
+	private void Tool_Lever(Vector2 mouse)
 	{
-		if (tools_index == 2 && interactive_tool_index == 0)
+		if (tools.index == 2 && tools.interactive_tool.index == 0)
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
-					GameObject lever = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/LeverIndicator", typeof(GameObject)), new Vector3(mouseX,mouseY, -9), transform.rotation);
-					((List<GameObject>)indicators[EntityTypes.Interactive]).Add(lever);
-					for (int i = 0; i < ((List<GameObject>)indicators[EntityTypes.Interactive]).Count; i++)
-					{
-						((List<GameObject>)indicators[EntityTypes.Interactive])[i].GetComponent<LeverIndicator>().info.self = i;
-					}
+					GameObject lever = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/LeverIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation);
+					indicators[EntityTypes.Interactive].Add(lever);
 
 					// we need a way to add in more valuable data (xy position, which platforms it is linked to)
 					//((ArrayList)((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).entity[EntityTypes.Interactive]).Add(new PseudoVector2(lever.transform.position.x, lever.transform.position.y));
@@ -406,15 +509,10 @@ public class TileEditor : MonoBehaviour
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.name == "LeverIndicator(Clone)")
 				{
-					List<GameObject> interactives = ((List<GameObject>)indicators[EntityTypes.Interactive]);
+					List<GameObject> interactives = indicators[EntityTypes.Interactive];
 					GameObject lever = interactives[interactives.IndexOf(hit.transform.gameObject)];
 					interactives.Remove(lever);
 					Destroy(lever);
-
-					for (int i = 0; i < ((List<GameObject>)indicators[EntityTypes.Interactive]).Count; i++)
-					{
-						((List<GameObject>)indicators[EntityTypes.Interactive])[i].GetComponent<LeverIndicator>().info.self = i;
-					}
 				}
 			}
 		}
