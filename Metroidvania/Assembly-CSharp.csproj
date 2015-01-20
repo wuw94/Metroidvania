@@ -49,7 +49,6 @@
      <Compile Include="Assets\Scripts\Custom\CustomCircle.cs" />
      <Compile Include="Assets\Scripts\Custom\CustomRect.cs" />
      <Compile Include="Assets\Scripts\Entity\AI.cs" />
-     <Compile Include="Assets\Scripts\Entity\CollisionManager.cs" />
      <Compile Include="Assets\Scripts\Entity\Controllable.cs" />
      <Compile Include="Assets\Scripts\Entity\DependantPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\EntityTypes.cs" />

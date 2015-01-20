@@ -180,23 +180,23 @@ public class Controllable : Mobile
 	{
 		if (Recordable.record_index < Recordable.recorded_states_max - 1)
 		{
-			if (IN_JUMP && grounded)
+			if (IN_JUMP)
 			{
 				jump(c.jump_speed);
 			}
-			else if (IN_LEFT)
+			if (IN_LEFT)
 			{
 				moveLeft(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			else if (IN_RIGHT)
+			if (IN_RIGHT)
 			{
 				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			else if (IN_ATTACK)
+			if (IN_ATTACK)
 			{
 				Attack(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			else
+			if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_ATTACK)
 			{
 				noInput();
 			}

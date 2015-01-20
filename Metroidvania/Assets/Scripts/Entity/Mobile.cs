@@ -53,36 +53,21 @@ public class Mobile : ReadSpriteSheet
 	public Vector2 attack_frames;
 	public int attack_frame_delay;
 
-	/// <summary>
-	/// Rectangular collider of this object.
-	/// </summary>
-	public CustomRect collider_r = null;
-
-	/// <summary>
-	/// Circle collider of this object.
-	/// </summary>
-	public CustomCircle collider_c = null;
-
-	/// <summary>
-	/// Similar to isTrigger option for colliders. If correction == true, will correct its position when collision happens.
-	/// </summary>
-	public bool correction;
-
-	/// <summary>
-	/// Mass of Mobile object, determines how much they will move when collided upon.
-	/// </summary>
-	public float mass;
-
 	protected bool is_attacking = false;
-	protected bool grounded = false;
+	protected bool control_enabled = true;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
 	string tagtype = "Ground";
 	int delay_time = 0; // actual timer that's ticking
 
 	// for collision type checking
-	public Transform ground_check;
-	private float check_radius = 0.1f;
+	public Transform ground_check_left;
+	public Transform ground_check_right;
+	protected bool grounded = false;
+
+	public Transform wall_check_front;
+	protected bool front_contact = false;
+	private float check_radius = 0.2f;
 	public LayerMask foreground;
 	
 	
@@ -92,6 +77,7 @@ public class Mobile : ReadSpriteSheet
 		if (grounded)
 		{
 			animate(still_frames, still_frame_delay);
+			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
 		}
 		else
 		{
@@ -104,20 +90,23 @@ public class Mobile : ReadSpriteSheet
 		this_info.facingRight = false;
 		animate(run_frames, run_frame_delay);
 
-		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
+		if (control_enabled)
 		{
 			if (grounded)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_g, rigidbody2D.velocity.y);
+				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 			}
 			else
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
+				if (rigidbody2D.velocity.x > -max)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
+				}
+				if (front_contact && rigidbody2D.velocity.y < 0)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+				}
 			}
-		}
-		else
-		{
-			rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 		}
 	}
 
@@ -126,20 +115,23 @@ public class Mobile : ReadSpriteSheet
 		this_info.facingRight = true;
 		animate(run_frames, run_frame_delay);
 
-		if (Mathf.Abs(rigidbody2D.velocity.x) < max)
+		if (control_enabled)
 		{
 			if (grounded)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_g, rigidbody2D.velocity.y);
+				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 			}
 			else
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
+				if (rigidbody2D.velocity.x < max)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
+				}
+				if (front_contact && rigidbody2D.velocity.y < 0)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+				}
 			}
-		}
-		else
-		{
-			rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 		}
 	}
 	public void Attack(float max, float accel_g, float accel_a)
@@ -155,7 +147,19 @@ public class Mobile : ReadSpriteSheet
 			{
 				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
 			}
-
+		}
+		else if (rigidbody2D.velocity.y < 2)
+		{
+			if (front_contact && !this_info.facingRight && Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+			{
+				StartCoroutine(DisableControl(0.04f));
+				rigidbody2D.velocity = new Vector2(jumpspeed/1.4f, jumpspeed / 2);
+			}
+			else if (front_contact && this_info.facingRight && Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+			{
+				StartCoroutine(DisableControl(0.04f));
+				rigidbody2D.velocity = new Vector2(-jumpspeed/1.4f, jumpspeed / 2);
+			}
 		}
 	}
 
@@ -183,6 +187,9 @@ public class Mobile : ReadSpriteSheet
 			{
 				delay_time--;
 			}
+		}
+		else if (front_contact)
+		{
 		}
 		else
 		{
@@ -239,8 +246,19 @@ public class Mobile : ReadSpriteSheet
 
 	private void checkCollisions()
 	{
-		Collider2D c = Physics2D.OverlapCircle(ground_check.position, check_radius, foreground);
-		grounded = c != null && c.GetComponent<TileContainer>() != null && c.GetComponent<TileContainer>().is_active;
+		Collider2D gL = Physics2D.OverlapCircle(ground_check_left.position, check_radius, foreground);
+		Collider2D gR = Physics2D.OverlapCircle(ground_check_right.position, check_radius, foreground);
+		grounded = 	(gL != null && gL.GetComponent<TileContainer>() != null && gL.GetComponent<TileContainer>().is_active) ||
+					(gR != null && gR.GetComponent<TileContainer>() != null && gR.GetComponent<TileContainer>().is_active);
+		Collider2D w = Physics2D.OverlapCircle(wall_check_front.position, check_radius, foreground);
+		front_contact = w != null && w.GetComponent<TileContainer>() != null && w.GetComponent<TileContainer>().is_active;
+	}
+
+	public IEnumerator DisableControl(float time)
+	{
+		control_enabled = false;
+		yield return new WaitForSeconds(time);
+		control_enabled = true;
 	}
 
 	public override void NormalUpdate()

@@ -22,7 +22,7 @@ public class Player : Controllable
 	void Start()
 	{
 		//GameManager.current_game = new GameManager();
-		GameManager.SetGameAll(3, 3, 0.5f, 12);
+		GameManager.SetGameAll(6, 3, 1, 15);
 		GameManager.current_game.progression.character.health = 100;
 
 		isPlayer = GetType() == typeof(Player);
