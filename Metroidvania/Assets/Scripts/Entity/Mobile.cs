@@ -57,7 +57,6 @@ public class Mobile : ReadSpriteSheet
 	protected bool control_enabled = true;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
-	string tagtype = "Ground";
 	int delay_time = 0; // actual timer that's ticking
 
 	// for collision type checking
@@ -65,9 +64,10 @@ public class Mobile : ReadSpriteSheet
 	public Transform ground_check_right;
 	protected bool grounded = false;
 
-	public Transform wall_check_front;
+	public Transform wall_check_top;
+	public Transform wall_check_bottom;
 	protected bool front_contact = false;
-	private float check_radius = 0.2f;
+	private float check_radius = 0.1f;
 	public LayerMask foreground;
 	
 	
@@ -134,11 +134,35 @@ public class Mobile : ReadSpriteSheet
 			}
 		}
 	}
+
+	public void moveUp(float max, float accel_g, float accel_a)
+	{
+		if (control_enabled)
+		{
+			if (front_contact)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, max);
+			}
+		}
+	}
+
+	public void moveDown(float max, float accel_g, float accel_a)
+	{
+		if (control_enabled)
+		{
+			if (front_contact)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -max);
+			}
+		}
+	}
+
 	public void Attack(float max, float accel_g, float accel_a)
 	{
 		animate(attack_frames, attack_frame_delay);
 
 	}
+
 	public void jump(float jumpspeed)
 	{
 		if (grounded)
@@ -148,17 +172,17 @@ public class Mobile : ReadSpriteSheet
 				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
 			}
 		}
-		else if (rigidbody2D.velocity.y < 2)
+		else
 		{
-			if (front_contact && !this_info.facingRight && Input.GetKey(GameManager.current_game.preferences.IN_LEFT))
+			if (front_contact && !this_info.facingRight)
 			{
-				StartCoroutine(DisableControl(0.04f));
-				rigidbody2D.velocity = new Vector2(jumpspeed/1.4f, jumpspeed / 2);
+				StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
+				rigidbody2D.velocity = new Vector2(jumpspeed, jumpspeed / 1.5f);
 			}
-			else if (front_contact && this_info.facingRight && Input.GetKey(GameManager.current_game.preferences.IN_RIGHT))
+			else if (front_contact && this_info.facingRight)
 			{
-				StartCoroutine(DisableControl(0.04f));
-				rigidbody2D.velocity = new Vector2(-jumpspeed/1.4f, jumpspeed / 2);
+				StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
+				rigidbody2D.velocity = new Vector2(-jumpspeed, jumpspeed / 1.5f);
 			}
 		}
 	}
@@ -172,7 +196,7 @@ public class Mobile : ReadSpriteSheet
 				delay_time = delay;
 				if (this_info.animState < loop.x || this_info.animState > loop.y)
 				{
-					this_info.animState = (int)loop.x;
+					this_info.animState = (byte)loop.x;
 				}
 				else if (this_info.animState < loop.y)
 				{
@@ -180,7 +204,7 @@ public class Mobile : ReadSpriteSheet
 				}
 				else
 				{
-					this_info.animState = (int)loop.x;
+					this_info.animState = (byte)loop.x;
 				}
 			}
 			else
@@ -202,7 +226,7 @@ public class Mobile : ReadSpriteSheet
 				}
 				else
 				{
-					this_info.animState = (int)jump_frames.x;
+					this_info.animState = (byte)jump_frames.x;
 				}
 			}
 			else
@@ -250,14 +274,24 @@ public class Mobile : ReadSpriteSheet
 		Collider2D gR = Physics2D.OverlapCircle(ground_check_right.position, check_radius, foreground);
 		grounded = 	(gL != null && gL.GetComponent<TileContainer>() != null && gL.GetComponent<TileContainer>().is_active) ||
 					(gR != null && gR.GetComponent<TileContainer>() != null && gR.GetComponent<TileContainer>().is_active);
-		Collider2D w = Physics2D.OverlapCircle(wall_check_front.position, check_radius, foreground);
-		front_contact = w != null && w.GetComponent<TileContainer>() != null && w.GetComponent<TileContainer>().is_active;
+		Collider2D wT = Physics2D.OverlapCircle(wall_check_top.position, check_radius, foreground);
+		Collider2D wB = Physics2D.OverlapCircle(wall_check_bottom.position, check_radius, foreground);
+		front_contact = (wT != null && wT.GetComponent<TileContainer>() != null && wT.GetComponent<TileContainer>().is_active) ||
+						(wB != null && wB.GetComponent<TileContainer>() != null && wB.GetComponent<TileContainer>().is_active);
 	}
 
-	public IEnumerator DisableControl(float time)
+	public IEnumerator DisableControl(float time, KeyCode k)
 	{
 		control_enabled = false;
-		yield return new WaitForSeconds(time);
+		for (int i = 0; i < time * 50; i++)
+		{
+			if (Input.GetKey(k))
+			{
+				control_enabled = true;
+			}
+			yield return new WaitForFixedUpdate();
+			//yield return new WaitForSeconds(time);
+		}
 		control_enabled = true;
 	}
 

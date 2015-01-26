@@ -9,12 +9,10 @@ using System.Collections;
  * 
  */
 
-public class TileDisplay : MonoBehaviour
+public sealed class TileDisplay : MonoBehaviour
 {
-	private Texture2D tile_image;
-	private Rect display_rect = new Rect();
-	private Vector2 pivot = new Vector2(0.5f, 0.5f);
-	public int rotation;
+	public short rotation;
+	private Vector3 euler = new Vector3(0,0,0);
 
 
 	void Start()
@@ -23,15 +21,14 @@ public class TileDisplay : MonoBehaviour
 		                                   0.5f/(renderer.bounds.max.y - renderer.bounds.min.y),
 		                                   1);
 	}
-	
-	public void setImage(Texture2D img, int rot)
+
+	public void setImage(Sprite spr, int rot)
 	{
-		rotation = rot;
-		display_rect.width = img.width;
-		display_rect.height = img.height;
-		GetComponent<SpriteRenderer>().sprite = Sprite.Create(img, display_rect, pivot);
+		rotation = (short)rot;
+		GetComponent<SpriteRenderer>().sprite = spr;
 		Quaternion quat = Quaternion.identity;
-		quat.eulerAngles = new Vector3(0,0,rotation);
+		euler.z = rotation;
+		quat.eulerAngles = euler;
 		transform.rotation = quat;
 	}
 

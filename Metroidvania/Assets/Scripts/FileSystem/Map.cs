@@ -19,8 +19,8 @@ public class Map : ISerializable
 	/// </summary>
 	public TileInfo[][] tiles;
 	
-	private int default_tile_x = 100;
-	private int default_tile_y = 100;
+	private short default_tile_x = 100;
+	private short default_tile_y = 100;
 
 	
 	/// <summary>
@@ -79,10 +79,10 @@ public class Map : ISerializable
 	private void CreateTiles()
 	{
 		tiles = new TileInfo[default_tile_x][];
-		for (int i = 0; i < default_tile_x; i++)
+		for (short i = 0; i < default_tile_x; i++)
 		{
 			tiles[i] = new TileInfo[default_tile_y];
-			for (int j = 0; j < default_tile_y; j++)
+			for (short j = 0; j < default_tile_y; j++)
 			{
 				tiles[i][j] = new TileInfo(true, 0);
 			}

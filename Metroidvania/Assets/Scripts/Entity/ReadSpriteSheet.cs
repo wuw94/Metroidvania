@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ReadSpriteSheet : Recordable
 {	
@@ -10,6 +11,8 @@ public class ReadSpriteSheet : Recordable
 	private ReadSpriteSheet spritesheet; /// Sprite Sheet testing
 	private SpriteRenderer sprite; // Sprite Sheet testing
 	private int frame; // Sprite Sheet testing
+
+	private Sprite[] sprites = new Sprite[0];
 	
 	void Start()
 	{
@@ -18,10 +21,30 @@ public class ReadSpriteSheet : Recordable
 		sprite = GetComponent<SpriteRenderer> ();// Sprite Sheet testing
 
 		//StartCoroutine (SpriteSheetTest ()); // Sprite Sheet Testing;
-		
 
+		MakeSprites();
 	}
+
+	private void MakeSprites()
+	{
+		sprites = new Sprite[(int)(xy.x * xy.y)];
+		for (int i = 0; i < xy.x * xy.y; i++)
+		{
+			sprites[i] = MakeFrame(i);
+		}
+	}
+
 	public Sprite Frame(int frame)
+	{
+		if (sprites.Length == 0)
+		{
+			MakeSprites();
+		}
+		int frame_number = (frame >= 0 && frame <= ((xy.x * xy.y) - 1)) ? frame : 0;
+		return sprites[frame_number];
+	}
+
+	public Sprite MakeFrame(int frame)
 	{
 		int frame_number = (frame >= 0 && frame <= ((xy.x * xy.y) - 1)) ? frame : 0; // returns first frame if frame number to big or small;
 		int row = (frame_number / (int)xy.x);

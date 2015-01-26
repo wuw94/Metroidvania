@@ -34,6 +34,8 @@ public class RenderingSystem : MonoBehaviour
 
 	public bool tiles_loaded = false;
 
+	private long total_memory_allocated;
+	private long memory_allocated_low;
 
 	void Start()
 	{
@@ -49,6 +51,17 @@ public class RenderingSystem : MonoBehaviour
 
 	}
 
+	void OnGUI()
+	{
+		if (System.GC.GetTotalMemory(false) < total_memory_allocated)
+		{
+			memory_allocated_low = System.GC.GetTotalMemory(false);
+		}
+		GUI.Label(new Rect(10,Screen.height - 60, 500, 20), Application.dataPath);
+		GUI.Label(new Rect(10,Screen.height - 40, 500, 20), "Memory Allocated (now): " + ((float)total_memory_allocated / 1000000).ToString("n2") + "MB");
+		GUI.Label(new Rect(10,Screen.height - 20, 500, 20), "Memory Allocated (low): " + ((memory_allocated_low == 0) ? "Uncollected" : ((float)memory_allocated_low / 1000000).ToString("n2") + "MB"));
+		total_memory_allocated = System.GC.GetTotalMemory(false);
+	}
 
 	public void LoadedDone()
 	{

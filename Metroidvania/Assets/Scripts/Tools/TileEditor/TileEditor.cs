@@ -11,36 +11,36 @@ using System.Threading;
  * IMPORTANT! Do not put this on any object. It will place itself if the scene name is "Tile Editor"
  * 
  */
-public class TileEditor : MonoBehaviour
+public sealed class TileEditor : MonoBehaviour
 {
 	public class Tool
 	{
 		public int index = 0;
 	}
-	public class Tools : Tool
+	public sealed class Tools : Tool
 	{
 		public TerrainTool terrain_tool = new TerrainTool();
 		public SpawnTool spawn_tool = new SpawnTool();
 		public InteractiveTool interactive_tool = new InteractiveTool();
 
-		public class TerrainTool : Tool
+		public sealed class TerrainTool : Tool
 		{
 			public TileTool tile_tool = new TileTool();
 		
-			public class TileTool : Tool
+			public sealed class TileTool : Tool
 			{
 			}
 		}
 
-		public class SpawnTool : Tool
+		public sealed class SpawnTool : Tool
 		{
 		}
 
-		public class InteractiveTool : Tool
+		public sealed class InteractiveTool : Tool
 		{
 			public LeverTool lever_tool = new LeverTool();
 
-			public class LeverTool : Tool
+			public sealed class LeverTool : Tool
 			{
 				public bool adding = false;
 				public List<string> addable = new List<string>{"LeverIndicator(Clone)"};
@@ -78,9 +78,7 @@ public class TileEditor : MonoBehaviour
 	public Dictionary<EntityTypes, List<GameObject>> indicators = new Dictionary<EntityTypes, List<GameObject>>();
 
 	private Tools tools = new Tools();
-
-	private string[] tile_types = new string[]{"GrassTile", "Test"};
-
+	
 	private bool show_tab = true;
 	private Rect full_window_rect = new Rect(0,0,Screen.width,Screen.height); // for displaying GUI
 	private Rect left_window_rect = new Rect(0,0,Screen.width - 200,Screen.height);
@@ -299,7 +297,6 @@ public class TileEditor : MonoBehaviour
 			}
 			GUI.Label(new Rect(130,260+20*tools.interactive_tool.index,10, 20), "x");
 		}
-		GUI.Label(new Rect(10,left_window_rect.height - 20, 500, 20), "Memory Allocated: " + System.GC.GetTotalMemory(false).ToString());
 	}
 
 
@@ -427,7 +424,7 @@ public class TileEditor : MonoBehaviour
 					if (possible_selection.Contains(hit.collider.gameObject.name))
 					{
 						selection = hit.collider.gameObject;
-						UnityEditor.Selection.objects = new GameObject[]{selection};
+						//UnityEditor.Selection.objects = new GameObject[]{selection};
 					}
 				}
 				if (is_dragging)
@@ -451,7 +448,7 @@ public class TileEditor : MonoBehaviour
 		if (Input.GetKey(KeyCode.Escape))
 		{
 			selection = null;
-			UnityEditor.Selection.objects = new GameObject[0];
+			//UnityEditor.Selection.objects = new GameObject[0];
 		}
 	}
 	
@@ -542,9 +539,13 @@ public class TileEditor : MonoBehaviour
 	/// </summary>
 	private void Save()
 	{
+		if (!Directory.Exists(Application.dataPath + "/Maps")) // Create a directory /Saved if it doesn't already exist
+		{
+			Directory.CreateDirectory(Application.dataPath + "/Maps");
+		}
+		FileStream file = File.Create(Application.dataPath + "/Maps/" + map_name + ".md");
 		// Serialize Map object into a file
 		BinaryFormatter bf = new BinaryFormatter();
-		FileStream file = File.Create(Application.dataPath + "/Maps/" + map_name + ".md");
 		bf.Serialize(file, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 		Debug.Log("Saved: " + Application.dataPath + "/Maps/" + map_name + ".md");
 		file.Close();

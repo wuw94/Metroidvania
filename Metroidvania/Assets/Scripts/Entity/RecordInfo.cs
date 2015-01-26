@@ -5,11 +5,11 @@ public struct RecordInfo
 {
 	public float posX;
 	public float posY;
-	public int animState;
-	public int eventState;
+	public byte animState;
+	public byte eventState;
 	public bool facingRight;
 
-	public RecordInfo(float pX, float pY, int aS, int eS, bool fR)
+	public RecordInfo(float pX, float pY, byte aS, byte eS, bool fR)
 	{
 		posX = pX;
 		posY = pY;

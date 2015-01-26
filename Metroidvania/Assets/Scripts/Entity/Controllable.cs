@@ -37,9 +37,14 @@ public class Controllable : Mobile
 	private bool can_check_action = true;
 	private bool IN_TIME_SHIFT = false;
 	private bool can_check_time_shift = true;
+
 	private bool IN_LEFT = false;
 	private bool IN_RIGHT = false;
+	private bool IN_UP = false;
+	private bool IN_DOWN = false;
+
 	private bool IN_JUMP = false;
+	private bool can_check_jump = true;
 	private bool IN_ATTACK = false;
 
 	private ArrayList current_collisions = new ArrayList();
@@ -83,9 +88,18 @@ public class Controllable : Mobile
 			{
 				IN_RIGHT = true;
 			}
-			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP)
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_UP)
+			{
+				IN_UP = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_DOWN)
+			{
+				IN_DOWN = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP && can_check_jump)
 			{
 				IN_JUMP = true;
+				can_check_jump = false;
 			}
 			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
 			{
@@ -112,9 +126,18 @@ public class Controllable : Mobile
 			{
 				IN_RIGHT = false;
 			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_UP)
+			{
+				IN_UP = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_DOWN)
+			{
+				IN_DOWN = false;
+			}
 			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP)
 			{
 				IN_JUMP = false;
+				can_check_jump = true;
 			}
 			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
 			{
@@ -182,6 +205,7 @@ public class Controllable : Mobile
 		{
 			if (IN_JUMP)
 			{
+				IN_JUMP = false;
 				jump(c.jump_speed);
 			}
 			if (IN_LEFT)
@@ -191,6 +215,14 @@ public class Controllable : Mobile
 			if (IN_RIGHT)
 			{
 				moveRight(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
+			if (IN_UP)
+			{
+				moveUp(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
+			}
+			if (IN_DOWN)
+			{
+				moveDown(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
 			if (IN_ATTACK)
 			{

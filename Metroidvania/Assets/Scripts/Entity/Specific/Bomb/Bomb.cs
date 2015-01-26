@@ -13,14 +13,14 @@ using System.Collections;
 
 public class Bomb : Immobile
 {
-	public int delay_time = 25;
+	public byte delay_time = 25;
 	public int power = 20;
 	private Color new_color;
 
 	void Start()
 	{
 		new_color = renderer.material.color;
-		this_info.eventState = delay_time;
+		this_info.eventState = (byte)delay_time;
 	}
 
 	void Update()
@@ -41,7 +41,7 @@ public class Bomb : Immobile
 	{
 		if (this_info.eventState == delay_time)
 		{
-			this_info.eventState = delay_time - 1;
+			this_info.eventState = (byte)(delay_time - 1);
 		}
 	}
 

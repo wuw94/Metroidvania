@@ -5,9 +5,9 @@ using System.Collections;
 public struct TileInfo
 {
 	public bool active;
-	public int type;
+	public byte type;
 
-	public TileInfo(bool a, int t)
+	public TileInfo(bool a, byte t)
 	{
 		active = a;
 		type = t;
