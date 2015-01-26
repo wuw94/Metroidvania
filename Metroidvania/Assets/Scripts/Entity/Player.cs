@@ -21,9 +21,12 @@ public class Player : Controllable
 
 	void Start()
 	{
+		ChangeLoop(still_sprites);
+		StartCoroutine(Animate());
 		//GameManager.current_game = new GameManager();
 		GameManager.SetGameAll(3, 1.5f, 1.5f, 7);
 		GameManager.current_game.progression.character.health = 100;
+
 
 		isPlayer = GetType() == typeof(Player);
 	}

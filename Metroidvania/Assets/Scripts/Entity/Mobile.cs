@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* Mobile.
  * Objects that inherit from the Mobile class are able to:
@@ -39,27 +40,16 @@ using System.Collections;
 
 public class Mobile : ReadSpriteSheet
 {
-	// Start and end frames to loop through, inclusive
-	// Use the same number if there's only one frame
-	public Vector2 still_frames;
-	public int still_frame_delay;
-
-	public Vector2 run_frames;
-	public int run_frame_delay;
-
-	public Vector2 jump_frames;
-	public int jump_frame_delay;
-
-	public Vector2 attack_frames;
-	public int attack_frame_delay;
 
 	protected bool is_attacking = false;
 	protected bool control_enabled = true;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
-	int delay_time = 0; // actual timer that's ticking
 
 	// for collision type checking
+	private float check_radius = 0.1f;
+	public LayerMask foreground;
+
 	public Transform ground_check_left;
 	public Transform ground_check_right;
 	protected bool grounded = false;
@@ -67,8 +57,6 @@ public class Mobile : ReadSpriteSheet
 	public Transform wall_check_top;
 	public Transform wall_check_bottom;
 	protected bool front_contact = false;
-	private float check_radius = 0.1f;
-	public LayerMask foreground;
 	
 	
 
@@ -76,28 +64,29 @@ public class Mobile : ReadSpriteSheet
 	{
 		if (grounded)
 		{
-			animate(still_frames, still_frame_delay);
+			ChangeLoop(still_sprites);
 			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
 		}
 		else
 		{
-			animate(jump_frames, jump_frame_delay);
+			ChangeLoop(jump_sprites);
 		}
 	}
 
 	public void moveLeft(float max, float accel_g, float accel_a)
 	{
 		this_info.facingRight = false;
-		animate(run_frames, run_frame_delay);
 
 		if (control_enabled)
 		{
 			if (grounded)
 			{
+				ChangeLoop(move_sprites);
 				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 			}
 			else
 			{
+				ChangeLoop(jump_sprites);
 				if (rigidbody2D.velocity.x > -max)
 				{
 					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
@@ -113,16 +102,17 @@ public class Mobile : ReadSpriteSheet
 	public void moveRight(float max, float accel_g, float accel_a)
 	{
 		this_info.facingRight = true;
-		animate(run_frames, run_frame_delay);
 
 		if (control_enabled)
 		{
 			if (grounded)
 			{
+				ChangeLoop(move_sprites);
 				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 			}
 			else
 			{
+				ChangeLoop(jump_sprites);
 				if (rigidbody2D.velocity.x < max)
 				{
 					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
@@ -159,7 +149,7 @@ public class Mobile : ReadSpriteSheet
 
 	public void Attack(float max, float accel_g, float accel_a)
 	{
-		animate(attack_frames, attack_frame_delay);
+		//animate(attack_frames, attack_frame_delay);
 
 	}
 
@@ -183,55 +173,6 @@ public class Mobile : ReadSpriteSheet
 			{
 				StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
 				rigidbody2D.velocity = new Vector2(-jumpspeed, jumpspeed / 1.5f);
-			}
-		}
-	}
-
-	private void animate(Vector2 loop, int delay)
-	{
-		if (grounded)
-		{
-			if (delay_time <= 0)
-			{
-				delay_time = delay;
-				if (this_info.animState < loop.x || this_info.animState > loop.y)
-				{
-					this_info.animState = (byte)loop.x;
-				}
-				else if (this_info.animState < loop.y)
-				{
-					this_info.animState++;
-				}
-				else
-				{
-					this_info.animState = (byte)loop.x;
-				}
-			}
-			else
-			{
-				delay_time--;
-			}
-		}
-		else if (front_contact)
-		{
-		}
-		else
-		{
-			if (delay_time <= 0)
-			{
-				delay_time = delay;
-				if (this_info.animState < jump_frames.y)
-				{
-					this_info.animState++;
-				}
-				else
-				{
-					this_info.animState = (byte)jump_frames.x;
-				}
-			}
-			else
-			{
-				delay_time--;
 			}
 		}
 	}
@@ -297,24 +238,28 @@ public class Mobile : ReadSpriteSheet
 
 	public override void NormalUpdate()
 	{
+		base.NormalUpdate();
 		checkCollisions();
 		manageVelocity();
 	}
 	
 	public override void Record()
 	{
+		base.Record();
 		manageVelocity();
 		recordInfo();
 	}
 
 	public override void Rewind()
 	{
+		base.Rewind();
 		manageVelocity();
 		readInfo();
 	}
 	
 	public override void Playback()
 	{
+		base.Playback();
 		manageVelocity();
 		readInfo();
 	}
