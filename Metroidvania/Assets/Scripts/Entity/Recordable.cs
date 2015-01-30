@@ -32,6 +32,11 @@ using System.Linq;
  * 
  */
 
+//jude changes
+/*
+	made operation
+ */
+
 public class Recordable : MonoBehaviour
 {
 	// Record data as RecordInfo struct
@@ -49,7 +54,7 @@ public class Recordable : MonoBehaviour
 
 
 	// Controls preferences
-	private readonly int rewind_speed = 4;
+	protected readonly int rewind_speed = 4;
 	public static bool dim = false;
 	
 	void Start()
@@ -103,6 +108,7 @@ public class Recordable : MonoBehaviour
 	{
 		if (change_mode_cd == 0)
 		{
+
 			change_mode_cd = change_mode_cd_max;
 			if (operation_mode < 3)
 			{
@@ -129,7 +135,7 @@ public class Recordable : MonoBehaviour
 			{
 				startPlayback();
 			}
-			print("operation_mode changed, is now " + operation_mode);
+			print("operation_mode changed, is now " + operation_mode + "by" + gameObject.name);
 		}
 	}
 
@@ -197,6 +203,7 @@ public class Recordable : MonoBehaviour
 	{
 		if (record_index > 0)
 		{
+
 			transform.position = new Vector3(recorded_states[record_index].posX,
 			                                 recorded_states[record_index].posY,
 			                                 transform.position.z);
@@ -222,6 +229,7 @@ public class Recordable : MonoBehaviour
 		if (record_index > 0)
 		{
 			record_index -= rewind_speed;
+
 		}
 		else
 		{

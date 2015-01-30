@@ -15,39 +15,30 @@ using System.Collections;
 
 public class DependantPlatform : Immobile
 {
-	public GameObject[] dependant_on; // Change this to a lever type when we have a lever class
-	public int behavior;
+	// Change this to a lever type when we have a lever class
+	public bool start;
 
 
-	void changeCollisions(bool on)
+	void Start (){
+
+		transform.collider2D.enabled = start;
+		renderer.enabled = start;
+
+		}
+
+	public void changeCollisions()
 	{
-		transform.collider2D.enabled = on;
-		renderer.enabled = on;
+		bool c = transform.collider2D.enabled;
+		transform.collider2D.enabled = !c;
+		renderer.enabled = !c;
 	}
 
 
 
 	//--------------------------- Behaviors ---------------------------
-	void behavior0()
-	{
-		if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(false);}
-		else if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(true);}
-	}
-
-	void behavior1()
-	{
-		if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 0) {changeCollisions(true);}
-		else if (dependant_on[0].GetComponent<Lever>().this_info.eventState == 1) {changeCollisions(false);}
-	}
-
-	void behavior2()
-	{
-	}
 
 	void Update()
 	{
-		if (behavior == 0) {behavior0();}
-		else if (behavior == 1){behavior1();}
-		else if (behavior == 2){behavior2();}
+
 	}
 }
