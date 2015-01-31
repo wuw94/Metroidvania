@@ -22,7 +22,7 @@ public sealed class ProgressionManager
 	/// <summary>
 	/// Your game's character data.
 	/// </summary>
-	public CharacterManager character;
+	public Dictionary<MobileTypes, CharacterManager> characters = new Dictionary<MobileTypes, CharacterManager>();
 
 	/// <summary>
 	/// Dictionary of this game's maps.
@@ -40,7 +40,7 @@ public sealed class ProgressionManager
 	/// </summary>
 	public ProgressionManager()
 	{
-		this.character = new CharacterManager();
+		this.characters.Add(MobileTypes.Player, new CharacterManager());
 		this.maps = new Dictionary<string, Map>();
 	}
 }

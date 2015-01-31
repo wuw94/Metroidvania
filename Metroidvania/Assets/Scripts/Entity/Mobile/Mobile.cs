@@ -40,13 +40,14 @@ using System.Collections.Generic;
 
 public class Mobile : ReadSpriteSheet
 {
-
+	public float grav_scale;
 	protected bool is_attacking = false;
 	protected bool control_enabled = true;
 	bool velocity_assigned = false;
 	protected bool isPlayer;
 
 	// for collision type checking
+	public bool accurate_check;
 	private float check_radius = 0.1f;
 	public LayerMask foreground;
 
@@ -56,20 +57,42 @@ public class Mobile : ReadSpriteSheet
 
 	public Transform wall_check_top;
 	public Transform wall_check_bottom;
+	public Transform wall_check_back;
 	protected bool front_contact = false;
-	
-	
+	protected bool back_contact = false;
+
+	public MobileTypes mobile_type;
+	protected bool updraft_contact = false;
+
+	public void Start()
+	{
+		base.Start();
+		if (Application.loadedLevelName == "TileEditor")
+		{
+			rigidbody2D.isKinematic = true;
+		}
+	}
 
 	public void noInput()
 	{
-		if (grounded)
+		if (updraft_contact)
 		{
-			ChangeLoop(still_sprites);
-			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
 		}
 		else
 		{
-			ChangeLoop(jump_sprites);
+			if (front_contact)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + (this_info.facingRight ? 0.5f : -0.5f), 0);
+			}
+			if (grounded)
+			{
+				ChangeLoop(still_sprites);
+				rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
+			}
+			else
+			{
+				ChangeLoop(jump_sprites);
+			}
 		}
 	}
 
@@ -79,21 +102,27 @@ public class Mobile : ReadSpriteSheet
 
 		if (control_enabled)
 		{
-			if (grounded)
+			if (updraft_contact)
 			{
-				ChangeLoop(move_sprites);
-				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 			}
 			else
 			{
-				ChangeLoop(jump_sprites);
-				if (rigidbody2D.velocity.x > -max)
+				if (grounded)
 				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
+					ChangeLoop(move_sprites);
+					rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 				}
-				if (front_contact && rigidbody2D.velocity.y < 0)
+				else
 				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					ChangeLoop(jump_sprites);
+					if (rigidbody2D.velocity.x > -max)
+					{
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
+					}
+					if (front_contact)
+					{
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					}
 				}
 			}
 		}
@@ -105,21 +134,27 @@ public class Mobile : ReadSpriteSheet
 
 		if (control_enabled)
 		{
-			if (grounded)
+			if (updraft_contact)
 			{
-				ChangeLoop(move_sprites);
-				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 			}
 			else
 			{
-				ChangeLoop(jump_sprites);
-				if (rigidbody2D.velocity.x < max)
+				if (grounded)
 				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
+					ChangeLoop(move_sprites);
+					rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 				}
-				if (front_contact && rigidbody2D.velocity.y < 0)
+				else
 				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					ChangeLoop(jump_sprites);
+					if (rigidbody2D.velocity.x < max)
+					{
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
+					}
+					if (front_contact)
+					{
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					}
 				}
 			}
 		}
@@ -129,9 +164,15 @@ public class Mobile : ReadSpriteSheet
 	{
 		if (control_enabled)
 		{
-			if (front_contact)
+			if (updraft_contact)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, max);
+			}
+			else
+			{
+				if (front_contact)
+				{
+					rigidbody2D.velocity = new Vector2(this_info.facingRight ? 1 : -1, max);
+				}
 			}
 		}
 	}
@@ -140,9 +181,15 @@ public class Mobile : ReadSpriteSheet
 	{
 		if (control_enabled)
 		{
-			if (front_contact)
+			if (updraft_contact)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, -max);
+			}
+			else
+			{
+				if (front_contact)
+				{
+					rigidbody2D.velocity = new Vector2(this_info.facingRight ? 1 : -1, -max);
+				}
 			}
 		}
 	}
@@ -155,25 +202,53 @@ public class Mobile : ReadSpriteSheet
 
 	public void jump(float jumpspeed)
 	{
-		if (grounded)
+		if (updraft_contact)
 		{
-			if (rigidbody2D.velocity.y < jumpspeed)
-			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
-			}
 		}
 		else
 		{
-			if (front_contact && !this_info.facingRight)
+			if (grounded)
 			{
-				StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
-				rigidbody2D.velocity = new Vector2(jumpspeed, jumpspeed / 1.5f);
+				if (rigidbody2D.velocity.y < jumpspeed)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
+				}
 			}
-			else if (front_contact && this_info.facingRight)
+			else
 			{
-				StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
-				rigidbody2D.velocity = new Vector2(-jumpspeed, jumpspeed / 1.5f);
+				if (front_contact && !this_info.facingRight)
+				{
+					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
+					rigidbody2D.velocity = new Vector2(jumpspeed, 0);
+				}
+				else if (front_contact && this_info.facingRight)
+				{
+					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
+					rigidbody2D.velocity = new Vector2(-jumpspeed, 0);
+				}
+				else if (back_contact && this_info.facingRight)
+				{
+					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
+					rigidbody2D.velocity = new Vector2(jumpspeed, 0);
+				}
+				else if (back_contact && !this_info.facingRight)
+				{
+					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
+					rigidbody2D.velocity = new Vector2(-jumpspeed, 0);
+				}
 			}
+		}
+	}
+
+	private void manageGravityScale()
+	{
+		if (front_contact || updraft_contact)
+		{
+			rigidbody2D.gravityScale = 0;
+		}
+		else
+		{
+			rigidbody2D.gravityScale = grav_scale;
 		}
 	}
 
@@ -211,14 +286,22 @@ public class Mobile : ReadSpriteSheet
 
 	private void checkCollisions()
 	{
-		Collider2D gL = Physics2D.OverlapCircle(ground_check_left.position, check_radius, foreground);
-		Collider2D gR = Physics2D.OverlapCircle(ground_check_right.position, check_radius, foreground);
-		grounded = 	(gL != null && gL.GetComponent<TileContainer>() != null && gL.GetComponent<TileContainer>().is_active) ||
-					(gR != null && gR.GetComponent<TileContainer>() != null && gR.GetComponent<TileContainer>().is_active);
-		Collider2D wT = Physics2D.OverlapCircle(wall_check_top.position, check_radius, foreground);
-		Collider2D wB = Physics2D.OverlapCircle(wall_check_bottom.position, check_radius, foreground);
-		front_contact = (wT != null && wT.GetComponent<TileContainer>() != null && wT.GetComponent<TileContainer>().is_active) ||
-						(wB != null && wB.GetComponent<TileContainer>() != null && wB.GetComponent<TileContainer>().is_active);
+		if (accurate_check)
+		{
+			Collider2D gL = Physics2D.OverlapCircle(ground_check_left.position, check_radius, foreground);
+			Collider2D gR = Physics2D.OverlapCircle(ground_check_right.position, check_radius, foreground);
+			grounded = 	(gL != null && gL.GetComponent<TileContainer>() != null && gL.GetComponent<TileContainer>().is_active) ||
+						(gR != null && gR.GetComponent<TileContainer>() != null && gR.GetComponent<TileContainer>().is_active);
+			Collider2D wT = Physics2D.OverlapCircle(wall_check_top.position, check_radius, foreground);
+			Collider2D wB = Physics2D.OverlapCircle(wall_check_bottom.position, check_radius, foreground);
+			front_contact = (wT != null && wT.GetComponent<TileContainer>() != null && wT.GetComponent<TileContainer>().is_active) ||
+							(wB != null && wB.GetComponent<TileContainer>() != null && wB.GetComponent<TileContainer>().is_active);
+			Collider2D wBa = Physics2D.OverlapCircle(wall_check_back.position, check_radius, foreground);
+			back_contact = (wBa != null && wBa.GetComponent<TileContainer>() != null && wBa.GetComponent<TileContainer>().is_active);
+		}
+		else
+		{
+		}
 	}
 
 	public IEnumerator DisableControl(float time, KeyCode k)
@@ -239,6 +322,7 @@ public class Mobile : ReadSpriteSheet
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
+		manageGravityScale();
 		checkCollisions();
 		manageVelocity();
 	}
@@ -246,6 +330,7 @@ public class Mobile : ReadSpriteSheet
 	public override void Record()
 	{
 		base.Record();
+		manageGravityScale();
 		manageVelocity();
 		recordInfo();
 	}
@@ -253,6 +338,7 @@ public class Mobile : ReadSpriteSheet
 	public override void Rewind()
 	{
 		base.Rewind();
+		manageGravityScale();
 		manageVelocity();
 		readInfo();
 	}
@@ -260,6 +346,7 @@ public class Mobile : ReadSpriteSheet
 	public override void Playback()
 	{
 		base.Playback();
+		manageGravityScale();
 		manageVelocity();
 		readInfo();
 	}

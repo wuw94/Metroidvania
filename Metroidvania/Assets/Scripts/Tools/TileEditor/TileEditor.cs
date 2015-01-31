@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-
-using System.Threading;
+using System.Reflection;
 
 /* TileEditor
  * 
@@ -22,6 +21,7 @@ public sealed class TileEditor : MonoBehaviour
 		public TerrainTool terrain_tool = new TerrainTool();
 		public SpawnTool spawn_tool = new SpawnTool();
 		public InteractiveTool interactive_tool = new InteractiveTool();
+		public EntityTool entity_tool = new EntityTool();
 
 		public sealed class TerrainTool : Tool
 		{
@@ -47,6 +47,15 @@ public sealed class TileEditor : MonoBehaviour
 			}
 		}
 
+		public sealed class EntityTool : Tool
+		{
+			public UpdraftGooTool updraft_goo_tool = new UpdraftGooTool();
+
+			public sealed class UpdraftGooTool : Tool
+			{
+			}
+		}
+
 	}
 
 
@@ -62,7 +71,7 @@ public sealed class TileEditor : MonoBehaviour
 
 
 
-
+	public List<System.Type> z = new List<System.Type>(){typeof(UpdraftGoo)};
 
 
 
@@ -94,11 +103,14 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			indicators.Add(t, new List<GameObject>());
 		}
-		indicators[EntityTypes.Spawn].Add((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/SpawnPointIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation));
-		indicators[EntityTypes.Spawn][0].gameObject.renderer.material.color = new Color(1,1,1,0);
 		indicators[EntityTypes.Tile].Add((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/TileIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation));
 		indicators[EntityTypes.Tile][0].gameObject.renderer.material.color = new Color(1,1,1,0.1f);
 		//indicators[EntityTypes.Interactive] = new List<GameObject>();
+
+		//TODO
+		//Player p = ((GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), transform.rotation)).GetComponent<Player>();
+		//GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[typeof(Player)].Add(p);
+
 		StartCoroutine(UpdateFPS());
 	}
 
@@ -166,8 +178,6 @@ public sealed class TileEditor : MonoBehaviour
 			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 			GetComponent<RenderingSystem>().LoadedDone();
 
-			indicators[EntityTypes.Spawn][0].transform.position = new Vector2(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].spawn_point.x,
-			                                                                  GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].spawn_point.y);
 		}
 	}
 
@@ -219,8 +229,9 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			tools.index = 2;
 		}
-		if (GUI.Button(new Rect(20,320,100,20), "n/a"))
+		if (GUI.Button(new Rect(20,320,100,20), "Entity"))
 		{
+			tools.index = 3;
 		}
 		if (GUI.Button(new Rect(20,340,100,20), "n/a"))
 		{
@@ -296,6 +307,24 @@ public sealed class TileEditor : MonoBehaviour
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  the entities affected by a particular lever");
 			}
 			GUI.Label(new Rect(130,260+20*tools.interactive_tool.index,10, 20), "x");
+		}
+		else if (tools.index == 3)
+		{
+			if (GUI.Button(new Rect(140,260,100,20), "Updraft Goo"))
+			{
+				tools.entity_tool.index = 0;
+			}
+			if (GUI.Button(new Rect(140,280,100,20), "n/a"))
+			{
+			}
+			if (tools.entity_tool.index == 0)
+			{
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Updraft Goo");
+				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
+				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Sets the spawn location for a new Updraft Goo");
+			}
+			GUI.Label(new Rect(130,260+20*tools.entity_tool.index,10, 20), "x");
 		}
 	}
 
@@ -395,6 +424,7 @@ public sealed class TileEditor : MonoBehaviour
 			Tool_Tile(mouse);
 			Tool_Spawn(mouse);
 			Tool_Lever(mouse);
+			Tool_Updraft_Goo(mouse);
 		}
 	}
 
@@ -473,14 +503,13 @@ public sealed class TileEditor : MonoBehaviour
 
 	private void Tool_Spawn(Vector2 mouse)
 	{
-		indicators[EntityTypes.Spawn][0].renderer.material.color = new Color(1,1,1,1);
+		((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0]).renderer.material.color = new Color(1,1,1,1);
 		if (tools.index == 1) // Spawn tool
 		{
 			if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.W))
 			{
-				indicators[EntityTypes.Spawn][0].transform.position = mouse;
-				((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point = mouse;
-				indicators[EntityTypes.Spawn][0].renderer.material.color = new Color(1,1,1,0.5f);
+				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0]).transform.position = mouse;
+				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0]).renderer.material.color = new Color(1,1,1,0.5f);
 			}
 		}
 	}
@@ -494,9 +523,9 @@ public sealed class TileEditor : MonoBehaviour
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
-					GameObject lever = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/LeverIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation);
-					indicators[EntityTypes.Interactive].Add(lever);
-
+					LeverIndicator lever = ((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/LeverIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<LeverIndicator>();
+					//indicators[EntityTypes.Interactive].Add(lever);
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1].Add(lever);
 					// we need a way to add in more valuable data (xy position, which platforms it is linked to)
 					//((ArrayList)((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).entity[EntityTypes.Interactive]).Add(new PseudoVector2(lever.transform.position.x, lever.transform.position.y));
 				}
@@ -512,6 +541,37 @@ public sealed class TileEditor : MonoBehaviour
 					Destroy(lever);
 				}
 			}
+		}
+	}
+
+	private void Tool_Updraft_Goo(Vector2 mouse)
+	{
+		if (tools.index == 3 && tools.entity_tool.index == 0)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform == null)
+				{
+					GameObject updraft_goo = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/UpdraftGooIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation);
+					indicators[EntityTypes.Entity].Add(updraft_goo);
+
+					//PseudoGameObject(updraft_goo);
+					//GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entity.Add();
+				}
+			}
+			if (Input.GetKey(KeyCode.W))
+			{		
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.name == "UpdraftGooIndicator(Clone)")
+				{
+					List<GameObject> interactives = indicators[EntityTypes.Entity];
+					GameObject updraft_goo = interactives[interactives.IndexOf(hit.transform.gameObject)];
+					interactives.Remove(updraft_goo);
+					Destroy(updraft_goo);
+				}
+			}
+
 		}
 	}
 
@@ -539,6 +599,7 @@ public sealed class TileEditor : MonoBehaviour
 	/// </summary>
 	private void Save()
 	{
+
 		if (!Directory.Exists(Application.dataPath + "/Maps")) // Create a directory /Saved if it doesn't already exist
 		{
 			Directory.CreateDirectory(Application.dataPath + "/Maps");
@@ -549,5 +610,6 @@ public sealed class TileEditor : MonoBehaviour
 		bf.Serialize(file, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 		Debug.Log("Saved: " + Application.dataPath + "/Maps/" + map_name + ".md");
 		file.Close();
+		GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].ConvertToGameObject();
 	}
 }

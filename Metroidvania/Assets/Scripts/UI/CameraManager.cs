@@ -14,7 +14,7 @@ public class CameraManager : MonoBehaviour
 {
 	// Lerp variables
 	public GameObject follow;
-	public GameObject player;
+	public Player player;
 	private float speed = 5;
 
 	// Shake variables
@@ -23,7 +23,7 @@ public class CameraManager : MonoBehaviour
 
 	public void returnToPlayer()
 	{
-		follow = player;
+		follow = player.gameObject;
 	}
 
 	void Start()
@@ -34,8 +34,18 @@ public class CameraManager : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		detectPlayer();
 		manageLerp();
 		manageShake();
+	}
+
+	private void detectPlayer()
+	{
+		if (player == null)
+		{
+			player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		}
+		returnToPlayer();
 	}
 
 	private void manageLerp()

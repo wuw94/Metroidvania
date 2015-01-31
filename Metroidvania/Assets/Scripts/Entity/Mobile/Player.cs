@@ -21,11 +21,9 @@ public class Player : Controllable
 
 	void Start()
 	{
-		ChangeLoop(still_sprites);
-		StartCoroutine(Animate());
+		base.Start();
 		//GameManager.current_game = new GameManager();
-		GameManager.SetGameAll(3, 1.5f, 1.5f, 7);
-		GameManager.current_game.progression.character.health = 100;
+		GameManager.SetGameAll();
 
 
 		isPlayer = GetType() == typeof(Player);
@@ -34,7 +32,7 @@ public class Player : Controllable
 
 	public override void Damage(float amount)
 	{
-		GameManager.current_game.progression.character.changeHealth(-amount);
+		GameManager.current_game.progression.characters[MobileTypes.Player].changeHealth(-amount);
 	}
 	
 	public override void NormalUpdate()
@@ -43,8 +41,8 @@ public class Player : Controllable
 		indicator_created = false;
 		checkAction();
 		checkTimeShift();
-		checkMovementInputs(GameManager.current_game.progression.character);
-		GameManager.current_game.progression.character.changeHealth(heal);
+		checkMovementInputs(GameManager.current_game.progression.characters[MobileTypes.Player]);
+		GameManager.current_game.progression.characters[MobileTypes.Player].changeHealth(heal);
 		//Debug.Log(grounded);
 	}
 
@@ -54,8 +52,8 @@ public class Player : Controllable
 		clone_created = false;
 		checkAction();
 		checkTimeShift();
-		checkMovementInputs(GameManager.current_game.progression.character);
-		GameManager.current_game.progression.character.changeHealth(heal);
+		checkMovementInputs(GameManager.current_game.progression.characters[MobileTypes.Player]);
+		GameManager.current_game.progression.characters[MobileTypes.Player].changeHealth(heal);
 
 		if (!indicator_created)
 		{
@@ -69,7 +67,7 @@ public class Player : Controllable
 	public override void Rewind()
 	{
 		base.Rewind();
-		GameManager.current_game.progression.character.changeHealth(heal);
+		GameManager.current_game.progression.characters[MobileTypes.Player].changeHealth(heal);
 	}
 
 	public override void Playback()

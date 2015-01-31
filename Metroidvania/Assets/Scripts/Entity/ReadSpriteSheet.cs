@@ -8,6 +8,12 @@ public class ReadSpriteSheet : Recordable
 	public Sprite[] jump_sprites;
 	public Sprite[] move_sprites;
 	private Sprite[] current_loop;
+
+	public void Start()
+	{
+		ChangeLoop(still_sprites);
+		StartCoroutine(Animate());
+	}
 	
 	protected void ChangeLoop(Sprite[] new_loop)
 	{
@@ -21,7 +27,7 @@ public class ReadSpriteSheet : Recordable
 			for (byte i = 0; i < current_loop.Length; i++)
 			{
 				GetComponent<SpriteRenderer>().sprite = current_loop[i];
-				yield return new WaitForSeconds(0.1f);
+				yield return new WaitForSeconds(0.08f);
 			}
 		}
 	}

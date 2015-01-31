@@ -59,18 +59,16 @@ public sealed class GameManager
 	}
 
 	/// <summary>
-	/// Reminder, we need to change this.
+	/// Call, edit this function based on testing requirements.
 	/// </summary>
-	public static void SetGameAll(float msm, float msag, float msaa, float js)
+	public static void SetGameAll()
 	{
-		// Parameters in this order:
-		// 1. move speed maximum
-		// 2. move speed acceleration (ground)
-		// 3. move speed acceleration (air)
-		// 4. jump speed
-		current_game.progression.character.move_speed_max = msm;
-		current_game.progression.character.move_speed_accel_ground = msag;
-		current_game.progression.character.move_speed_accel_air = msaa;
-		current_game.progression.character.jump_speed = js;
+		GameManager.current_game.progression.characters[MobileTypes.Player].health = 100;
+		current_game.progression.characters[MobileTypes.Player].move_speed_max = 3;
+		current_game.progression.characters[MobileTypes.Player].move_speed_accel_ground = 1.5f;
+		current_game.progression.characters[MobileTypes.Player].move_speed_accel_air = 1.5f;
+		current_game.progression.characters[MobileTypes.Player].jump_speed = 7;
+
+		current_game.progression.characters[MobileTypes.Player].equipped.Add(Equipment.Parachute);
 	}
 }

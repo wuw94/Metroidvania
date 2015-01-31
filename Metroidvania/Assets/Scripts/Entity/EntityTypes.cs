@@ -5,5 +5,6 @@ public enum EntityTypes
 {
 	Tile,
 	Spawn,
-	Interactive
+	Interactive,
+	Entity
 }

@@ -49,6 +49,11 @@ public class Controllable : Mobile
 
 	private ArrayList current_collisions = new ArrayList();
 
+	public void Start()
+	{
+		base.Start();
+	}
+
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (!current_collisions.Contains(col))
@@ -228,7 +233,7 @@ public class Controllable : Mobile
 			{
 				Attack(c.move_speed_max, c.move_speed_accel_ground, c.move_speed_accel_air);
 			}
-			if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_ATTACK)
+			if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_UP && !IN_DOWN && !IN_ATTACK)
 			{
 				noInput();
 			}

@@ -21,24 +21,29 @@ public class Map : ISerializable
 	
 	private short default_tile_x = 100;
 	private short default_tile_y = 100;
-
 	
-	/// <summary>
-	/// XY data of where the player will be placed upon entering map.
-	/// </summary>
-	public PseudoVector2 spawn_point = new PseudoVector2(0,0);
 
 	/// <summary>
-	/// Hashtable of entities (enemies, levers, bombs, items, ladders). Access the entity by entering the class type
+	/// <para>Number of types of entities stored. Types:</para>
+	/// <para>0: Player</para>
 	/// </summary>
-	public Dictionary<EntityTypes, List<System.ValueType>> entity = new Dictionary<EntityTypes, List<System.ValueType>>();
-	
+	private readonly byte type_count = 1;
+
+	/// <summary>
+	/// All the entities in the current map.
+	/// </summary>
+	public ArrayList[] entities;
+
 	/// <summary>
 	/// Default constructor for creating a new Map. Use this when designing maps to receive a blank template.
 	/// </summary>
 	public Map()
 	{
 		CreateTiles();
+
+		entities = new ArrayList[type_count];
+		entities[0] = new ArrayList();
+		entities[0].Add(((GameObject)MonoBehaviour.Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), Quaternion.identity)).GetComponent<Player>());
 	}
 	
 	/// <summary>
@@ -97,8 +102,33 @@ public class Map : ISerializable
 	private void CopyDataOver(Map map_data)
 	{
 		this.tiles = map_data.tiles;
-		this.spawn_point = map_data.spawn_point;
-		this.entity = map_data.entity;
+		this.entities = map_data.entities;
+	}
+
+
+	/// <summary>
+	/// Converts the entities (which are objects within the map) into pseudo_entities.
+	/// We require this to extract necessary data because GameObjects are not serializable.
+	/// </summary>
+	private void ConvertToPseudoGameObject()
+	{
+		for (byte i = 0; i < entities[0].Count; i++)
+		{
+			entities[0][i] = (PseudoGameObject<Player>)((Player)entities[0][i]);
+		}
+	}
+
+
+	/// <summary>
+	/// Converts pseudo_entities (which only contain object data) into entities
+	/// We require this to convert object data into GameObjects.
+	/// </summary>
+	public void ConvertToGameObject()
+	{
+		for (byte i = 0; i < entities[0].Count; i++)
+		{
+			entities[0][i] = (Player)((PseudoGameObject<Player>)entities[0][i]);
+		}
 	}
 
 
@@ -109,10 +139,15 @@ public class Map : ISerializable
 	/// <param name="context">Context.</param>
 	public virtual void GetObjectData(SerializationInfo info, StreamingContext context) // Called when serializing data
 	{
+		ConvertToPseudoGameObject();
 		foreach (System.Reflection.FieldInfo field in typeof(Map).GetFields())
 		{
 			try
 			{
+				if (!field.GetType().IsSerializable)
+				{
+					Debug.Log(field.Name + " is not Serializable");
+				}
 				info.AddValue(field.Name, field.GetValue(this));
 			}
 			catch
@@ -143,6 +178,7 @@ public class Map : ISerializable
 				field.SetValue(this, field.GetValue(new Map()));
 			}
 		}
+		ConvertToGameObject();
 	}
 	
 

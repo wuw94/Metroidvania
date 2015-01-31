@@ -69,31 +69,34 @@ public class Recordable : MonoBehaviour
 			Debug.LogWarning("Something is causing too much CPU consumption, Time.deltaTime > 0.02");
 		}
 		// Change Mode CD
-		if (change_mode_cd > 0)
+		if (Application.loadedLevelName != "TileEditor")
 		{
-			change_mode_cd--;
-		}
-		else
-		{
-			change_mode_cd = 0;
-		}
+			if (change_mode_cd > 0)
+			{
+				change_mode_cd--;
+			}
+			else
+			{
+				change_mode_cd = 0;
+			}
 
-		// Operations
-		if (operation_mode == 0)
-		{
-			NormalUpdate();
-		}
-		else if (operation_mode == 1)
-		{
-			Record();
-		}
-		else if (operation_mode == 2)
-		{
-			Rewind();
-		}
-		else if (operation_mode == 3)
-		{
-			Playback();
+			// Operations
+			if (operation_mode == 0)
+			{
+				NormalUpdate();
+			}
+			else if (operation_mode == 1)
+			{
+				Record();
+			}
+			else if (operation_mode == 2)
+			{
+				Rewind();
+			}
+			else if (operation_mode == 3)
+			{
+				Playback();
+			}
 		}
 	}
 

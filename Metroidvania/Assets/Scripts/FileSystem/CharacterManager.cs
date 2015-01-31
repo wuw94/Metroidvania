@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* Character Manager.
  * Stores information about the player's character
@@ -23,11 +24,32 @@ using System.Collections;
 public sealed class CharacterManager
 {
 	public float move_speed_max;
+
 	public float move_speed_accel_ground;
+
 	public float move_speed_accel_air;
+
 	public float jump_speed;
+
 	public float health;
+
 	public float health_max = 100;
+
+	/// <summary>
+	/// These are the equipments currently owned by player.
+	/// </summary>
+	public HashSet<Equipment> equipments = new HashSet<Equipment>();
+
+	/// <summary>
+	/// These are the equipments currently equipped on player.
+	/// </summary>
+	public HashSet<Equipment> equipped = new HashSet<Equipment>();
+
+	/// <summary>
+	/// These are the upgrades currently owned by player.
+	/// </summary>
+	public HashSet<Upgrade> upgrades = new HashSet<Upgrade>();
+
 
 	/// <summary>
 	/// Constructor.

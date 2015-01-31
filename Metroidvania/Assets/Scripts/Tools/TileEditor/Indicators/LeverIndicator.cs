@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class LeverIndicator : Indicator
 {
 	public List<GameObject> affecting = new List<GameObject>();
-	public bool displaying = false;
+
 
 	void Start()
 	{
@@ -13,14 +13,7 @@ public class LeverIndicator : Indicator
 	
 	void Update ()
 	{
-		if (Camera.main.GetComponent<TileEditor>().selection != null && Camera.main.GetComponent<TileEditor>().selection.Equals(gameObject))
-		{
-			displaying = true;
-		}
-		else
-		{
-			displaying = false;
-		}
+		base.Update();
 	}
 	
 	void OnDrawGizmos()

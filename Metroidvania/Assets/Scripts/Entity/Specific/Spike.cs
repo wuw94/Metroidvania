@@ -19,7 +19,7 @@ public class Spike : Immobile
 	{
 		if (col.gameObject.name == "Player")
 		{
-			GameManager.current_game.progression.character.changeHealth(-GameManager.current_game.progression.character.health_max);
+			GameManager.current_game.progression.characters[MobileTypes.Player].changeHealth(-GameManager.current_game.progression.characters[MobileTypes.Player].health_max);
 		}
 	}
 }
