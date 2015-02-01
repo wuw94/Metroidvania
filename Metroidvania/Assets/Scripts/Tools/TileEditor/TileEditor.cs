@@ -39,11 +39,23 @@ public sealed class TileEditor : MonoBehaviour
 		public sealed class InteractiveTool : Tool
 		{
 			public LeverTool lever_tool = new LeverTool();
+			public DependantPlatformTool dependant_platform_tool = new DependantPlatformTool();
+			public ButtonTool button_tool = new ButtonTool();
 
 			public sealed class LeverTool : Tool
 			{
 				public bool adding = false;
-				public List<string> addable = new List<string>{"LeverIndicator(Clone)"};
+				public List<string> addable = new List<string>{"DependantPlatform(Clone)"};
+			}
+
+			public sealed class DependantPlatformTool : Tool
+			{
+			}
+
+			public sealed class ButtonTool : Tool
+			{
+				public bool adding = false;
+				public List<string> addable = new List<string>{"DependantPlatform(Clone)"};
 			}
 		}
 
@@ -71,20 +83,17 @@ public sealed class TileEditor : MonoBehaviour
 
 
 
-	public List<System.Type> z = new List<System.Type>(){typeof(UpdraftGoo)};
-
 
 
 	private string map_name = ""; // name of map
 
 	// Selection
 	public GameObject selection = null;
-	private List<string> possible_selection = new List<string>(){"SpawnPointIndicator(Clone)","LeverIndicator(Clone)"};
+	private List<string> possible_selection = new List<string>(){"Player(Clone)","Lever(Clone)", "Button(Clone)"};
 	private bool is_dragging = false;
 	private Vector2 click_offset = new Vector2(0.5f,0.5f);
-
-
-	public Dictionary<EntityTypes, List<GameObject>> indicators = new Dictionary<EntityTypes, List<GameObject>>();
+	
+	public GameObject grid_highlight;
 
 	private Tools tools = new Tools();
 	
@@ -99,17 +108,9 @@ public sealed class TileEditor : MonoBehaviour
 	void Start()
 	{
 		ReformatGame();
-		foreach (EntityTypes t in System.Enum.GetValues(typeof(EntityTypes)))
-		{
-			indicators.Add(t, new List<GameObject>());
-		}
-		indicators[EntityTypes.Tile].Add((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/TileIndicator", typeof(GameObject)), new Vector3(0,0,0), transform.rotation));
-		indicators[EntityTypes.Tile][0].gameObject.renderer.material.color = new Color(1,1,1,0.1f);
-		//indicators[EntityTypes.Interactive] = new List<GameObject>();
+		grid_highlight = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/GridHighlight", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
+		grid_highlight.renderer.material.color = new Color(1,1,1,0.1f);
 
-		//TODO
-		//Player p = ((GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), transform.rotation)).GetComponent<Player>();
-		//GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[typeof(Player)].Add(p);
 
 		StartCoroutine(UpdateFPS());
 	}
@@ -295,8 +296,13 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				tools.interactive_tool.index = 0;
 			}
-			if (GUI.Button(new Rect(140,280,100,20), "n/a"))
+			if (GUI.Button(new Rect(140,280,100,20), "DependantPlatform"))
 			{
+				tools.interactive_tool.index = 1;
+			}
+			if (GUI.Button(new Rect(140, 300,100,20), "Button"))
+			{
+				tools.interactive_tool.index = 2;
 			}
 			if (tools.interactive_tool.index == 0)
 			{
@@ -305,6 +311,22 @@ public sealed class TileEditor : MonoBehaviour
 				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
 				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Left click a lever to open a menu for assigning");
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  the entities affected by a particular lever");
+			}
+			if (tools.interactive_tool.index == 1)
+			{
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "DependantPlatform");
+				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
+				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates a platform which is affected by");
+				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  a lever");
+			}
+			if (tools.interactive_tool.index == 2)
+			{
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Button");
+				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
+				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Left click a button to open a menu for assigning");
+				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  the entities affected by a particular button");
 			}
 			GUI.Label(new Rect(130,260+20*tools.interactive_tool.index,10, 20), "x");
 		}
@@ -329,29 +351,77 @@ public sealed class TileEditor : MonoBehaviour
 	}
 
 
+	/// <summary>
+	/// Displays information about the current selected object.
+	/// </summary>
+	/// <param name="windowID">Window I.</param>
 	void DescriptionWindowFunction(int windowID)
 	{
 		if (selection != null)
 		{
 			GUI.Label(new Rect(40, 40, 180, 20), "Press ESC to deselect");
 			GUI.Label(new Rect(20, 80, 180, 20), "Position: (" + selection.transform.position.x + ", " + selection.transform.position.y + ")");
-			if (selection.name == "LeverIndicator(Clone)")
+			if (selection.name == "Lever(Clone)")
 			{
 				GUI.Label(new Rect(10, 20, 180, 20), "Selected: Lever");
-				GUI.Label(new Rect(10, 120, 180, 20), "Affects: " + selection.GetComponent<LeverIndicator>().affecting.Count + " items");
+				GUI.Label(new Rect(10, 120, 180, 20), "Affects: " + selection.GetComponent<Lever>().platforms.Count + " items");
 				if (GUI.Button(new Rect(140,124,38,16), tools.interactive_tool.lever_tool.adding ? "?" : "add"))
 				{
 					tools.interactive_tool.lever_tool.adding = !tools.interactive_tool.lever_tool.adding;
 				}
-				for (int i = 0; i < selection.GetComponent<LeverIndicator>().affecting.Count; i++)
+				for (int i = 0; i < selection.GetComponent<Lever>().platforms.Count; i++)
 				{
-					GUI.Label(new Rect(20, 140 + 20*i, 180, 20), "Item(" + selection.GetComponent<LeverIndicator>().affecting[i].transform.position.x + ", " + selection.GetComponent<LeverIndicator>().affecting[i].transform.position.y + ")");
+					try
+					{
+						GUI.Label(new Rect(20, 140 + 20*i, 180, 20), "Item(" +
+						          ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][selection.GetComponent<Lever>().platforms[i]]).transform.position.x + 
+						          ", " + 
+						          ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][selection.GetComponent<Lever>().platforms[i]]).transform.position.y +
+						          ")");
+					}
+					catch (System.ArgumentOutOfRangeException e)
+					{
+						selection.GetComponent<Lever>().platforms.RemoveAt(i);
+					}
 					if (GUI.Button(new Rect(150,144 + 20*i,20,16), "x"))
 					{
-						selection.GetComponent<LeverIndicator>().affecting.RemoveAt(i);
+						selection.GetComponent<Lever>().platforms.RemoveAt(i);
 					}
 				}
 			}
+			else if (selection.name == "Button(Clone)")
+			{
+				GUI.Label(new Rect(10, 20, 180, 20), "Selected: Button");
+				GUI.Label(new Rect(10, 120, 180, 20), "Affects: " + selection.GetComponent<Button>().platforms.Count + " items");
+				if (GUI.Button(new Rect(140,124,38,16), tools.interactive_tool.button_tool.adding ? "?" : "add"))
+				{
+					tools.interactive_tool.button_tool.adding = !tools.interactive_tool.button_tool.adding;
+				}
+				for (int i = 0; i < selection.GetComponent<Button>().platforms.Count; i++)
+				{
+					try
+					{
+						GUI.Label(new Rect(20, 140 + 20*i, 180, 20), "Item(" +
+						          ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][selection.GetComponent<Button>().platforms[i]]).transform.position.x + 
+						          ", " + 
+						          ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][selection.GetComponent<Button>().platforms[i]]).transform.position.y +
+						          ")");
+					}
+					catch (System.ArgumentOutOfRangeException e)
+					{
+						selection.GetComponent<Lever>().platforms.RemoveAt(i);
+					}
+					if (GUI.Button(new Rect(150,144 + 20*i,20,16), "x"))
+					{
+						selection.GetComponent<Lever>().platforms.RemoveAt(i);
+					}
+				}
+			}
+			else if (selection.name == "DependantPlatform(Clone)")
+			{
+				GUI.Label(new Rect(10, 20, 180, 20), "Selected: DependantPlatform");
+			}
+
 			else if (selection.name == "SpawnPointIndicator(Clone)")
 			{
 				GUI.Label(new Rect(10, 20, 180, 20), "Selected: Spawn Location");
@@ -418,13 +488,15 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			Vector2 mouse = new Vector2((int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x),
 			                            (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y));
-			indicators[EntityTypes.Tile][0].transform.position = new Vector3(mouse.x, mouse.y, -9);
+			grid_highlight.transform.position = new Vector3(mouse.x, mouse.y, -9);
 
 			Tool_Selection(mouse);
 			Tool_Tile(mouse);
 			Tool_Spawn(mouse);
 			Tool_Lever(mouse);
 			Tool_Updraft_Goo(mouse);
+			Tool_Dependant_Platform(mouse);
+			Tool_Button(mouse);
 		}
 	}
 
@@ -436,15 +508,24 @@ public sealed class TileEditor : MonoBehaviour
 
 			if (tools.interactive_tool.lever_tool.adding)
 			{
-				if (hit.collider != null && tools.interactive_tool.lever_tool.addable.Contains(hit.collider.name))
+				if (hit.collider != null && tools.interactive_tool.lever_tool.addable.Contains(hit.collider.name) && hit.collider.GetComponent<DependantPlatform>() != null)
 				{
 					tools.interactive_tool.lever_tool.adding = false;
-					selection.GetComponent<LeverIndicator>().affecting.Add(hit.collider.gameObject);
+
+					selection.GetComponent<Lever>().platforms.Add(hit.collider.GetComponent<DependantPlatform>().WhatIndexAmI());
+				}
+			}
+			else if (tools.interactive_tool.button_tool.adding)
+			{
+				if (hit.collider != null && tools.interactive_tool.button_tool.addable.Contains(hit.collider.name) && hit.collider.GetComponent<DependantPlatform>() != null)
+				{
+					tools.interactive_tool.button_tool.adding = false;
+					
+					selection.GetComponent<Button>().platforms.Add(hit.collider.GetComponent<DependantPlatform>().WhatIndexAmI());
 				}
 			}
 			else
-			{
-			
+			{			
 				if (!is_dragging && selection != null && hit.collider != null && selection.Equals(hit.collider.gameObject))
 				{
 					is_dragging = true;
@@ -454,7 +535,7 @@ public sealed class TileEditor : MonoBehaviour
 					if (possible_selection.Contains(hit.collider.gameObject.name))
 					{
 						selection = hit.collider.gameObject;
-						//UnityEditor.Selection.objects = new GameObject[]{selection};
+						UnityEditor.Selection.objects = new GameObject[]{selection};
 					}
 				}
 				if (is_dragging)
@@ -477,8 +558,15 @@ public sealed class TileEditor : MonoBehaviour
 		}
 		if (Input.GetKey(KeyCode.Escape))
 		{
-			selection = null;
-			//UnityEditor.Selection.objects = new GameObject[0];
+			if (tools.interactive_tool.lever_tool.adding)
+			{
+				tools.interactive_tool.lever_tool.adding = false;
+			}
+			else
+			{
+				selection = null;
+				UnityEditor.Selection.objects = new GameObject[0];
+			}
 		}
 	}
 	
@@ -520,25 +608,25 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
-				if (hit.transform == null)
+				if (mouse.x >= 0 && mouse.y >= 0)
 				{
-					LeverIndicator lever = ((GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/LeverIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<LeverIndicator>();
-					//indicators[EntityTypes.Interactive].Add(lever);
-					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1].Add(lever);
-					// we need a way to add in more valuable data (xy position, which platforms it is linked to)
-					//((ArrayList)((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).entity[EntityTypes.Interactive]).Add(new PseudoVector2(lever.transform.position.x, lever.transform.position.y));
+					RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+					if (hit.transform == null)
+					{
+						Lever lever = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.directory[typeof(Lever)], typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Lever>();
+						GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1].Add(lever);
+					}
 				}
 			}
 			if (Input.GetKey(KeyCode.W))
 			{		
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
-				if (hit.transform != null && hit.transform.name == "LeverIndicator(Clone)")
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<Lever>() != null)
 				{
-					List<GameObject> interactives = indicators[EntityTypes.Interactive];
-					GameObject lever = interactives[interactives.IndexOf(hit.transform.gameObject)];
-					interactives.Remove(lever);
-					Destroy(lever);
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1];
+					Lever lever = (Lever)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<Lever>())];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1].Remove(lever);
+					Destroy(lever.gameObject);
 				}
 			}
 		}
@@ -553,25 +641,104 @@ public sealed class TileEditor : MonoBehaviour
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
-					GameObject updraft_goo = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/UpdraftGooIndicator", typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation);
-					indicators[EntityTypes.Entity].Add(updraft_goo);
-
-					//PseudoGameObject(updraft_goo);
-					//GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entity.Add();
+					UpdraftGoo updraft_goo = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.directory[typeof(UpdraftGoo)], typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<UpdraftGoo>();
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[2].Add(updraft_goo);
 				}
 			}
 			if (Input.GetKey(KeyCode.W))
 			{		
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
-				if (hit.transform != null && hit.transform.name == "UpdraftGooIndicator(Clone)")
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<UpdraftGoo>() != null)
 				{
-					List<GameObject> interactives = indicators[EntityTypes.Entity];
-					GameObject updraft_goo = interactives[interactives.IndexOf(hit.transform.gameObject)];
-					interactives.Remove(updraft_goo);
-					Destroy(updraft_goo);
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[2];
+					UpdraftGoo updraft_goo = (UpdraftGoo)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<UpdraftGoo>())];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[2].Remove(updraft_goo);
+					Destroy(updraft_goo.gameObject);
 				}
 			}
 
+		}
+	}
+
+	private void Tool_Dependant_Platform(Vector2 mouse)
+	{
+		if (tools.index == 2 && tools.interactive_tool.index == 1)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform == null)
+				{
+					DependantPlatform dependant_platform = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.directory[typeof(DependantPlatform)], typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<DependantPlatform>();
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3].Add(dependant_platform);
+				}
+			}
+		}
+		if (Input.GetKey(KeyCode.W))
+		{		
+			RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+			if (hit.transform != null && hit.transform.gameObject.GetComponent<DependantPlatform>() != null)
+			{
+				ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3];
+				DependantPlatform dependant_platform = (DependantPlatform)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<DependantPlatform>())];
+				for (int i = 0; i < GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1].Count; i++)
+				{
+					((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1][i]).platforms.Remove(dependant_platform.WhatIndexAmI());
+					for (int j = 0; j < ((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1][i]).platforms.Count; j++)
+					{
+						if (((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1][i]).platforms[j] >= dependant_platform.WhatIndexAmI())
+						{
+							((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[1][i]).platforms[j]--;
+						}
+					}
+					
+				}
+				for (int i = 0; i < GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4].Count; i++)
+				{
+					((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Remove(dependant_platform.WhatIndexAmI());
+					for (int j = 0; j < ((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Count; j++)
+					{
+						if (((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j] >= dependant_platform.WhatIndexAmI())
+						{
+							((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j]--;
+						}
+					}
+					
+				}
+				GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3].Remove(dependant_platform);
+				Destroy(dependant_platform.gameObject);
+			}
+		}
+	}
+
+
+	private void Tool_Button(Vector2 mouse)
+	{
+		if (tools.index == 2 && tools.interactive_tool.index == 2)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				if (mouse.x >= 0 && mouse.y >= 0)
+				{
+					RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+					if (hit.transform == null)
+					{
+						Button button = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.directory[typeof(Button)], typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Button>();
+						GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4].Add(button);
+					}
+				}
+			}
+			if (Input.GetKey(KeyCode.W))
+			{		
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<Button>() != null)
+				{
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4];
+					Button button = (Button)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<Button>())];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4].Remove(button);
+					Destroy(button.gameObject);
+				}
+			}
 		}
 	}
 

@@ -63,12 +63,12 @@ public sealed class GameManager
 	/// </summary>
 	public static void SetGameAll()
 	{
-		GameManager.current_game.progression.characters[MobileTypes.Player].health = 100;
-		current_game.progression.characters[MobileTypes.Player].move_speed_max = 3;
-		current_game.progression.characters[MobileTypes.Player].move_speed_accel_ground = 1.5f;
-		current_game.progression.characters[MobileTypes.Player].move_speed_accel_air = 1.5f;
-		current_game.progression.characters[MobileTypes.Player].jump_speed = 7;
+		GameManager.current_game.progression.player.health = 100;
+		current_game.progression.player.move_speed_max = 3;
+		current_game.progression.player.move_speed_accel_ground = 1.5f;
+		current_game.progression.player.move_speed_accel_air = 1.5f;
+		current_game.progression.player.jump_speed = 7;
 
-		current_game.progression.characters[MobileTypes.Player].equipped.Add(Equipment.Parachute);
+		current_game.progression.player.equipped.Add(Equipment.Parachute);
 	}
 }

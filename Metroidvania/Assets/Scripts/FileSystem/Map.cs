@@ -26,13 +26,17 @@ public class Map : ISerializable
 	/// <summary>
 	/// <para>Number of types of entities stored. Types:</para>
 	/// <para>0: Player</para>
+	/// <para>1: Lever</para>
+	/// <para>2: UpdraftGoo</para>
+	/// <para>3: DependantPlatform</para>
+	/// <para>4: Button</para>
 	/// </summary>
-	private readonly byte type_count = 1;
+	public readonly byte type_count = 5;
 
 	/// <summary>
 	/// All the entities in the current map.
 	/// </summary>
-	public ArrayList[] entities;
+	public List<ArrayList> entities;
 
 	/// <summary>
 	/// Default constructor for creating a new Map. Use this when designing maps to receive a blank template.
@@ -41,8 +45,11 @@ public class Map : ISerializable
 	{
 		CreateTiles();
 
-		entities = new ArrayList[type_count];
-		entities[0] = new ArrayList();
+		entities = new List<ArrayList>();
+		for (byte i = 0; i < type_count; i++)
+		{
+			entities.Add(new ArrayList());
+		}
 		entities[0].Add(((GameObject)MonoBehaviour.Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), Quaternion.identity)).GetComponent<Player>());
 	}
 	
@@ -112,9 +119,42 @@ public class Map : ISerializable
 	/// </summary>
 	private void ConvertToPseudoGameObject()
 	{
-		for (byte i = 0; i < entities[0].Count; i++)
+		byte j = 0;
+		try
 		{
-			entities[0][i] = (PseudoGameObject<Player>)((Player)entities[0][i]);
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<Player>)((Player)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<Lever>)((Lever)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<UpdraftGoo>)((UpdraftGoo)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				Debug.Log(entities[j][i].GetType());
+				entities[j][i] = (PseudoGameObject<DependantPlatform>)((DependantPlatform)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				Debug.Log(entities[j][i].GetType());
+				entities[j][i] = (PseudoGameObject<Button>)((Button)entities[j][i]);
+			}
+		}
+		catch (ArgumentOutOfRangeException e)
+		{
+			for (byte i = j; i < type_count; i++)
+			{
+				entities.Add(new ArrayList());
+			}
 		}
 	}
 
@@ -125,9 +165,41 @@ public class Map : ISerializable
 	/// </summary>
 	public void ConvertToGameObject()
 	{
-		for (byte i = 0; i < entities[0].Count; i++)
+		byte j = 0;
+		try
 		{
-			entities[0][i] = (Player)((PseudoGameObject<Player>)entities[0][i]);
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Player)((PseudoGameObject<Player>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Lever)((PseudoGameObject<Lever>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (UpdraftGoo)((PseudoGameObject<UpdraftGoo>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (DependantPlatform)((PseudoGameObject<DependantPlatform>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Button)((PseudoGameObject<Button>)entities[j][i]);
+			}
+		}
+		catch (ArgumentOutOfRangeException e)
+		{
+			ArrayList[] new_entities = new ArrayList[type_count];
+			for (byte i = j; i < type_count; i++)
+			{
+				entities.Add(new ArrayList());
+			}
 		}
 	}
 
@@ -144,10 +216,6 @@ public class Map : ISerializable
 		{
 			try
 			{
-				if (!field.GetType().IsSerializable)
-				{
-					Debug.Log(field.Name + " is not Serializable");
-				}
 				info.AddValue(field.Name, field.GetValue(this));
 			}
 			catch

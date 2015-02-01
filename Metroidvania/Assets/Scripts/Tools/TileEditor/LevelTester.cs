@@ -21,7 +21,7 @@ public class LevelTester : MonoBehaviour {
 				throw;
 			}
 			
-			GetComponent<TileManager>().LoadAll((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]));
+			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 			GetComponent<RenderingSystem>().LoadedDone();
 
 			camera_manager.player = (Player)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0];
