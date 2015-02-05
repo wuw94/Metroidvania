@@ -1,26 +1,42 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //Text Generator just makes single textboxes once, cannot change it
 //Goal for tomorrow, figure out why must print out from OnGUI and how to manipulate that
-public class TextGenerator : MonoBehaviour {
-	
+public class TextGenerator : RenderingSystem {
+	public static List<string> message_buffer = new List<string>();
 
-	public bool button_passed = false;
+	void Start()
+	{
+		AddText ("one");
+		AddText ("asjdoajiogaioegjoaijgioeagjoaejgoieajgo");
+		AddText ("ajasjdoajiogaioegjoaijgioeagjoaejgoieajgoasjdoajiogaioegjoaijgioeagjoaejgoieajgoasjdoajiogaioegjoaijgioeagjoaejgoieajgoasjdoajiogaioegjoaijgioeagjoaejgoieajgoasjdoajiogaioegjoaijgioeagjoaejgoieajgo");
+	}
+
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			Next();
+		}
+	}
+
 	void OnGUI () {
-		if (Input.anyKey){
-			button_passed = true;
+		if (message_buffer.Count > 0)
+		{
+			GUI.Label(new Rect(20,Screen.height - 100,Screen.width-20,100), message_buffer[0]);
+			GUI.Label(new Rect(message_buffer[0].Length * 9, 20, 20, 20), ".");
 		}
-		if (button_passed) {
-			Debug.Log("First button was clicked");
-			GUI.TextArea (new Rect (0, 0, 100, 50), "Top-left");
-			GUI.TextArea (new Rect (Screen.width - 100, 0, 100, 50), "Top-right");
-			GUI.TextArea (new Rect (0, Screen.height - 50, 100, 50), "Bottom-left");
-			GUI.TextArea (new Rect (Screen.width - 100, Screen.height - 50, 100, 50), "Bottom-right");
-		}
-		if (button_passed != true) {
-			Debug.Log("Changes text bubbles");
-			GUI.TextArea (new Rect(0, 0, 200, 100), "Top-left");
-		}
+	}
+
+	public void AddText(string text)
+	{
+		message_buffer.Add(text);
+	}
+
+	public void Next()
+	{
+		message_buffer.RemoveAt(0);
 	}
 }
