@@ -1,35 +1,44 @@
 using UnityEngine;
+using System;
+using System.Reflection;
 using System.Collections;
-
-using System.Threading;
+using System.Collections.Generic;
 
 
 
 public class test : MonoBehaviour
 {
-	float x = 1f;
-	bool threadRunning = true;
-	private Object thislock = new Object();
-
 	void Start()
 	{
+		/*
+		System.Type genericType = typeof(Repository<>);
+		System.Type[] typeArgs = {System.Type.GetType("TypeRepository")};
+		System.Type repositoryType = genericType.MakeGenericType(typeArgs);
+		System.Object repository = System.Activator.CreateInstance(repositoryType);
 
-		new Thread(Multiply).Start();
+		System.Reflection.MethodInfo genericMethod = repositoryType.GetMethod("GetMeSomething");
+		System.Reflection.MethodInfo closedMethod = genericMethod.MakeGenericMethod(typeof(Something));
+		closedMethod.Invoke(repository, new[] {"Query String"});
+		*/
 
-		threadRunning = false;
-	}
+		Player player = ((GameObject)MonoBehaviour.Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), Quaternion.identity)).GetComponent<Player>();
 
-	void Multiply()
-	{
-		while (threadRunning)
-		{
-			//Debug.Log("thread action");
+		Type generic = typeof(PseudoGameObject<>);
+		Type[] typeArgs = {typeof(Player)};
+		Type constructed = generic.MakeGenericType(typeArgs);
 
-			lock(thislock)
-			{
-				x++;
-			}
-		}
+
+		object ps_object = Activator.CreateInstance(constructed, new object[]{player});
+
+
+		//ps_object = player;
+		Debug.Log(ps_object);
+		Debug.Log(ps_object.GetType());
+
+		//object ps_player = (object)Convert.ChangeType(player, constructed);
+
+		//PseudoGameObject<Player> ps_player = player;
+		//Debug.Log(ps_player);
 	}
 
 }

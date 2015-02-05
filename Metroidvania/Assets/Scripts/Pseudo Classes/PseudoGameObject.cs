@@ -17,10 +17,21 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 	/// We only want to be able to typecast it from an already made GameObject.
 	/// </summary>
 	/// <param name="go">Go.</param>
-	private PseudoGameObject(T go)
+	public PseudoGameObject(T go)
 	{
+		//Debug.Log("will destroy");
 		position = go.transform.position;
+		foreach (FieldInfo field in go.GetType().GetFields())
+		{
+			if (((field.FieldType.IsSerializable && field.FieldType.GetElementType() == null) || (field.FieldType.GetElementType() != null && field.FieldType.GetElementType().IsSerializable)))
+			{
+				this.information.Add(field.GetValue(go));
+			}
+		}
+		MonoBehaviour.Destroy(go.gameObject);
 	}
+
+
 
 
 	/// <summary>
@@ -62,14 +73,7 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 	{
 		PseudoGameObject<T> pgo = new PseudoGameObject<T>(rValue);
 
-		foreach (FieldInfo field in rValue.GetType().GetFields())
-		{
-			if (((field.FieldType.IsSerializable && field.FieldType.GetElementType() == null) || (field.FieldType.GetElementType() != null && field.FieldType.GetElementType().IsSerializable)))
-			{
-				pgo.information.Add(field.GetValue(rValue));
-			}
-		}
-		MonoBehaviour.Destroy(rValue.gameObject);
+
 		return pgo;
 	}
 	
