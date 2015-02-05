@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerRecordingIndicator : Mobile
+public class PlayerRecordingIndicator : Recordable
 {
 	void Start()
 	{

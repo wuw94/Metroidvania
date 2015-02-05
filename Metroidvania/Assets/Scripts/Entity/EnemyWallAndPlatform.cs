@@ -16,9 +16,6 @@ using System.Collections;
  * - active in recording mode
  * - inactive in normal mode
  * 
- * Attach this script to a separate game object
- * that has an array of enemy platforms and walls and
- * toggle their activeness within a loop.
  * 
  */
 

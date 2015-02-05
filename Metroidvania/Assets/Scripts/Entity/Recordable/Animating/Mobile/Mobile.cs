@@ -84,7 +84,7 @@ public class Mobile : Animating
 		{
 			if (front_contact)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + (this_info.facingRight ? 0.5f : -0.5f), 0);
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : rigidbody2D.velocity.y));
 			}
 			if (grounded)
 			{
@@ -124,7 +124,7 @@ public class Mobile : Animating
 					}
 					if (front_contact)
 					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : 0));
 					}
 				}
 			}
@@ -157,7 +157,7 @@ public class Mobile : Animating
 					}
 					if (front_contact)
 					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : 0));
 					}
 				}
 			}
@@ -248,7 +248,7 @@ public class Mobile : Animating
 
 	private void manageGravityScale()
 	{
-		if (front_contact || updraft_contact)
+		if (updraft_contact)
 		{
 			rigidbody2D.gravityScale = 0;
 		}
@@ -305,10 +305,6 @@ public class Mobile : Animating
 		}
 		else
 		{
-		}
-		if (name == "UpdraftGoo(Clone)")
-		{
-			Debug.Log(collider2D.bounds.min);
 		}
 		if (GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)transform.position.x][(int)(collider2D.bounds.min.y)].active)
 		{

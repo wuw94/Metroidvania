@@ -58,7 +58,7 @@ public class Player : Controllable
 		if (!indicator_created)
 		{
 			indicator_created = true;
-			GameObject indicator = (GameObject)Instantiate(Resources.Load("Prefabs/PlayerRecordingIndicator", typeof(GameObject)));
+			GameObject indicator = (GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/PlayerRecordingIndicator", typeof(GameObject)));
 			indicator.transform.position = transform.position;
 			indicator.GetComponent<PlayerRecordingIndicator>().this_info.animState = this_info.animState;
 		}
@@ -76,7 +76,7 @@ public class Player : Controllable
 		if (!clone_created)
 		{
 			clone_created = true;
-			GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs/PlayerClone", typeof(GameObject)));
+			GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/PlayerClone", typeof(GameObject)));
 			clone.GetComponent<PlayerClone>().setRecordedStates(recorded_states);
 		}
 	}

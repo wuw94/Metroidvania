@@ -695,12 +695,12 @@ public sealed class TileEditor : MonoBehaviour
 				}
 				for (int i = 0; i < GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4].Count; i++)
 				{
-					((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Remove(dependant_platform.WhatIndexAmI());
-					for (int j = 0; j < ((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Count; j++)
+					((Button)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Remove(dependant_platform.WhatIndexAmI());
+					for (int j = 0; j < ((Button)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms.Count; j++)
 					{
-						if (((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j] >= dependant_platform.WhatIndexAmI())
+						if (((Button)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j] >= dependant_platform.WhatIndexAmI())
 						{
-							((Lever)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j]--;
+							((Button)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[4][i]).platforms[j]--;
 						}
 					}
 					

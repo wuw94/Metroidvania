@@ -7,7 +7,7 @@ using System.Collections;
  * 
  */
 
-public class PlayerClone : Mobile
+public class PlayerClone : Recordable
 {
 	void Start()
 	{
@@ -32,7 +32,7 @@ public class PlayerClone : Mobile
 	
 	public override void Playback()
 	{
-		base.Playback();
+		//base.Playback();
 	}
 	
 	
