@@ -21,12 +21,10 @@ public class LevelTester : MonoBehaviour {
 				throw;
 			}
 			
-			GetComponent<TileManager>().LoadAll((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]));
+			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
 			GetComponent<RenderingSystem>().LoadedDone();
 
-			camera_manager.player = (GameObject)Instantiate(Resources.Load("Prefabs/Player", typeof(GameObject)));
-			camera_manager.player.transform.position = new Vector2(((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.x+1,
-			                                                       ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).spawn_point.y+1);
+			camera_manager.player = (Player)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0];
 			camera_manager.returnToPlayer();
 		}
 

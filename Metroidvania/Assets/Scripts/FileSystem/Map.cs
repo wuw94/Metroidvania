@@ -21,24 +21,36 @@ public class Map : ISerializable
 	
 	private short default_tile_x = 100;
 	private short default_tile_y = 100;
-
 	
-	/// <summary>
-	/// XY data of where the player will be placed upon entering map.
-	/// </summary>
-	public PseudoVector2 spawn_point = new PseudoVector2(0,0);
 
 	/// <summary>
-	/// Hashtable of entities (enemies, levers, bombs, items, ladders). Access the entity by entering the class type
+	/// <para>Number of types of entities stored. Types:</para>
+	/// <para>0: Player</para>
+	/// <para>1: Lever</para>
+	/// <para>2: UpdraftGoo</para>
+	/// <para>3: DependantPlatform</para>
+	/// <para>4: Button</para>
 	/// </summary>
-	public Dictionary<EntityTypes, List<System.ValueType>> entity = new Dictionary<EntityTypes, List<System.ValueType>>();
-	
+	public readonly byte type_count = 5;
+
+	/// <summary>
+	/// All the entities in the current map.
+	/// </summary>
+	public List<ArrayList> entities;
+
 	/// <summary>
 	/// Default constructor for creating a new Map. Use this when designing maps to receive a blank template.
 	/// </summary>
 	public Map()
 	{
 		CreateTiles();
+
+		entities = new List<ArrayList>();
+		for (byte i = 0; i < type_count; i++)
+		{
+			entities.Add(new ArrayList());
+		}
+		entities[0].Add(((GameObject)MonoBehaviour.Instantiate(Resources.Load("Prefabs/Mobiles/Player/Player", typeof(GameObject)), new Vector3(0,0,0), Quaternion.identity)).GetComponent<Player>());
 	}
 	
 	/// <summary>
@@ -97,8 +109,98 @@ public class Map : ISerializable
 	private void CopyDataOver(Map map_data)
 	{
 		this.tiles = map_data.tiles;
-		this.spawn_point = map_data.spawn_point;
-		this.entity = map_data.entity;
+		this.entities = map_data.entities;
+	}
+
+
+	/// <summary>
+	/// Converts the entities (which are objects within the map) into pseudo_entities.
+	/// We require this to extract necessary data because GameObjects are not serializable.
+	/// </summary>
+	private void ConvertToPseudoGameObject()
+	{
+		byte j = 0;
+		try
+		{
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<Player>)((Player)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<Lever>)((Lever)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (PseudoGameObject<UpdraftGoo>)((UpdraftGoo)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				Debug.Log(entities[j][i].GetType());
+				entities[j][i] = (PseudoGameObject<DependantPlatform>)((DependantPlatform)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				Debug.Log(entities[j][i].GetType());
+				entities[j][i] = (PseudoGameObject<Button>)((Button)entities[j][i]);
+			}
+		}
+		catch (ArgumentOutOfRangeException e)
+		{
+			for (byte i = j; i < type_count; i++)
+			{
+				entities.Add(new ArrayList());
+			}
+		}
+	}
+
+
+	/// <summary>
+	/// Converts pseudo_entities (which only contain object data) into entities
+	/// We require this to convert object data into GameObjects.
+	/// </summary>
+	public void ConvertToGameObject()
+	{
+		byte j = 0;
+		try
+		{
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Player)((PseudoGameObject<Player>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Lever)((PseudoGameObject<Lever>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (UpdraftGoo)((PseudoGameObject<UpdraftGoo>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (DependantPlatform)((PseudoGameObject<DependantPlatform>)entities[j][i]);
+			}
+			j++;
+			for (byte i = 0; i < entities[j].Count; i++)
+			{
+				entities[j][i] = (Button)((PseudoGameObject<Button>)entities[j][i]);
+			}
+		}
+		catch (ArgumentOutOfRangeException e)
+		{
+			ArrayList[] new_entities = new ArrayList[type_count];
+			for (byte i = j; i < type_count; i++)
+			{
+				entities.Add(new ArrayList());
+			}
+		}
 	}
 
 
@@ -109,6 +211,7 @@ public class Map : ISerializable
 	/// <param name="context">Context.</param>
 	public virtual void GetObjectData(SerializationInfo info, StreamingContext context) // Called when serializing data
 	{
+		ConvertToPseudoGameObject();
 		foreach (System.Reflection.FieldInfo field in typeof(Map).GetFields())
 		{
 			try
@@ -143,6 +246,7 @@ public class Map : ISerializable
 				field.SetValue(this, field.GetValue(new Map()));
 			}
 		}
+		ConvertToGameObject();
 	}
 	
 
