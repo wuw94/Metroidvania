@@ -24,36 +24,32 @@ using System.Collections;
 
 public class EnemyWallAndPlatform : Recordable 
 {
-	public GameObject[] blueObjects;
-	public GameObject[] greenObjects;
+	public enum GooColor{Blue, Green};
+	public GooColor color;
 
 	public override void NormalUpdate()
 	{
-		// Changes anything of blue objects within this loop during normal state
-		for (int i = 0; i < blueObjects.Length; i++) 
+		if (color == GooColor.Blue) 
 		{
-			blueObjects [i].transform.localScale = new Vector3 (1, 1, 1);
+			transform.localScale = new Vector3 (1, 1, 1);
 		}
 
-		// Changes anything of green objects within this loop during normal state
-		for (int i = 0; i < greenObjects.Length; i++) 
+		if (color == GooColor.Green) 
 		{
-			greenObjects [i].transform.localScale = new Vector3 (.5f, 3, 1);
+			transform.localScale = new Vector3 (.5f, 3, 1);
 		}
 	}
 
 	public override void Record()
 	{
-		// Changes anything of blue objects within this loop during recording state
-		for (int i = 0; i < blueObjects.Length; i++) 
+		if (color == GooColor.Blue) 
 		{
-			blueObjects [i].transform.localScale = new Vector3 (.5f, 3, 1);
+			transform.localScale = new Vector3(.5f, 3, 1);
 		}
-
-		// Changes anything of green objects within this loop during recording state
-		for (int i = 0; i < greenObjects.Length; i++) 
+		
+		if (color == GooColor.Green) 
 		{
-			greenObjects [i].transform.localScale = new Vector3 (1, 1, 1);
+			transform.localScale = new Vector3(1, 1, 1);
 		}
 	}
 }
