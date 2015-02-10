@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Entity : MonoBehaviour
 {
+	public List<Equipment> equipment = new List<Equipment>();
+
 	public enum GooColor{Blue, Red, Purple};
 
 	public int WhatIndexAmI()

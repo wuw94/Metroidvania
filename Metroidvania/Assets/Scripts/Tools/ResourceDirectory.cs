@@ -11,9 +11,8 @@ public static class ResourceDirectory
 		{typeof(UpdraftGoo), new ResourceData("Prefabs/Mobiles/AI/UpdraftGoo/UpdraftGoo", 2)},
 		{typeof(DependantPlatform), new ResourceData("Prefabs/Immobiles/DependantPlatform/DependantPlatform", 3)},
 		{typeof(Button), new ResourceData("Prefabs/Immobiles/Button/Button", 4)},
-		{typeof(TextGeneratorEntity), new ResourceData("Prefabs/Effects/TextGenerator", 5)}
-
-
+		{typeof(TextGeneratorEntity), new ResourceData("Prefabs/Effects/TextGenerator", 5)},
+		{typeof(Item), new ResourceData("Prefabs/Item", 6)}
 	};
 
 }

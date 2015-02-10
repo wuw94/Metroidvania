@@ -1,14 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/TextGeneratorEntity.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/FileSystem/CharacterManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Controllable/Player/Player.cs" Line="16" Column="35" />
-      <File FileName="Assets/Scripts/FileSystem/Map.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/TileEditor/TileEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/ResourceDirectory.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/ResourceData.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/TextGenerator.cs" Line="7" Column="27" />
-      <File FileName="Assets/TextGeneratorEntity.cs" Line="4" Column="49" />
+      <File FileName="Assets/Scripts/Entity/Entity.cs" Line="8" Column="31" />
+      <File FileName="Assets/Scripts/FileSystem/Equipment.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Controllable/Player/Player.cs" Line="16" Column="28" />
+      <File FileName="Assets/test.cs" Line="14" Column="16" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Recordable.cs" Line="47" Column="36" />
+      <File FileName="Assets/Scripts/FileSystem/CharacterManager.cs" Line="47" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,29 +17,23 @@
               <Node name="Entity" expanded="True">
                 <Node name="Recordable" expanded="True">
                   <Node name="Animating" expanded="True">
-                    <Node name="Immobile" expanded="True">
-                      <Node name="Lever" expanded="True" />
-                    </Node>
                     <Node name="Mobile" expanded="True">
+                      <Node name="AI" expanded="True">
+                        <Node name="Goo" expanded="True" />
+                      </Node>
                       <Node name="Controllable" expanded="True">
                         <Node name="Player" expanded="True" />
                       </Node>
                     </Node>
                   </Node>
                 </Node>
-                <Node name="UI" expanded="True">
-                  <Node name="Camera" expanded="True" />
-                </Node>
               </Node>
-              <Node name="FileSystem" expanded="True" />
-              <Node name="Pseudo Classes" expanded="True" />
-              <Node name="TileEngine" expanded="True" />
-              <Node name="Tools" expanded="True">
-                <Node name="TileEditor" expanded="True" />
+              <Node name="FileSystem" expanded="True">
+                <Node name="CharacterManager.cs" selected="True" />
               </Node>
             </Node>
-            <Node name="TextGeneratorEntity.cs" selected="True" />
           </Node>
+          <Node name="Assembly-UnityScript-firstpass" expanded="True" />
         </State>
       </Pad>
     </Pads>

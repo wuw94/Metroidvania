@@ -75,6 +75,7 @@
      <Compile Include="Assets\Scripts\Entity\UI\RecordDim.cs" />
      <Compile Include="Assets\Scripts\Entity\UI\Screens\ClickToContinue.cs" />
      <Compile Include="Assets\Scripts\Entity\UI\Screens\TitleScreen.cs" />
+     <Compile Include="Assets\Scripts\Entity\UI\TextGenerator.cs" />
      <Compile Include="Assets\Scripts\Entity\Wall.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
@@ -84,6 +85,7 @@
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\Upgrade.cs" />
+     <Compile Include="Assets\Scripts\Item.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\FieldInformation.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoGameObject.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoVector2.cs" />
@@ -92,9 +94,7 @@
      <Compile Include="Assets\Scripts\TileEngine\TileDisplay.cs" />
      <Compile Include="Assets\Scripts\TileEngine\TileInfo.cs" />
      <Compile Include="Assets\Scripts\TileEngine\TileManager.cs" />
-     <Compile Include="Assets\Scripts\Tools\ResourceData.cs" />
      <Compile Include="Assets\Scripts\Tools\ResourceDirectory.cs" />
-     <Compile Include="Assets\Scripts\Tools\TextGenerator.cs" />
      <Compile Include="Assets\Scripts\Tools\TileEditor\LevelTester.cs" />
      <Compile Include="Assets\Scripts\Tools\TileEditor\TileEditor.cs" />
      <Compile Include="Assets\UpdraftZone.cs" />
