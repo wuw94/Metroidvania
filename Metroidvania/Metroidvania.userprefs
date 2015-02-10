@@ -1,9 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Entity\Recordable\Animating\Immobile\DependantPlatform\DependantPlatform.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Controllable.cs">
     <Files>
-      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" Line="9" Column="2" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" Line="9" Column="1" />
       <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\DependantPlatform\DependantPlatform.cs" Line="15" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Controllable.cs" Line="161" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
