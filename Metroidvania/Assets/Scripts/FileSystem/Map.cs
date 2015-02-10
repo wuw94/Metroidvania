@@ -31,7 +31,7 @@ public class Map : ISerializable
 	/// <para>3: DependantPlatform</para>
 	/// <para>4: Button</para>
 	/// </summary>
-	public readonly byte type_count = 5;
+	//public readonly byte type_count = 5;
 
 	/// <summary>
 	/// All the entities in the current map.
@@ -46,7 +46,7 @@ public class Map : ISerializable
 		CreateTiles();
 
 		entities = new List<ArrayList>();
-		for (byte i = 0; i < type_count; i++)
+		for (byte i = 0; i < ResourceDirectory.resource.Count; i++)
 		{
 			entities.Add(new ArrayList());
 		}
@@ -122,7 +122,7 @@ public class Map : ISerializable
 		byte j = 0;
 		try
 		{
-			while (j < type_count)
+			while (j < ResourceDirectory.resource.Count)
 			{
 				for (byte i = 0; i < entities[j].Count; i++)
 				{
@@ -133,7 +133,7 @@ public class Map : ISerializable
 		}
 		catch (ArgumentOutOfRangeException e)
 		{
-			for (byte i = j; i < type_count; i++)
+			for (byte i = j; i < ResourceDirectory.resource.Count; i++)
 			{
 				entities.Add(new ArrayList());
 			}
@@ -150,7 +150,7 @@ public class Map : ISerializable
 		byte j = 0;
 		try
 		{
-			while (j < type_count)
+			while (j < ResourceDirectory.resource.Count)
 			{
 				for (byte i = 0; i < entities[j].Count; i++)
 				{
@@ -162,8 +162,8 @@ public class Map : ISerializable
 		}
 		catch (ArgumentOutOfRangeException e)
 		{
-			ArrayList[] new_entities = new ArrayList[type_count];
-			for (byte i = j; i < type_count; i++)
+			ArrayList[] new_entities = new ArrayList[ResourceDirectory.resource.Count];
+			for (byte i = j; i < ResourceDirectory.resource.Count; i++)
 			{
 				entities.Add(new ArrayList());
 			}
