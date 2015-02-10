@@ -1,10 +1,25 @@
 ﻿<Properties>
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Controllable.cs">
     <Files>
       <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" Line="9" Column="1" />
       <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\DependantPlatform\DependantPlatform.cs" Line="15" Column="1" />
       <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Controllable.cs" Line="161" Column="1" />
+=======
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Entity\Recordable\Animating\Immobile\Button\Button.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Entity\UI\Camera\CameraManager.cs" Line="72" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Player\Player.cs" Line="31" Column="2" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Immobile.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Animating.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" Line="90" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Recordable.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Mobile.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\FileSystem\Map.cs" Line="226" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Button\Button.cs" Line="113" Column="1" />
+>>>>>>> 03b15203c5aa1ee251997b4ff2e8505dac12d88f
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
