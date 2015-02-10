@@ -23,6 +23,7 @@ public sealed class TileEditor : MonoBehaviour
 		public SpawnTool spawn_tool = new SpawnTool();
 		public InteractiveTool interactive_tool = new InteractiveTool();
 		public EntityTool entity_tool = new EntityTool();
+		public TextGeneratorTool text_generator_tool = new TextGeneratorTool();
 
 		public sealed class TerrainTool : Tool
 		{
@@ -67,6 +68,10 @@ public sealed class TileEditor : MonoBehaviour
 			public sealed class UpdraftGooTool : Tool
 			{
 			}
+		}
+
+		public sealed class TextGeneratorTool : Tool
+		{
 		}
 
 	}
@@ -235,8 +240,9 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			tools.index = 3;
 		}
-		if (GUI.Button(new Rect(20,340,100,20), "n/a"))
+		if (GUI.Button(new Rect(20,340,100,20), "TextGenerator"))
 		{
+			tools.index = 4;
 		}
 		if (GUI.Button(new Rect(20,360,100,20), "n/a"))
 		{
@@ -349,6 +355,13 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			GUI.Label(new Rect(130,260+20*tools.entity_tool.index,10, 20), "x");
 		}
+		else if (tools.index == 4)
+		{
+			GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Text Generator");
+			GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to place at mouse position");
+			GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+			GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates a module that generates text when player is nearby");
+		}
 	}
 
 
@@ -410,11 +423,11 @@ public sealed class TileEditor : MonoBehaviour
 					}
 					catch (System.ArgumentOutOfRangeException e)
 					{
-						selection.GetComponent<Lever>().platforms.RemoveAt(i);
+						selection.GetComponent<Button>().platforms.RemoveAt(i);
 					}
 					if (GUI.Button(new Rect(150,144 + 20*i,20,16), "x"))
 					{
-						selection.GetComponent<Lever>().platforms.RemoveAt(i);
+						selection.GetComponent<Button>().platforms.RemoveAt(i);
 					}
 				}
 			}
@@ -498,6 +511,7 @@ public sealed class TileEditor : MonoBehaviour
 			Tool_Updraft_Goo(mouse, ResourceDirectory.resource[typeof(UpdraftGoo)].index);
 			Tool_Dependant_Platform(mouse, ResourceDirectory.resource[typeof(DependantPlatform)].index);
 			Tool_Button(mouse, ResourceDirectory.resource[typeof(Button)].index);
+			Tool_TextGenerator(mouse, ResourceDirectory.resource[typeof(TextGeneratorEntity)].index);
 		}
 	}
 
@@ -746,7 +760,25 @@ public sealed class TileEditor : MonoBehaviour
 
 	private void Tool_TextGenerator(Vector2 mouse, int type_index)
 	{
-
+		if (tools.index == 4)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				TextGeneratorEntity text_generator_entity = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(TextGeneratorEntity)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<TextGeneratorEntity>();
+				GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Add(text_generator_entity);
+			}
+			if (Input.GetKey(KeyCode.W))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<TextGeneratorEntity>() != null)
+				{
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
+					TextGeneratorEntity text_generator_entity = (TextGeneratorEntity)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<TextGeneratorEntity>())];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Remove(text_generator_entity);
+					Destroy(text_generator_entity.gameObject);
+				}
+			}
+		}
 	}
 
 

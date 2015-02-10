@@ -29,6 +29,7 @@ public class RenderingSystem : MonoBehaviour
 
 
 	private TileManager tile_manager;
+	public TextGenerator text_generator;
 	private TileEditor tile_editor;
 	private LevelTester level_tester;
 
@@ -40,6 +41,7 @@ public class RenderingSystem : MonoBehaviour
 	void Start()
 	{
 		tile_manager = (TileManager)gameObject.AddComponent("TileManager");
+		text_generator = (TextGenerator)gameObject.AddComponent("TextGenerator");
 		if (Application.loadedLevelName == "LevelTester")
 		{
 		level_tester = (LevelTester)gameObject.AddComponent("LevelTester");
@@ -48,6 +50,7 @@ public class RenderingSystem : MonoBehaviour
 		{
 			tile_editor = (TileEditor)gameObject.AddComponent("TileEditor");
 		}
+
 
 	}
 

@@ -10,7 +10,9 @@ public static class ResourceDirectory
 		{typeof(Lever), new ResourceData("Prefabs/Immobiles/Lever/Lever", 1)},
 		{typeof(UpdraftGoo), new ResourceData("Prefabs/Mobiles/AI/UpdraftGoo/UpdraftGoo", 2)},
 		{typeof(DependantPlatform), new ResourceData("Prefabs/Immobiles/DependantPlatform/DependantPlatform", 3)},
-		{typeof(Button), new ResourceData("Prefabs/Immobiles/Button/Button", 4)}
+		{typeof(Button), new ResourceData("Prefabs/Immobiles/Button/Button", 4)},
+		{typeof(TextGeneratorEntity), new ResourceData("Prefabs/Effects/TextGenerator", 5)}
+
 
 	};
 

@@ -66,6 +66,7 @@
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Mobile.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\RecordInfo.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Recordable.cs" />
+     <Compile Include="Assets\Scripts\Entity\TextGeneratorEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\Entity\UI\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\Entity\UI\Camera\RenderingSystem.cs" />
