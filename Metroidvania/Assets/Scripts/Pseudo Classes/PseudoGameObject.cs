@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 /// <summary>
@@ -10,7 +11,9 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 {
 	public PseudoVector3 position;
 	
-	public ArrayList information = new ArrayList();
+	public List<FieldInformation> information;
+
+
 
 	/// <summary>
 	/// Constructor. This is private because we don't want to be able to construct a PseudoGameObject.
@@ -19,19 +22,25 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 	/// <param name="go">Go.</param>
 	public PseudoGameObject(T go)
 	{
-		//Debug.Log("will destroy");
-		position = go.transform.position;
+		this.position = go.transform.position;
+		this.information = new List<FieldInformation>();
 		foreach (FieldInfo field in go.GetType().GetFields())
 		{
 			if (((field.FieldType.IsSerializable && field.FieldType.GetElementType() == null) || (field.FieldType.GetElementType() != null && field.FieldType.GetElementType().IsSerializable)))
 			{
-				this.information.Add(field.GetValue(go));
+				this.information.Add(new FieldInformation(field.DeclaringType.ToString(), field.Name, field.GetValue(go)));
 			}
 		}
 		MonoBehaviour.Destroy(go.gameObject);
 	}
 
 
+
+
+	public static T CreateGameObject<T>(PseudoGameObject<T> pgo) where T : MonoBehaviour
+	{
+		return (T)pgo;
+	}
 
 
 	/// <summary>
@@ -50,18 +59,25 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 	/// <returns></returns>
 	public static implicit operator T(PseudoGameObject<T> rValue)
 	{
-		T obj = ((GameObject)MonoBehaviour.Instantiate(Resources.Load(ResourceDirectory.directory[typeof(T)], typeof(GameObject)), rValue.position, Quaternion.identity)).GetComponent<T>();
-		int i = 0;
+		T obj = ((GameObject)MonoBehaviour.Instantiate(Resources.Load(ResourceDirectory.resource[typeof(T)].path, typeof(GameObject)), rValue.position, Quaternion.identity)).GetComponent<T>();
+
 		foreach (FieldInfo field in typeof(T).GetFields())
 		{
 			if (((field.FieldType.IsSerializable && field.FieldType.GetElementType() == null) || (field.FieldType.GetElementType() != null && field.FieldType.GetElementType().IsSerializable)))
 			{
-				field.SetValue(obj, rValue.information[i]);
-				i++;
+				foreach (FieldInformation info in rValue.information)
+				{
+					if (field.DeclaringType.ToString().Equals(info.declaring_type) && field.Name.Equals(info.field_name))
+					{
+						field.SetValue(obj, info.field_value);
+					}
+				}
 			}
 		}
 		return obj;
 	}
+
+
 	
 	/// <summary>
 	/// Automatic conversion from Monobehavior Object to PseudoGameObject. When converting, will destroy the GameObject,

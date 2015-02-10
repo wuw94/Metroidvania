@@ -122,31 +122,13 @@ public class Map : ISerializable
 		byte j = 0;
 		try
 		{
-			for (byte i = 0; i < entities[j].Count; i++)
+			while (j < type_count)
 			{
-				entities[j][i] = (PseudoGameObject<Player>)((Player)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (PseudoGameObject<Lever>)((Lever)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (PseudoGameObject<UpdraftGoo>)((UpdraftGoo)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				Debug.Log(entities[j][i].GetType());
-				entities[j][i] = (PseudoGameObject<DependantPlatform>)((DependantPlatform)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				Debug.Log(entities[j][i].GetType());
-				entities[j][i] = (PseudoGameObject<Button>)((Button)entities[j][i]);
+				for (byte i = 0; i < entities[j].Count; i++)
+				{
+					entities[j][i] = Activator.CreateInstance(typeof(PseudoGameObject<>).MakeGenericType(new Type[]{entities[j][i].GetType()}), new object[]{entities[j][i]});
+				}
+				j++;
 			}
 		}
 		catch (ArgumentOutOfRangeException e)
@@ -168,29 +150,14 @@ public class Map : ISerializable
 		byte j = 0;
 		try
 		{
-			for (byte i = 0; i < entities[j].Count; i++)
+			while (j < type_count)
 			{
-				entities[j][i] = (Player)((PseudoGameObject<Player>)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (Lever)((PseudoGameObject<Lever>)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (UpdraftGoo)((PseudoGameObject<UpdraftGoo>)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (DependantPlatform)((PseudoGameObject<DependantPlatform>)entities[j][i]);
-			}
-			j++;
-			for (byte i = 0; i < entities[j].Count; i++)
-			{
-				entities[j][i] = (Button)((PseudoGameObject<Button>)entities[j][i]);
+				for (byte i = 0; i < entities[j].Count; i++)
+				{
+					Type t = entities[j][i].GetType().GetGenericArguments()[0];
+					entities[j][i] = typeof(PseudoGameObject<>).MakeGenericType(new Type[]{t}).GetMethod("CreateGameObject").MakeGenericMethod(t).Invoke(null, new object[]{entities[j][i]});
+				}
+				j++;
 			}
 		}
 		catch (ArgumentOutOfRangeException e)
@@ -234,6 +201,10 @@ public class Map : ISerializable
 	/// <param name="context">Context.</param>
 	protected Map(SerializationInfo info, StreamingContext context) // Called when deserializing data
 	{
+
+		//this.tiles = (TileInfo[][])info.GetValue("tiles", tiles.GetType());
+		//return;
+
 		foreach (System.Reflection.FieldInfo field in typeof(Map).GetFields())
 		{
 			try

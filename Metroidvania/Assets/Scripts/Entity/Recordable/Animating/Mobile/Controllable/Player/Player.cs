@@ -80,8 +80,5 @@ public class Player : Controllable
 			clone.GetComponent<PlayerClone>().setRecordedStates(recorded_states);
 		}
 	}
-
-
-
-
+	
 }

@@ -46,6 +46,9 @@ public class Mobile : Animating
 	bool velocity_assigned = false;
 	protected bool isPlayer;
 
+	public bool abc = true;
+	public int def = 5;
+
 	// for collision type checking
 	public bool accurate_check;
 	private float check_radius = 0.1f;

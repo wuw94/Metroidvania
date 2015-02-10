@@ -56,6 +56,7 @@ public class Recordable : Entity
 	// Controls preferences
 	protected readonly int rewind_speed = 4;
 	public static bool dim = false;
+
 	
 	void Start()
 	{
