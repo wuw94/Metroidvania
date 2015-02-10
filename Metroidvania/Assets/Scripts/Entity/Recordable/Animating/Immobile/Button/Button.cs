@@ -9,6 +9,11 @@ public class Button : Immobile{
 	private bool pressed;
 	private bool bycollider;
 
+
+	void Start()
+	{
+		ChangeLoop (move_sprites);
+	}
 	public override void Action()
 	{
 		base.Action ();
@@ -18,6 +23,7 @@ public class Button : Immobile{
 		{
 			
 			this_info.eventState = 1;
+			GetComponent<SpriteRenderer>().sprite = still_sprites[1];
 			for (int i = 0; i < platforms.Count; i++)
 			{
 				((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).changeCollisions();
@@ -27,6 +33,7 @@ public class Button : Immobile{
 		{
 			
 			this_info.eventState = 0;
+			GetComponent<SpriteRenderer>().sprite = still_sprites[0];
 			for (int i = 0; i < platforms.Count; i++)
 			{
 				((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).changeCollisions();

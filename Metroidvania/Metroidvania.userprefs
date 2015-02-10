@@ -1,49 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/TextGeneratorEntity.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Entity\Recordable\Animating\Mobile\Mobile.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Controllable/Player/Player.cs" Line="16" Column="35" />
-      <File FileName="Assets/Scripts/FileSystem/Map.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/TileEditor/TileEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/ResourceDirectory.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/ResourceData.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Tools/TextGenerator.cs" Line="7" Column="27" />
-      <File FileName="Assets/TextGeneratorEntity.cs" Line="4" Column="49" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Player\Player.cs" Line="31" Column="2" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Immobile.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Animating.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Recordable.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Mobile.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="Entity" expanded="True">
-                <Node name="Recordable" expanded="True">
-                  <Node name="Animating" expanded="True">
-                    <Node name="Immobile" expanded="True">
-                      <Node name="Lever" expanded="True" />
-                    </Node>
-                    <Node name="Mobile" expanded="True">
-                      <Node name="Controllable" expanded="True">
-                        <Node name="Player" expanded="True" />
-                      </Node>
-                    </Node>
-                  </Node>
-                </Node>
-                <Node name="UI" expanded="True">
-                  <Node name="Camera" expanded="True" />
-                </Node>
-              </Node>
-              <Node name="FileSystem" expanded="True" />
-              <Node name="Pseudo Classes" expanded="True" />
-              <Node name="TileEngine" expanded="True" />
-              <Node name="Tools" expanded="True">
-                <Node name="TileEditor" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="TextGeneratorEntity.cs" selected="True" />
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
