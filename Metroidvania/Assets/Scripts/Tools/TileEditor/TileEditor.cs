@@ -43,6 +43,7 @@ public sealed class TileEditor : MonoBehaviour
 			public LeverTool lever_tool = new LeverTool();
 			public DependantPlatformTool dependant_platform_tool = new DependantPlatformTool();
 			public ButtonTool button_tool = new ButtonTool();
+			public ItemTool item_tool = new ItemTool();
 
 			public sealed class LeverTool : Tool
 			{
@@ -58,6 +59,11 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				public bool adding = false;
 				public List<string> addable = new List<string>{"DependantPlatform(Clone)"};
+			}
+
+			public sealed class ItemTool : Tool
+			{
+
 			}
 		}
 
@@ -311,6 +317,10 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				tools.interactive_tool.index = 2;
 			}
+			if (GUI.Button(new Rect(140, 320,100,20), "Item"))
+			{
+				tools.interactive_tool.index = 3;
+			}
 			if (tools.interactive_tool.index == 0)
 			{
 				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Lever");
@@ -334,6 +344,14 @@ public sealed class TileEditor : MonoBehaviour
 				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
 				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Left click a button to open a menu for assigning");
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  the entities affected by a particular button");
+			}
+			if (tools.interactive_tool.index == 3)
+			{
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Item");
+				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
+				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Item, obtainable by player touching");
+				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "  change type of item through unity editor");
 			}
 			GUI.Label(new Rect(130,260+20*tools.interactive_tool.index,10, 20), "x");
 		}
@@ -512,6 +530,7 @@ public sealed class TileEditor : MonoBehaviour
 			Tool_Dependant_Platform(mouse, ResourceDirectory.resource[typeof(DependantPlatform)].index);
 			Tool_Button(mouse, ResourceDirectory.resource[typeof(Button)].index);
 			Tool_TextGenerator(mouse, ResourceDirectory.resource[typeof(TextGeneratorEntity)].index);
+			Tool_Item(mouse, ResourceDirectory.resource[typeof(Item)].index);
 		}
 	}
 
@@ -776,6 +795,29 @@ public sealed class TileEditor : MonoBehaviour
 					TextGeneratorEntity text_generator_entity = (TextGeneratorEntity)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<TextGeneratorEntity>())];
 					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Remove(text_generator_entity);
 					Destroy(text_generator_entity.gameObject);
+				}
+			}
+		}
+	}
+
+	private void Tool_Item(Vector2 mouse, int type_index)
+	{
+		if (tools.index == 2 && tools.interactive_tool.index == 3)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				Item item = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(Item)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Item>();
+				GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Add(item);
+			}
+			if (Input.GetKey(KeyCode.W))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<Item>() != null)
+				{
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
+					Item item = (Item)interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent<Item>())];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Remove(item);
+					Destroy(item.gameObject);
 				}
 			}
 		}

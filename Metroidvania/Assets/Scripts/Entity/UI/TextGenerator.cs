@@ -8,6 +8,8 @@ public class TextGenerator : RenderingSystem
 {
 	public static List<string> message_buffer = new List<string>();
 
+	private Rect text_window = new Rect(20,Screen.height - 100,Screen.width-40,100);
+
 	void Start()
 	{
 	}
@@ -19,9 +21,13 @@ public class TextGenerator : RenderingSystem
 	void OnGUI () {
 		if (message_buffer.Count > 0)
 		{
-			GUI.Label(new Rect(20,Screen.height - 100,Screen.width-20,100), message_buffer[0]);
-			GUI.Label(new Rect(message_buffer[0].Length * 9, 20, 20, 20), ".");
+			text_window = GUI.Window(0, text_window, TextWindow, "READ THIS!!!!");
 		}
+	}
+
+	void TextWindow(int windowID)
+	{
+		GUI.Label(new Rect(20,20,Screen.width-40,100), message_buffer[0]);
 	}
 
 	public void AddText(string text)

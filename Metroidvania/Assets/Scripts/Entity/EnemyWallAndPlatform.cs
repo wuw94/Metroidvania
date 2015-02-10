@@ -4,10 +4,6 @@ using System.Collections;
 /*
  * This script is for enemy walls and platforms.
  * 
- * It toggles their active and inactiveness depending on
- * 		- Their color (blue or green)
- * 		- The recording state (recording or normal)
- * 
  * Green 
  * - active in normal mode
  * - inactive in recording mode
@@ -21,10 +17,10 @@ using System.Collections;
 
 public class EnemyWallAndPlatform : Recordable 
 {
-	public enum GooColor{Blue, Green};
+	public enum GooColor{Blue, Green}; //Review enum
 	public GooColor color;
 
-	public override void NormalUpdate()
+	public override void NormalUpdate() //Review override, NormalUpdate during normal time
 	{
 		if (color == GooColor.Blue) 
 		{
@@ -37,7 +33,7 @@ public class EnemyWallAndPlatform : Recordable
 		}
 	}
 
-	public override void Record()
+	public override void Record() //Record during Time Shift
 	{
 		if (color == GooColor.Blue) 
 		{
