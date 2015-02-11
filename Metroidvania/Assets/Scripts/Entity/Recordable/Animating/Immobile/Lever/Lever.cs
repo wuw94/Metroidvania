@@ -7,6 +7,35 @@ public class Lever : Immobile
 {
 	public List<int> platforms = new List<int>();
 
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.tag == "Player")
+		{
+			List<Object> objects = new List<Object>(UnityEditor.Selection.objects);
+			objects.Add(gameObject);
+			for (int i = 0; i < platforms.Count; i++)
+			{
+				objects.Add(((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).gameObject);
+			}
+			UnityEditor.Selection.objects = objects.ToArray();
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (col.tag == "Player")
+		{
+			List<Object> objects = new List<Object>(UnityEditor.Selection.objects);
+			objects.Remove(gameObject);
+			for (int i = 0; i < platforms.Count; i++)
+			{
+				objects.Remove(((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).gameObject);
+			}
+			UnityEditor.Selection.objects = objects.ToArray();
+		}
+	}
+
 	void Start()
 	{
 		ChangeLoop (move_sprites);
@@ -83,7 +112,9 @@ public class Lever : Immobile
 		{
 			for (int i = 0; i < platforms.Count; i++)
 			{
-				Gizmos.DrawLine(transform.position, ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).transform.position);
+				Gizmos.color = Color.magenta;
+				Vector3 pos = ((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).transform.position;
+				Gizmos.DrawLine(transform.position, new Vector3(pos.x + 0.5f, pos.y + 0.5f, pos.z));
 			}
 		}
 		catch

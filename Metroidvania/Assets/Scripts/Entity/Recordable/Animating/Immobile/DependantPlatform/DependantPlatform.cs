@@ -26,7 +26,10 @@ public class DependantPlatform : Immobile
 	
 	void Update()
 	{
-		
+		if (Application.loadedLevelName == "TileEditor")
+		{
+			transform.collider2D.enabled = true;
+		}
 	}
 
 	public void changeCollisions()
