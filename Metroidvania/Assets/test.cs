@@ -11,7 +11,7 @@ public class test : MonoBehaviour
 	void Start()
 	{
 		Child c = new Child();
-		Debug.Log(c.a);
+		//Debug.Log(c.a);
 	}
 }
 

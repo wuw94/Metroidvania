@@ -67,7 +67,7 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 			{
 				foreach (FieldInformation info in rValue.information)
 				{
-					if (field.DeclaringType.ToString().Equals(info.declaring_type) && field.Name.Equals(info.field_name))
+					if (field.DeclaringType.ToString().Equals(info.declaring_type) && field.Name.Equals(info.field_name) && field.FieldType.Equals(info.field_value.GetType()))
 					{
 						field.SetValue(obj, info.field_value);
 					}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* Controllable.
  * Objects that inherit from the Controllable class are able to:
@@ -47,7 +48,7 @@ public class Controllable : Mobile
 	private bool can_check_jump = true;
 	private bool IN_ATTACK = false;
 
-	private ArrayList current_collisions = new ArrayList();
+	public List<Collider2D> current_collisions = new List<Collider2D>();
 
 	public void Start()
 	{
@@ -158,9 +159,9 @@ public class Controllable : Mobile
 			IN_ACTION = false;
 			for (int i = 0; i < current_collisions.Count; i++)
 			{
-				if (((Collider2D)current_collisions[i]).gameObject.GetComponent<Recordable>() != null)
+				if (current_collisions[i].gameObject.GetComponent<Recordable>() != null)
 				{
-					((Collider2D)current_collisions[i]).gameObject.GetComponent<Recordable>().Action();
+					current_collisions[i].gameObject.GetComponent<Recordable>().Action();
 				}
 			}
 		}

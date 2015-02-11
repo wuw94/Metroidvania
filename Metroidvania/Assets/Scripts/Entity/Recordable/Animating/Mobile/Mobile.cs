@@ -40,6 +40,8 @@ using System.Collections.Generic;
 
 public class Mobile : Animating
 {
+	public List<Equipment> equipment = new List<Equipment>();
+
 	public float grav_scale;
 	protected bool is_attacking = false;
 	protected bool control_enabled = true;
@@ -228,22 +230,22 @@ public class Mobile : Animating
 				if (front_contact && !this_info.facingRight)
 				{
 					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
-					rigidbody2D.velocity = new Vector2(jumpspeed, 0);
+					rigidbody2D.velocity = new Vector2(jumpspeed/1.5f, jumpspeed/2);
 				}
 				else if (front_contact && this_info.facingRight)
 				{
 					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
-					rigidbody2D.velocity = new Vector2(-jumpspeed, 0);
+					rigidbody2D.velocity = new Vector2(-jumpspeed/1.5f, jumpspeed/2);
 				}
 				else if (back_contact && this_info.facingRight)
 				{
 					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
-					rigidbody2D.velocity = new Vector2(jumpspeed, 0);
+					rigidbody2D.velocity = new Vector2(jumpspeed/1.5f, jumpspeed/2);
 				}
 				else if (back_contact && !this_info.facingRight)
 				{
 					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
-					rigidbody2D.velocity = new Vector2(-jumpspeed, 0);
+					rigidbody2D.velocity = new Vector2(-jumpspeed/1.5f, jumpspeed/2);
 				}
 			}
 		}

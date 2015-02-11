@@ -11,6 +11,15 @@ public class Lever : Immobile
 	{
 		ChangeLoop (move_sprites);
 	}
+
+	void Update()
+	{
+		if (GetComponent<SpriteRenderer>().sprite != still_sprites[this_info.eventState])
+		{
+			GetComponent<SpriteRenderer>().sprite = still_sprites[this_info.eventState];
+		}
+	}
+
 	public override void Action()
 	{
 		base.Action ();
@@ -19,7 +28,6 @@ public class Lever : Immobile
 		{
 
 			this_info.eventState = 1;
-			GetComponent<SpriteRenderer>().sprite = still_sprites[0];
 
 			for (int i = 0; i < platforms.Count; i++)
 			{
@@ -30,7 +38,6 @@ public class Lever : Immobile
 		{
 
 			this_info.eventState = 0;
-			GetComponent<SpriteRenderer>().sprite = still_sprites[1];
 			for (int i = 0; i < platforms.Count; i++)
 			{
 				((DependantPlatform)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[3][platforms[i]]).changeCollisions();
@@ -38,13 +45,11 @@ public class Lever : Immobile
 		}	
 
 	}
+
 	public override void UndoAction()
 	{
-		Action ();
-		}
-
-	
-
+		Action();
+	}
 
 	public override void NormalUpdate()
 	{

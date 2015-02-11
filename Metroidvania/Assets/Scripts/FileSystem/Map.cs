@@ -131,7 +131,7 @@ public class Map : ISerializable
 				j++;
 			}
 		}
-		catch (ArgumentOutOfRangeException e)
+		catch (ArgumentOutOfRangeException)
 		{
 			for (byte i = j; i < ResourceDirectory.resource.Count; i++)
 			{
@@ -160,7 +160,7 @@ public class Map : ISerializable
 				j++;
 			}
 		}
-		catch (ArgumentOutOfRangeException e)
+		catch (ArgumentOutOfRangeException)
 		{
 			ArrayList[] new_entities = new ArrayList[ResourceDirectory.resource.Count];
 			for (byte i = j; i < ResourceDirectory.resource.Count; i++)
