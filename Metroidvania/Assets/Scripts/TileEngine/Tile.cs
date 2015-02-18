@@ -25,8 +25,8 @@ public sealed class Tile : MonoBehaviour
 	{
 		updateAll();
 		transform.localScale = new Vector3(0.25f,0.25f,1);
-		
 	}
+
 
 
 	public void SetNeighbors(bool[] n)

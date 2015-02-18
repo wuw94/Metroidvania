@@ -67,7 +67,7 @@ public class Mobile : Animating
 	protected bool back_contact = false;
 
 	public bool updraft_contact = false;
-
+	public bool parachute_use = false;
 
 
 	public void Start()
@@ -81,9 +81,17 @@ public class Mobile : Animating
 
 	public void noInput()
 	{
+		if (grounded && parachute_use)
+		{
+			parachute_use = false;
+		}
+		if (parachute_use)
+		{
+			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
+		}
 		if (updraft_contact)
 		{
-			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 1)?1:0));
+			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
 		}
 		else
 		{
@@ -107,8 +115,16 @@ public class Mobile : Animating
 	{
 		this_info.facingRight = false;
 
+		if (grounded && parachute_use)
+		{
+			parachute_use = false;
+		}
 		if (control_enabled)
 		{
+			if (parachute_use)
+			{
+				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
+			}
 			if (updraft_contact)
 			{
 				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 1)?1:0));
@@ -140,8 +156,16 @@ public class Mobile : Animating
 	{
 		this_info.facingRight = true;
 
+		if (grounded && parachute_use)
+		{
+			parachute_use = false;
+		}
 		if (control_enabled)
 		{
+			if (parachute_use)
+			{
+				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
+			}
 			if (updraft_contact)
 			{
 				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 1)?1:0));
@@ -171,8 +195,16 @@ public class Mobile : Animating
 
 	public void moveUp(float max, float accel_g, float accel_a)
 	{
+		if (grounded && parachute_use)
+		{
+			parachute_use = false;
+		}
 		if (control_enabled)
 		{
+			if (parachute_use)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
+			}
 			if (updraft_contact)
 			{
 				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 2)?2:0));
@@ -189,8 +221,16 @@ public class Mobile : Animating
 
 	public void moveDown(float max, float accel_g, float accel_a)
 	{
+		if (grounded && parachute_use)
+		{
+			parachute_use = false;
+		}
 		if (control_enabled)
 		{
+			if (parachute_use)
+			{
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
+			}
 			if (updraft_contact)
 			{
 				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + 0.3f);
@@ -215,6 +255,10 @@ public class Mobile : Animating
 	{
 		if (updraft_contact)
 		{
+		}
+		if (!grounded && equipment.Contains(Equipment.Parachute))
+		{
+			parachute_use = !parachute_use;
 		}
 		else
 		{

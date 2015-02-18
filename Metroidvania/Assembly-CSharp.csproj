@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\DetectLeaks.cs" />
+     <Compile Include="Assets\Luminary.cs" />
      <Compile Include="Assets\Scripts\Entity\EnemyWallAndPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\Entity.cs" />
      <Compile Include="Assets\Scripts\Entity\Item.cs" />

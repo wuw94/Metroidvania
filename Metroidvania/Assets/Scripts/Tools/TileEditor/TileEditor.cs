@@ -569,9 +569,7 @@ public sealed class TileEditor : MonoBehaviour
 				Tool_Text2Type(mouse, ResourceDirectory.resource[t].index);
 			}
 			catch
-			{
-				Debug.Log("invalid type");
-			}
+			{}
 		}
 	}
 
