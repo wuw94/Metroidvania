@@ -36,7 +36,12 @@ public sealed class PseudoGameObject<T> where T : MonoBehaviour
 
 
 
-
+	/// <summary>
+	/// Create a GameObject from a PseudoGameObject
+	/// </summary>
+	/// <returns>The game object.</returns>
+	/// <param name="pgo">Pgo.</param>
+	/// <typeparam name="T">The 1st type parameter.</typeparam>
 	public static T CreateGameObject<T>(PseudoGameObject<T> pgo) where T : MonoBehaviour
 	{
 		return (T)pgo;

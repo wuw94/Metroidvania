@@ -80,6 +80,10 @@ public sealed class TileEditor : MonoBehaviour
 		{
 		}
 
+		public sealed class Text2TypeTool : Tool
+		{
+		}
+
 	}
 
 
@@ -98,6 +102,7 @@ public sealed class TileEditor : MonoBehaviour
 
 
 	private string map_name = ""; // name of map
+	private string type_name = ""; // name of class for Text2Type
 
 	// Selection
 	public GameObject selection = null;
@@ -115,6 +120,7 @@ public sealed class TileEditor : MonoBehaviour
 	private Rect right_window_rect = new Rect(Screen.width-200,0,200,Screen.height);
 	private float camera_speed;
 	private int FPS;
+	private bool loaded = false;
 
 
 	void Start()
@@ -129,7 +135,7 @@ public sealed class TileEditor : MonoBehaviour
 
 	void OnGUI()
 	{
-		if (GetComponent<TileManager>().read_done)
+		if (loaded)
 		{
 			if (show_tab)
 			{
@@ -172,25 +178,23 @@ public sealed class TileEditor : MonoBehaviour
 		
 		if (GUI.Button(new Rect(10,60,100,40), "New"))
 		{
-			GameManager.current_game.progression.maps.Add("TileEditorMap", new Map());
-			GetComponent<TileManager>().LoadAll();
-			GetComponent<RenderingSystem>().LoadedDone();
+			GameManager.current_game.progression.AddMap("TileEditorMap", new Map());
+			GameManager.current_game.progression.loaded_map = "TileEditorMap";
+			loaded = true;
 		}
 		if (GUI.Button(new Rect(Screen.width/2 - 90,60,100,40), "Load"))
 		{
 			try
 			{
-				GameManager.current_game.progression.maps.Add("TileEditorMap", new Map(map_name));
+				GameManager.current_game.progression.AddMap("TileEditorMap", new Map(map_name));
+				GameManager.current_game.progression.loaded_map = "TileEditorMap";
+				loaded = true;
 			}
 			catch
 			{
 				Debug.LogWarning("Could not load file: " + map_name);
 				throw;
 			}
-
-			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
-			GetComponent<RenderingSystem>().LoadedDone();
-
 		}
 	}
 
@@ -252,15 +256,35 @@ public sealed class TileEditor : MonoBehaviour
 		}
 		if (GUI.Button(new Rect(20,360,100,20), "n/a"))
 		{
+			//5
 		}
 		if (GUI.Button(new Rect(20,380,100,20), "n/a"))
 		{
+			//6
 		}
 		if (GUI.Button(new Rect(20,400,100,20), "n/a"))
 		{
+			//7
 		}
 		if (GUI.Button(new Rect(20,420,100,20), "n/a"))
 		{
+			//8
+		}
+		if (GUI.Button(new Rect(20,440,100,20), "n/a"))
+		{
+			//9
+		}
+		if (GUI.Button(new Rect(20,460,100,20), "n/a"))
+		{
+			//10
+		}
+		if (GUI.Button(new Rect(20,480,100,20), "n/a"))
+		{
+			//11
+		}
+		if (GUI.Button(new Rect(20,500,100,20), "Text2Type"))
+		{
+			tools.index = 12;
 		}
 		GUI.Label(new Rect(10,260+20*tools.index,10, 20), "x");
 		//----------------------------</Tier 1 Options>-----------------------------
@@ -281,14 +305,14 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (tools.terrain_tool.index == 0)
 			{
-				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Tile <" + TileManager.tile_type[tools.terrain_tool.tile_tool.index] + ">");
+				GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Tile <" + TileManager.tile_types[tools.terrain_tool.tile_tool.index] + ">");
 				GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to paste at mouse position");
 				GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to disable at mouse position");
 				GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates or removes tiles at mouse location");
 				GUI.Label(new Rect(280, 120, Screen.width/2-5, 20), "- Switch tile type with second tier option");
-				for (int i = 0; i < TileManager.tile_type.Length; i++)
+				for (int i = 0; i < TileManager.tile_types.Length; i++)
 				{
-					if (GUI.Button(new Rect(260,260 + i*20,100,20), TileManager.tile_type[i]))
+					if (GUI.Button(new Rect(260,260 + i*20,100,20), TileManager.tile_types[i]))
 					{
 						tools.terrain_tool.tile_tool.index = i;
 					}
@@ -380,6 +404,14 @@ public sealed class TileEditor : MonoBehaviour
 			GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
 			GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates a module that generates text when player is nearby");
 		}
+		else if (tools.index == 12)
+		{
+			GUI.Label(new Rect(280, 40, Screen.width/2-5, 20), "Text2Type");
+			GUI.Label(new Rect(280, 60, Screen.width/2-5, 20), "<Q> to place at mouse position");
+			GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
+			GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates an instance of the type labeled inside textbox");
+			type_name = GUI.TextField(new Rect(130,500,200,20), type_name);
+		}
 	}
 
 
@@ -464,7 +496,7 @@ public sealed class TileEditor : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Tab) && GetComponent<TileManager>().read_done)
+		if (Input.GetKeyDown(KeyCode.Tab) && loaded)
 		{
 			show_tab = !show_tab;
 		}
@@ -516,7 +548,7 @@ public sealed class TileEditor : MonoBehaviour
 
 	void manageTool()
 	{
-		if (GetComponent<TileManager>().read_done)
+		if (loaded)
 		{
 			Vector2 mouse = new Vector2((int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).x),
 			                            (int)(Camera.main.ScreenToWorldPoint(Input.mousePosition).y));
@@ -531,6 +563,15 @@ public sealed class TileEditor : MonoBehaviour
 			Tool_Button(mouse, ResourceDirectory.resource[typeof(Button)].index);
 			Tool_TextGenerator(mouse, ResourceDirectory.resource[typeof(TextGeneratorEntity)].index);
 			Tool_Item(mouse, ResourceDirectory.resource[typeof(Item)].index);
+			try
+			{
+				System.Type t = System.Type.GetType(type_name);
+				Tool_Text2Type(mouse, ResourceDirectory.resource[t].index);
+			}
+			catch
+			{
+				Debug.Log("invalid type");
+			}
 		}
 	}
 
@@ -823,6 +864,17 @@ public sealed class TileEditor : MonoBehaviour
 		}
 	}
 
+	private void Tool_Text2Type(Vector2 mouse, int type_index)
+	{
+		Debug.Log("text2type");
+		if (tools.index == 12)
+		{
+		}
+
+	}
+
+
+
 
 	/// <summary>
 	/// When TileEditor scene is being run, game needs to be reformatted to allow new editing capabilities
@@ -831,7 +883,6 @@ public sealed class TileEditor : MonoBehaviour
 	{
 		Debug.Log("TileEditor Scene detected. Reformatting current_game session...");
 		GameManager.current_game = new GameManager();
-		GameManager.current_game.progression.loaded_map = "TileEditorMap";
 		Debug.Log("Done");
 	}
 

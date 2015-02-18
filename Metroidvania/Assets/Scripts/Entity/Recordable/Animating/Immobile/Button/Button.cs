@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Button : Immobile{
 
 	public List<int> platforms = new List<int>();
+	public List<Collider2D> current_collisions = new List<Collider2D>();
 
 	private bool pressed;
 	private bool bycollider;
@@ -48,25 +49,36 @@ public class Button : Immobile{
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		if (!current_collisions.Contains(other) && other.GetComponent<Mobile>() != null)
+		{
+			current_collisions.Add(other);
+		}
 
-		if (other.tag == "Player" && !pressed) {
+		if (!pressed && current_collisions.Contains(other))
+		{
 			bycollider = true;
 			Action ();
 			bycollider = false;
-		    	pressed = true;
-			}
+	    	pressed = true;
+		}
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
+		if (current_collisions.Contains(other))
+		{
+			current_collisions.Remove(other);
+		}
 	
-		 if (other.tag == "Player" && pressed) {
+		if (pressed && current_collisions.Count == 0)
+		{
 			bycollider = true;
 			Action ();
 			bycollider = false;
 			pressed = false;
-				}
 		}
-	
+	}
+
+
 	public override void NormalUpdate()
 	{
 		//base.NormalUpdate();

@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 /* Progression Manager.
@@ -42,5 +41,17 @@ public sealed class ProgressionManager
 	{
 		this.player = new CharacterManager();
 		this.maps = new Dictionary<string, Map>();
+	}
+
+
+	public void ChangeMap(string name)
+	{
+		loaded_map = name;
+	}
+
+	public void AddMap(string name, Map map)
+	{
+		maps.Add(name, map);
+		UnityEngine.Camera.main.GetComponent<TileManager>().BeginChecks();
 	}
 }

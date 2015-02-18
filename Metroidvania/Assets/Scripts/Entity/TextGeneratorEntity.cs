@@ -10,14 +10,14 @@ public class TextGeneratorEntity : MonoBehaviour {
 	{
 		if (other.tag == "Player")
 		{
-			Camera.main.GetComponent<RenderingSystem>().text_generator.AddText(text);
+			Camera.main.GetComponent<TextGenerator>().AddText(text);
 		}
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
 		if (other.tag == "Player")
 		{
-			Camera.main.GetComponent<RenderingSystem>().text_generator.Next();
+			Camera.main.GetComponent<TextGenerator>().Next();
 		}
 	}
 }

@@ -13,17 +13,13 @@ public class LevelTester : MonoBehaviour {
 		{
 			try
 			{
-				GameManager.current_game.progression.maps.Add("LevelTesterMap", new Map(PlayerPrefs.GetString("Map Name")));
+				GameManager.current_game.progression.AddMap("LevelTesterMap", new Map(PlayerPrefs.GetString("Map Name")));
 			}
 			catch
 			{
 				Debug.LogWarning("Could not load file: " + PlayerPrefs.GetString("Map Name"));
 				throw;
 			}
-			
-			GetComponent<TileManager>().LoadAll(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map]);
-			GetComponent<RenderingSystem>().LoadedDone();
-
 			camera_manager.player = (Player)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0];
 			camera_manager.returnToPlayer();
 		}

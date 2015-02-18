@@ -17,26 +17,72 @@ using System.Collections.Generic;
 
 public sealed class TileManager : RenderingSystem
 {
-	public static readonly string[] tile_type = new string[]{"GrassTile"};
-	private readonly string[] tile_unload = new string[]{"Inner_Concave","Inner_Corner","Inner_Side_Right","Inner_Side_Top","Inner_Surround","Outer_Concave","Outer_Corner","Outer_Side_Right","Outer_Side_Top","Outer_Surround"};
-	private readonly Vector2 pivot = new Vector2(0.5f, 0.5f);
-	private readonly sbyte[] clockwise_x_logic = new sbyte[]{0,1,1,1,0,-1,-1,-1};
-	private readonly sbyte[] clockwise_y_logic = new sbyte[]{1,1,0,-1,-1,-1,0,1};
+	/// <summary>
+	/// Self-described, top, side, bottom, depending on surrounding tiles
+	/// O : neighboring tile not occupied (Open)
+	/// C : neighboring tile occupied (Closed)
+	/// </summary>
+	private enum CornerCombination
+	{
+		CCC, CCO,
+		COC, COO,
+		OCC, OOC
+	};
 
-	private Dictionary<string, Sprite[]> sprites = new Dictionary<string, Sprite[]>();
-	private readonly Object tile_resource = Resources.Load("Prefabs/Immobiles/Tiles/MacroTile", typeof(GameObject));
-	private List<TileContainer> tile_pool = new List<TileContainer>();
-	private Dictionary<Vector2, TileContainer> displayed_tiles = new Dictionary<Vector2, TileContainer>();
+	
+
+	/// <summary>
+	/// All the different types of tiles we have in their string form.
+	/// These names are used when searching the Resources folder for artwork.
+	/// </summary>
+	public static readonly string[] tile_types = new string[]{"TestTile"};
+
+	/// <summary>
+	/// A sprite with no art on it
+	/// </summary>
+	public static readonly Sprite empty_sprite = Sprite.Create((Texture2D)Resources.Load("Tiles/GrassTile/Outer_Surround"), new Rect(0,0,100,100),new Vector2(0,0));
+
+	/// <summary>
+	/// Artwork into Texture2D into Color[] for a corner, key CornerCombination.
+	/// Used when building sprites, 4 corners per tile.
+	/// </summary>
+	private Dictionary<string, Dictionary<CornerCombination, Color[]>> tile_corner = new Dictionary<string, Dictionary<CornerCombination, Color[]>>();
+
+	/// <summary>
+	/// Sprites for all the possible combination of tiles for each tile type.
+	/// Built inside TileManager class, then used as a sprite reserve for Tile class.
+	/// </summary>
+	public static Dictionary<string, Dictionary<TileCombination, Sprite>> tile_sprite = new Dictionary<string, Dictionary<TileCombination, Sprite>>();
+
+	/// <summary>
+	/// Preloaded resource for a tile from Resources/Prefabs/Immobiles/Tiles/MacroTile
+	/// </summary>
+	private readonly Object tile_resource = Resources.Load("Prefabs/Immobiles/Tiles/Tile", typeof(GameObject));
+	
+	/// <summary>
+	/// Pool of tiles that have been created but have fallen out of view and not currently in use.
+	/// </summary>
+	private List<Tile> tile_pool = new List<Tile>();
+
+	/// <summary>
+	/// Tiles that are currently being displayed with its Vector2 coordinates as its key.
+	/// </summary>
+	private Dictionary<Vector2, Tile> displayed_tiles = new Dictionary<Vector2, Tile>();
+
+	/// <summary>
+	/// Folder to keep tiles organized inside the Unity Editor.
+	/// </summary>
+	private GameObject tile_folder;
+
+
 
 	//helper
 	private readonly bool[] default_bool = new bool[8];
 	private readonly Sprite[] default_sprite = new Sprite[10];
+	private static readonly sbyte[] clockwise_x_logic = new sbyte[]{0,1,1,1,0,-1,-1,-1};
+	private static readonly sbyte[] clockwise_y_logic = new sbyte[]{1,1,0,-1,-1,-1,0,1};
 	
-
-	public bool read_done = false;
-	private GameObject tile_folder;
-
-
+	
 	void Start()
 	{
 		tile_folder = new GameObject();
@@ -48,69 +94,158 @@ public sealed class TileManager : RenderingSystem
 	{}
 
 
-	/* LoadAll()
-	 * - Loads a new map
-	 */
-	public void LoadAll()
+	/// <summary>
+	/// Starts TileManager pooling system.
+	/// </summary>
+	public void BeginChecks()
 	{
-		if (read_done)
-		{
-			Debug.LogWarning("There is already a map");
-		}
-		else
-		{
-			LoadResources();
-			StartCoroutine(UpdateShownTiles());
-			StartCoroutine(UpdateTileBuffer());
-			StartCoroutine(UnloadTilePool());
-			read_done = true;
-		}
+		LoadResources();
+		StartCoroutine(UpdateShownTiles());
+		StartCoroutine(UpdateTileBuffer());
+		StartCoroutine(UnloadTilePool());
 	}
 
 	
-	/* LoadAll(Map new_map)
-	 * - Takes what is needed from a new_map parameter, loads the rest around it.
-	 * - Needed: tiles
-	 */
-	public void LoadAll(Map new_map)
-	{
-		if (read_done)
-		{
-			Debug.LogWarning("There is already a map");
-		}
-		else
-		{
-			LoadResources();
-			StartCoroutine(UpdateShownTiles());
-			StartCoroutine(UpdateTileBuffer());
-			StartCoroutine(UnloadTilePool());
-			read_done = true;
-		}
-	}
 
 
-	/* LoadResources()
-	 * - Loads all the tile textures we need from the Resources folder
-	 * - Refer to tile_unload to see what names to give these files
-	 */
+
+	/// <summary>
+	/// Loades textures from Resources folder and builds sprites for each possible combination of artwork.
+	/// </summary>
 	private void LoadResources()
 	{
-		foreach (string type in tile_type)
+		foreach (string type in tile_types)
 		{
-			sprites.Add(type, default_sprite);
-			for (byte i = 0; i < 10; i++)
+			tile_corner[type] = new Dictionary<CornerCombination, Color[]>();
+			tile_corner[type][CornerCombination.CCC] = ((Texture2D)Resources.Load("Tiles/" + type + "/CCC")).GetPixels();
+			tile_corner[type][CornerCombination.CCO] = ((Texture2D)Resources.Load("Tiles/" + type + "/CCO")).GetPixels();
+			tile_corner[type][CornerCombination.COC] = ((Texture2D)Resources.Load("Tiles/" + type + "/COC")).GetPixels();
+			tile_corner[type][CornerCombination.COO] = ((Texture2D)Resources.Load("Tiles/" + type + "/COO")).GetPixels();
+			tile_corner[type][CornerCombination.OCC] = ((Texture2D)Resources.Load("Tiles/" + type + "/OCC")).GetPixels();
+			tile_corner[type][CornerCombination.OOC] = ((Texture2D)Resources.Load("Tiles/" + type + "/OOC")).GetPixels();
+			tile_sprite[type] = new Dictionary<TileCombination, Sprite>();
+			foreach (TileCombination c in System.Enum.GetValues(typeof(TileCombination)))
 			{
-				Texture2D t = (Texture2D)Resources.Load("Tiles/"+type+"/"+tile_unload[i]);
-				sprites[type][i] = Sprite.Create(t, new Rect(0,0,t.width,t.height), pivot);
+				tile_sprite[type].Add(c, BuildSprite(c, type));
 			}
 		}
 	}
 
 
+	/// <summary>
+	/// Build a sprite based on its TileCombination and type of tile
+	/// </summary>
+	/// <returns>The sprite.</returns>
+	/// <param name="combination">Combination.</param>
+	/// <param name="type">Type.</param>
+	public Sprite BuildSprite(TileCombination combination, string type)
+	{
+		string code = combination.ToString();
 
-	
+		Texture2D tex = new Texture2D(400,400);
 
-	
+		//Top left
+		if (code[0].Equals('C') && code[1].Equals('C'))
+		{
+			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.CCC],200,200));
+		}
+		else if (code[0].Equals('C') && code[1].Equals('O'))
+		{
+			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.COC],200,200));
+		}
+		else if (code[0].Equals('O') && code[1].Equals('C'))
+		{
+			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.OCC],200,200));
+		}
+		else if (code[0].Equals('O') && code[1].Equals('O'))
+		{
+			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.OOC],200,200));
+		}
+
+
+		//Top right
+		if (code[0].Equals('C') && code[2].Equals('C'))
+		{
+			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.CCC]);
+		}
+		else if (code[0].Equals('C') && code[2].Equals('O'))
+		{
+			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.COC]);
+		}
+		else if (code[0].Equals('O') && code[2].Equals('C'))
+		{
+			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.OCC]);
+		}
+		else if (code[0].Equals('O') && code[2].Equals('O'))
+		{
+			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.OOC]);
+		}
+
+		//Bottom left
+		if (code[3].Equals('C') && code[1].Equals('C'))
+		{
+			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.CCC],200,200));
+		}
+		else if (code[3].Equals('C') && code[1].Equals('O'))
+		{
+			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.COC],200,200));
+		}
+		else if (code[3].Equals('O') && code[1].Equals('C'))
+		{
+			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.CCO],200,200));
+		}
+		else if (code[3].Equals('O') && code[1].Equals('O'))
+		{
+			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.COO],200,200));
+		}
+
+		//Bottom right
+		if (code[3].Equals('C') && code[2].Equals('C'))
+		{
+			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.CCC]);
+		}
+		else if (code[3].Equals('C') && code[2].Equals('O'))
+		{
+			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.COC]);
+		}
+		else if (code[3].Equals('O') && code[2].Equals('C'))
+		{
+			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.CCO]);
+		}
+		else if (code[3].Equals('O') && code[2].Equals('O'))
+		{
+			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.COO]);
+		}
+
+
+		tex.Apply();
+		Sprite s = Sprite.Create(tex, new Rect(0,0,400,400), new Vector2(0,0));
+		return s;
+	}
+
+
+	/// <summary>
+	/// Flip a Color[] for Texture2D across Y axis.
+	/// </summary>
+	/// <param name="given">Given.</param>
+	/// <param name="width">Width.</param>
+	/// <param name="height">Height.</param>
+	Color[] Flip(Color[] given, int width, int height)
+	{
+		Color[] to_return = new Color[given.Length];
+		for (int h = 0; h < width * height; h += width)
+		{
+			for (int w = 0; w < width; w++)
+			{
+				to_return[h + w] = given[h + width-1 - w];
+			}
+		}
+		return to_return;
+	}
+
+
+
+
 
 	/// <summary>
 	/// Increases the tile_pool to match the amount of tiles we need to display
@@ -122,7 +257,7 @@ public sealed class TileManager : RenderingSystem
 			while (tile_pool.Count == 0 || tile_pool.Count + displayed_tiles.Count < (unit_shown.y-unit_shown.x) * (unit_shown.w-unit_shown.z))
 			{
 				GameObject new_tile = (GameObject)Instantiate(tile_resource);
-				tile_pool.Add(new_tile.GetComponent<TileContainer>());
+				tile_pool.Add(new_tile.GetComponent<Tile>());
 				new_tile.transform.parent = tile_folder.transform;
 			}
 			yield return null;
@@ -141,7 +276,7 @@ public sealed class TileManager : RenderingSystem
 			{
 				for (short i = 0; i < tile_pool.Count/2; i++)
 				{
-					TileContainer t = tile_pool[0];
+					Tile t = tile_pool[0];
 					tile_pool.RemoveAt(0);
 					Destroy(t.gameObject);
 				}
@@ -151,10 +286,11 @@ public sealed class TileManager : RenderingSystem
 	}
 
 
-	/* UpdateShownTiles()
-	 * - Looks at how much the camera is showing and modifies displayed_tiles and tile_pool
-	 * - Changes to the appearance of tiles is covered in this function
-	 */
+	/// <summary>
+	/// Looks at how much the camera is showing and modifies displayed_tiles and tile_pool.
+	/// Updates tile appearance after change.
+	/// </summary>
+	/// <returns>The shown tiles.</returns>
 	private IEnumerator UpdateShownTiles()
 	{
 		while (true)
@@ -171,11 +307,10 @@ public sealed class TileManager : RenderingSystem
 						displayed_tiles.Add(coordinate, tile_pool[0]);
 						tile_pool.RemoveAt(0);
 						displayed_tiles[coordinate].SetDisplaying(true);
-						displayed_tiles[coordinate].SetSprite(sprites[tile_type[0]]);
 						displayed_tiles[coordinate].is_active = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
 						displayed_tiles[coordinate].collider2D.enabled = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
 						displayed_tiles[coordinate].SetNeighbors(GetNeighbors(coordinate));
-						displayed_tiles[coordinate].transform.position = coordinate;
+						displayed_tiles[coordinate].transform.position = new Vector3(coordinate.x, coordinate.y, 1);
 						displayed_tiles[coordinate].updateAll();
 
 						UpdateTiles(coordinate,GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active);
@@ -193,10 +328,12 @@ public sealed class TileManager : RenderingSystem
 	}
 
 
-	/* GetNeighbors(int row, int column)
-	 * - Returns a bool[] of neighboring states
-	 * - 8 values, clockwise starting at 12:00
-	 */
+	/// <summary>
+	/// Returns a bool[] of neighboring states.
+	/// States stored in array, clockwise starting at 12:00 index 0
+	/// </summary>
+	/// <returns>The neighbors.</returns>
+	/// <param name="coordinate">Coordinate.</param>
 	private bool[] GetNeighbors(Vector2 coordinate)
 	{
 		bool[] n = default_bool;
@@ -208,6 +345,13 @@ public sealed class TileManager : RenderingSystem
 		return n;
 	}
 
+
+	/// <summary>
+	/// Returns a bool[] of neighboring states.
+	/// States stored in array, clockwise starting at 12:00 index 0
+	/// </summary>
+	/// <returns>The neighbors.</returns>
+	/// <param name="coordinate">Coordinate.</param>
 	private bool[] GetNeighbors(int x, int y)
 	{
 		bool[] n = default_bool;
@@ -220,10 +364,11 @@ public sealed class TileManager : RenderingSystem
 	}
 
 
-	/* UpdateTiles(int row, int column, bool change_to)
-	 * - Not to be confused with UpdateShownTiles()
-	 * - Call this each time you're changing a tile, so the surrounding tiles know how to change their appearance
-	 */
+	/// <summary>
+	/// Called each time a tile is changed, so surrounding tiles know how to change their appearance
+	/// </summary>
+	/// <param name="coordinate">Coordinate.</param>
+	/// <param name="change_to">If set to <c>true</c> change_to.</param>
 	public void UpdateTiles(Vector2 coordinate, bool change_to)
 	{
 		if (!displayed_tiles.ContainsKey(coordinate)) {return;}
@@ -244,3 +389,15 @@ public sealed class TileManager : RenderingSystem
 		catch{}
 	}
 }
+
+
+/// <summary>
+/// Self-described, top, left, right, bottom, Closed/Open depending on surrounding tiles
+/// </summary>
+public enum TileCombination
+{
+	CCCC, OCCC, CCCO, OCCO,
+	CCOC, OCOC, CCOO, OCOO,
+	COCC, OOCC, COCO, OOCO,
+	COOC, OOOC, COOO, OOOO
+};

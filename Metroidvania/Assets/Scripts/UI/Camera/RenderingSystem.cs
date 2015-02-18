@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 
 /* RenderingSystem.
  * 
@@ -27,33 +24,39 @@ public class RenderingSystem : MonoBehaviour
 	public static Vector4 unit_shown; // amount of tiles that are shown (considering being outside tile bounds)
 	// unit_shown is guaranteed to be within the bounds of row/columns
 
-
-	private TileManager tile_manager;
-	public TextGenerator text_generator;
-	private TileEditor tile_editor;
-	private LevelTester level_tester;
-
-	public bool tiles_loaded = false;
+	
+	private bool tiles_loaded = false;
 
 
 
 	void Start()
 	{
-		tile_manager = (TileManager)gameObject.AddComponent("TileManager");
-		text_generator = (TextGenerator)gameObject.AddComponent("TextGenerator");
+		gameObject.AddComponent("TileManager");
+		gameObject.AddComponent("TextGenerator");
 		if (Application.loadedLevelName == "LevelTester")
 		{
-		level_tester = (LevelTester)gameObject.AddComponent("LevelTester");
+			gameObject.AddComponent("LevelTester");
 		}
 		if (Application.loadedLevelName == "TileEditor")
 		{
-			tile_editor = (TileEditor)gameObject.AddComponent("TileEditor");
+			gameObject.AddComponent("TileEditor");
 		}
 
-
+		BeginChecks();
 	}
 
-	public void LoadedDone()
+	void Update()
+	{
+		if (GameManager.current_game != null && GameManager.current_game.progression.loaded_map != null)
+		{
+			unit_shown.x = Mathf.Clamp(unit_absolute.x-1, 0, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[0].Length);
+			unit_shown.y = Mathf.Clamp(unit_absolute.y+1, 0, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[0].Length);
+			unit_shown.z = Mathf.Clamp(unit_absolute.z-1, 0, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles.Length);
+			unit_shown.w = Mathf.Clamp(unit_absolute.w+1, 0, GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles.Length);
+		}
+	}
+
+	public void BeginChecks()
 	{
 		tiles_loaded = true;
 		StartCoroutine(CheckSizeChanged());
@@ -107,10 +110,5 @@ public class RenderingSystem : MonoBehaviour
 		unit_absolute.y = Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth,Camera.main.pixelHeight,0)).x);
 		unit_absolute.z = Mathf.FloorToInt(Camera.main.ScreenToWorldPoint(new Vector3(0,0,0)).y);
 		unit_absolute.w = Mathf.CeilToInt(Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth,Camera.main.pixelHeight,0)).y);
-
-		unit_shown.x = Mathf.Clamp(unit_absolute.x-1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[0].Length);
-		unit_shown.y = Mathf.Clamp(unit_absolute.y+1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles[0].Length);
-		unit_shown.z = Mathf.Clamp(unit_absolute.z-1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles.Length);
-		unit_shown.w = Mathf.Clamp(unit_absolute.w+1, 0, ((Map)(GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map])).tiles.Length);
 	}
 }
