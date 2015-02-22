@@ -4,17 +4,13 @@ using System.Collections.Generic;
 
 public class Animating : Recordable
 {
-
-	public Sprite[] still_sprites;
-	public Sprite[] jump_sprites;
-	public Sprite[] move_sprites;
-	private Sprite[] current_loop;
+	private Sprite[] current_loop = new Sprite[0];
+	public byte loop_index = 0;
 
 	public void Start()
 	{
 		if (Application.loadedLevelName != "TileEditor")
 		{
-			ChangeLoop(still_sprites);
 			StartCoroutine(Animate());
 		}
 	}
@@ -30,9 +26,9 @@ public class Animating : Recordable
 		{
 			if (current_loop.Length > 0)
 			{
-				for (byte i = 0; i < current_loop.Length; i++)
+				for (loop_index = 0; loop_index < current_loop.Length; loop_index++)
 				{
-					GetComponent<SpriteRenderer>().sprite = current_loop[i];
+					GetComponent<SpriteRenderer>().sprite = current_loop[loop_index];
 					yield return new WaitForSeconds(0.08f);
 				}
 			}

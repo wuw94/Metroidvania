@@ -46,8 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\DetectLeaks.cs" />
-     <Compile Include="Assets\Luminary.cs" />
      <Compile Include="Assets\Scripts\Entity\EnemyWallAndPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\Entity.cs" />
      <Compile Include="Assets\Scripts\Entity\Item.cs" />
@@ -71,15 +69,20 @@
      <Compile Include="Assets\Scripts\Entity\SpecificSprite.cs" />
      <Compile Include="Assets\Scripts\Entity\TextGeneratorEntity.cs" />
      <Compile Include="Assets\Scripts\Entity\Wall.cs" />
+     <Compile Include="Assets\Scripts\Equipment\Equipment.cs" />
+     <Compile Include="Assets\Scripts\Equipment\EquipmentManager.cs" />
+     <Compile Include="Assets\Scripts\Equipment\EquipmentType.cs" />
+     <Compile Include="Assets\Scripts\Equipment\Luminary.cs" />
+     <Compile Include="Assets\Scripts\Equipment\Parachute.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
-     <Compile Include="Assets\Scripts\FileSystem\Equipment.cs" />
      <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\Map.cs" />
      <Compile Include="Assets\Scripts\FileSystem\PreferenceManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\ProgressionManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\Upgrade.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\FieldInformation.cs" />
+     <Compile Include="Assets\Scripts\Pseudo Classes\PseudoColor.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoGameObject.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoVector2.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoVector3.cs" />
@@ -92,13 +95,15 @@
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\Camera\RenderingSystem.cs" />
+     <Compile Include="Assets\Scripts\UI\DetectLeaks.cs" />
      <Compile Include="Assets\Scripts\UI\FadetoRed.cs" />
      <Compile Include="Assets\Scripts\UI\MyUnitySingleton.cs" />
+     <Compile Include="Assets\Scripts\UI\PointLight.cs" />
      <Compile Include="Assets\Scripts\UI\RecordDim.cs" />
      <Compile Include="Assets\Scripts\UI\Screens\ClickToContinue.cs" />
      <Compile Include="Assets\Scripts\UI\Screens\TitleScreen.cs" />
      <Compile Include="Assets\Scripts\UI\TextGenerator.cs" />
-     <Compile Include="Assets\UpdraftZone.cs" />
+     <Compile Include="Assets\Scripts\UpdraftZone.cs" />
      <Compile Include="Assets\test.cs" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Shaders\Hyperbola_Shader.shader" />

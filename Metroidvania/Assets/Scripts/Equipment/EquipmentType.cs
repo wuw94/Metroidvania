@@ -1,4 +1,4 @@
-﻿public enum Equipment
+﻿public enum EquipmentType
 {
 	Integrator,
 	Goosplosives,

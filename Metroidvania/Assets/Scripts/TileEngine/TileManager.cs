@@ -310,7 +310,7 @@ public sealed class TileManager : RenderingSystem
 						displayed_tiles[coordinate].is_active = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
 						displayed_tiles[coordinate].collider2D.enabled = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active;
 						displayed_tiles[coordinate].SetNeighbors(GetNeighbors(coordinate));
-						displayed_tiles[coordinate].transform.position = new Vector3(coordinate.x, coordinate.y, 1);
+						displayed_tiles[coordinate].transform.position = new Vector3(coordinate.x, coordinate.y, 0);
 						displayed_tiles[coordinate].updateAll();
 
 						UpdateTiles(coordinate,GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[i][j].active);

@@ -12,7 +12,9 @@ public static class ResourceDirectory
 		{typeof(DependantPlatform), new ResourceData("Prefabs/Immobiles/DependantPlatform/DependantPlatform", 3)},
 		{typeof(Button), new ResourceData("Prefabs/Immobiles/Button/Button", 4)},
 		{typeof(TextGeneratorEntity), new ResourceData("Prefabs/Effects/TextGenerator", 5)},
-		{typeof(Item), new ResourceData("Prefabs/Item", 6)}
+		{typeof(Item), new ResourceData("Prefabs/Item", 6)},
+		{typeof(PointLight), new ResourceData("Prefabs/Effects/PointLight", 7)},
+		{typeof(SpecificSprite), new ResourceData("Prefabs/SpecificSprite", 8)}
 	};
 
 }

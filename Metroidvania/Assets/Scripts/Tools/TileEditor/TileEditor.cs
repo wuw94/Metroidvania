@@ -411,6 +411,16 @@ public sealed class TileEditor : MonoBehaviour
 			GUI.Label(new Rect(280, 80, Screen.width/2-5, 20), "<W> to remove at mouse position");
 			GUI.Label(new Rect(280, 100, Screen.width/2-5, 20), "- Creates an instance of the type labeled inside textbox");
 			type_name = GUI.TextField(new Rect(130,500,200,20), type_name);
+			try
+			{
+				System.Type t = System.Type.GetType(type_name);
+				int _z = ResourceDirectory.resource[t].index;
+				GUI.Label(new Rect(350,500,200,20), "Good 2 Go!");
+			}
+			catch
+			{
+				GUI.Label(new Rect(350,500,200,20), "Invalid Type");
+			}
 		}
 	}
 
@@ -845,6 +855,7 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
+				
 				Item item = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(Item)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Item>();
 				GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Add(item);
 			}
@@ -864,9 +875,24 @@ public sealed class TileEditor : MonoBehaviour
 
 	private void Tool_Text2Type(Vector2 mouse, int type_index)
 	{
-		Debug.Log("text2type");
 		if (tools.index == 12)
 		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				object obj = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[System.Type.GetType(type_name)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent(System.Type.GetType(type_name));
+				GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Add(obj);
+			}
+			if (Input.GetKey(KeyCode.W))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent(System.Type.GetType(type_name)) != null)
+				{
+					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
+					object obj = interactives[interactives.IndexOf(hit.transform.gameObject.GetComponent(System.Type.GetType(type_name)))];
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Remove(obj);
+					Destroy(((MonoBehaviour)obj).gameObject);
+				}
+			}
 		}
 
 	}

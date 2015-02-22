@@ -40,7 +40,7 @@ using System.Collections.Generic;
 
 public class Mobile : Animating
 {
-	public List<Equipment> equipment = new List<Equipment>();
+	public EquipmentManager equipment;
 
 	public float grav_scale;
 	protected bool is_attacking = false;
@@ -73,6 +73,7 @@ public class Mobile : Animating
 	public void Start()
 	{
 		base.Start();
+		equipment = new EquipmentManager(gameObject);
 		if (Application.loadedLevelName == "TileEditor")
 		{
 			rigidbody2D.isKinematic = true;
@@ -81,6 +82,7 @@ public class Mobile : Animating
 
 	public void noInput()
 	{
+		OnNoInput();
 		if (grounded && parachute_use)
 		{
 			parachute_use = false;
@@ -101,18 +103,14 @@ public class Mobile : Animating
 			}
 			if (grounded)
 			{
-				ChangeLoop(still_sprites);
 				rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
-			}
-			else
-			{
-				ChangeLoop(jump_sprites);
 			}
 		}
 	}
 
 	public void moveLeft(float max, float accel_g, float accel_a)
 	{
+		OnMoveLeft();
 		this_info.facingRight = false;
 
 		if (grounded && parachute_use)
@@ -133,12 +131,10 @@ public class Mobile : Animating
 			{
 				if (grounded)
 				{
-					ChangeLoop(move_sprites);
 					rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
 				}
 				else
 				{
-					ChangeLoop(jump_sprites);
 					if (rigidbody2D.velocity.x > -max)
 					{
 						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
@@ -154,6 +150,7 @@ public class Mobile : Animating
 
 	public void moveRight(float max, float accel_g, float accel_a)
 	{
+		OnMoveRight();
 		this_info.facingRight = true;
 
 		if (grounded && parachute_use)
@@ -174,12 +171,10 @@ public class Mobile : Animating
 			{
 				if (grounded)
 				{
-					ChangeLoop(move_sprites);
 					rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
 				}
 				else
 				{
-					ChangeLoop(jump_sprites);
 					if (rigidbody2D.velocity.x < max)
 					{
 						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
@@ -195,6 +190,7 @@ public class Mobile : Animating
 
 	public void moveUp(float max, float accel_g, float accel_a)
 	{
+		OnMoveUp();
 		if (grounded && parachute_use)
 		{
 			parachute_use = false;
@@ -221,6 +217,7 @@ public class Mobile : Animating
 
 	public void moveDown(float max, float accel_g, float accel_a)
 	{
+		OnMoveDown();
 		if (grounded && parachute_use)
 		{
 			parachute_use = false;
@@ -256,7 +253,7 @@ public class Mobile : Animating
 		if (updraft_contact)
 		{
 		}
-		if (!grounded && equipment.Contains(Equipment.Parachute))
+		if (!grounded && equipment.Contains(EquipmentType.Parachute))
 		{
 			parachute_use = !parachute_use;
 		}
@@ -376,6 +373,36 @@ public class Mobile : Animating
 			//yield return new WaitForSeconds(time);
 		}
 		control_enabled = true;
+	}
+
+
+	public virtual void OnNoInput()
+	{
+	}
+
+	public virtual void OnMoveRight()
+	{
+	}
+
+	public virtual void OnMoveLeft()
+	{
+	}
+
+	public virtual void OnMoveUp()
+	{
+	}
+
+	public virtual void OnMoveDown()
+	{
+	}
+
+	public virtual void OnJump()
+	{
+	}
+
+	public void Equip(GameObject equipment)
+	{
+		equipment.transform.parent = transform.FindChild("Equipment");
 	}
 
 	public override void NormalUpdate()

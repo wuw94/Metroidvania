@@ -5,7 +5,7 @@ public class UpdraftZone : MonoBehaviour
 {
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.gameObject.GetComponent<Mobile>() != null && col.gameObject.GetComponent<Mobile>().equipment.Contains(Equipment.Parachute))
+		if (col.gameObject.GetComponent<Mobile>() != null && col.gameObject.GetComponent<Mobile>().equipment.Contains(EquipmentType.Parachute))
 		{
 			Debug.Log("entered");
 			col.gameObject.GetComponent<Mobile>().updraft_contact = true;

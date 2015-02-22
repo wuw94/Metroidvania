@@ -2,7 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Button : Immobile{
+public class Button : Immobile
+{
+	// Animating
+	public Sprite[] still_sprites;
+	public Sprite[] move_sprites;
+
 
 	public List<int> platforms = new List<int>();
 	public List<Collider2D> current_collisions = new List<Collider2D>();

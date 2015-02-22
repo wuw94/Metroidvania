@@ -5,6 +5,10 @@ using System.Linq;
 
 public class Lever : Immobile
 {
+	// Animating
+	public Sprite[] still_sprites;
+	public Sprite[] move_sprites;
+
 	public List<int> platforms = new List<int>();
 
 

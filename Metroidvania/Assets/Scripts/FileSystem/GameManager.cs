@@ -64,11 +64,11 @@ public sealed class GameManager
 	public static void SetGameAll()
 	{
 		GameManager.current_game.progression.player.health = 100;
-		current_game.progression.player.move_speed_max = 3;
-		current_game.progression.player.move_speed_accel_ground = 1.5f;
-		current_game.progression.player.move_speed_accel_air = 1.5f;
-		current_game.progression.player.jump_speed = 7;
+		current_game.progression.player.move_speed_max = 6;
+		current_game.progression.player.move_speed_accel_ground = 3;
+		current_game.progression.player.move_speed_accel_air = 3;
+		current_game.progression.player.jump_speed = 12;
 
-		current_game.progression.player.equipped.Add(Equipment.Parachute);
+		current_game.progression.player.equipped.Add(EquipmentType.Parachute);
 	}
 }

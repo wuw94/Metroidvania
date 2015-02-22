@@ -15,6 +15,12 @@ using System.Collections;
 
 public class Player : Controllable
 {
+	// Animating
+	public Sprite[] still_sprites;
+	public Sprite[] jump_sprites;
+	public Sprite[] move_sprites;
+
+
 	private bool clone_created = false;
 	private bool indicator_created = false;
 	private int heal = 2;
@@ -34,6 +40,54 @@ public class Player : Controllable
 	{
 		GameManager.current_game.progression.player.changeHealth(-amount);
 	}
+
+	public override void OnNoInput()
+	{
+		if (grounded)
+		{
+			ChangeLoop(still_sprites);
+		}
+		else
+		{
+			ChangeLoop(jump_sprites);
+		}
+	}
+	
+	public override void OnMoveLeft()
+	{
+		if (grounded)
+		{
+			ChangeLoop(move_sprites);
+		}
+		else
+		{
+			ChangeLoop(jump_sprites);
+		}
+	}
+
+	public override void OnMoveRight()
+	{
+		if (grounded)
+		{
+			ChangeLoop(move_sprites);
+		}
+		else
+		{
+			ChangeLoop(jump_sprites);
+		}
+	}
+	
+	public override void OnMoveUp()
+	{
+	}
+	
+	public override void OnMoveDown()
+	{
+	}
+	
+	public override void OnJump()
+	{
+	}
 	
 	public override void NormalUpdate()
 	{
@@ -43,7 +97,6 @@ public class Player : Controllable
 		checkTimeShift();
 		checkMovementInputs(GameManager.current_game.progression.player);
 		GameManager.current_game.progression.player.changeHealth(heal);
-		//Debug.Log(grounded);
 	}
 
 	public override void Record()
