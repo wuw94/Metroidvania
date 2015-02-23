@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CollisionLight.cs" />
      <Compile Include="Assets\Scripts\Entity\EnemyWallAndPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\Entity.cs" />
      <Compile Include="Assets\Scripts\Entity\Item.cs" />
@@ -92,6 +93,7 @@
      <Compile Include="Assets\Scripts\Tools\ResourceDirectory.cs" />
      <Compile Include="Assets\Scripts\Tools\TileEditor\LevelTester.cs" />
      <Compile Include="Assets\Scripts\Tools\TileEditor\TileEditor.cs" />
+     <Compile Include="Assets\Scripts\UI\Atmosphere.cs" />
      <Compile Include="Assets\Scripts\UI\AudioManager.cs" />
      <Compile Include="Assets\Scripts\UI\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\UI\Camera\RenderingSystem.cs" />

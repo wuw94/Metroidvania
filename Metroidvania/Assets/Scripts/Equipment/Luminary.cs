@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Luminary : Equipment
 {
+	public GameObject light;
+
 	void Start()
 	{
 		transform.localPosition = new Vector3(0,-0.2f,-0.5f);
@@ -27,5 +29,7 @@ public class Luminary : Equipment
 		{
 			transform.rotation = new Quaternion(0.5f,-0.5f,0.5f,0.5f);
 		}
+		//Instantiate(light, transform.position, transform.rotation);
 	}
+
 }
