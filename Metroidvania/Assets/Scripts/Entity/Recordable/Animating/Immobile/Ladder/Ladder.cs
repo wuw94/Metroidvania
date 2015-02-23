@@ -14,24 +14,25 @@ public class Ladder : Controllable
 	// Update is called once per frame
 	void Update () {
 		if (Player near ladder orr Player on ladder){
-			Touch_the_ladder()
-			Ladder_controls()
+			Touch_the_ladder();
+			Ladder_controls();
 		}
 		if(Player Attribute the endd offff Ladder){
-			At_the_end_of_ladder()
+			At_the_end_of_ladder();
 		}
 	}
-	public void Touch_the_ladder()
+	public void Touch_the_ladder();
 	{
 		//You lock into place and stay on the ladder
 		if(){
 			on_ladder = true;
 		}
 	}
-	public void At_the_end_of_ladder()
+	public void At_the_end_of_ladder();
 	{
 		if(){
 			on_ladder = false;
+			return on_ladder
 		}
 	}
 	public void Ladder_controls(){
