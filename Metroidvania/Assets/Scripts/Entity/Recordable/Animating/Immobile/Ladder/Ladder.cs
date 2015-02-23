@@ -38,13 +38,13 @@ public class Ladder : Controllable
 		if (on_ladder = true) {
 			
 			//controls will be for ladder
-			if(button_for_up){
+			if(Input.GetKey(KeyCode.W)){
 				moveUp()
 			}
-			if(button_for_down){
+			if(Input.GetKey(KeyCode.S)){
 				moveDown()
 			}
-			if(button_for_left_and_right){
+			if(Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.W)){
 				on_ladder = false
 			}
 			
