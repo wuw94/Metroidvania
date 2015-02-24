@@ -56,6 +56,7 @@ public class RenderingSystem : MonoBehaviour
 		}
 	}
 
+
 	public void BeginChecks()
 	{
 		tiles_loaded = true;

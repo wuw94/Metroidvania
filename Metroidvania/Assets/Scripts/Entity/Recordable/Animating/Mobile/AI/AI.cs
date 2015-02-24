@@ -43,7 +43,7 @@ public class AI : Mobile
 		Debug.DrawLine (sightStart.position, sightEnd.position, Color.green);
 
 		if (collision)
-			jump (5.0f);
+			IN_JUMP = true;
 		if (rigidbody2D.velocity.x < 0)
 			transform.localScale = new Vector3 (-1, 1, 1);
 		else
@@ -72,11 +72,11 @@ public class AI : Mobile
 				}
 				else if (rigidbody2D.position.x <= initialPosition)
 				{
-					moveRight(5f, 1f, .5f);
+					IN_RIGHT = true;
 				}
 				else if (rigidbody2D.position.x > initialPosition)
 				{
-					moveLeft (5f, 1f, .5f);
+					IN_LEFT = true;
 				}
 			}
 		}
@@ -108,11 +108,11 @@ public class AI : Mobile
 	{
 		if (rigidbody2D.position.x <= player.rigidbody2D.position.x) 
 		{
-			moveRight(5f, 1f, .5f);
+			IN_RIGHT = true;
 		}
 		else //if (this.gameObject.rigidbody2D.position.x > player.rigidbody2D.position.x)
 		{
-			moveLeft (5f, 1f, .5f);
+			IN_LEFT = true;
 		}
 	}
 

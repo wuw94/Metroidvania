@@ -1,18 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Equipment/Luminary.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Entity/Recordable/Animating/Mobile/Mobile.cs">
     <Files>
-      <File FileName="Assets/Scripts/UI/Atmosphere.cs" Line="17" Column="5" />
-      <File FileName="Assets/Scripts/Tools/ResourceDirectory.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Entity/SpecificSprite.cs" Line="12" Column="3" />
-      <File FileName="Assets/Scripts/Tools/TileEditor/TileEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/UI/PointLight.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Pseudo Classes/PseudoColor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Controllable/Player/Player.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Mobile.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/FileSystem/GameManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Equipment/Luminary.cs" Line="4" Column="32" />
-      <File FileName="Assets/Standard Assets/Particles/Legacy Particles/TimedObjectDestructor.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Equipment/Parachute.cs" Line="10" Column="3" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Mobile.cs" Line="148" Column="44" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Immobile/Ladder/Ladder.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Controllable/Player/Player.cs" Line="31" Column="28" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Animating.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Recordable.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/UI/Atmosphere.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Equipment/Equipment.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Equipment/Luminary.cs" Line="14" Column="3" />
+      <File FileName="Assets/Scripts/Equipment/Integrator.cs" Line="16" Column="33" />
+      <File FileName="Assets/Scripts/Equipment/TimeZone.cs" Line="24" Column="120" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -23,29 +23,12 @@
                 <Node name="Recordable" expanded="True">
                   <Node name="Animating" expanded="True">
                     <Node name="Mobile" expanded="True">
-                      <Node name="Controllable" expanded="True">
-                        <Node name="Player" expanded="True" />
-                      </Node>
+                      <Node name="Mobile.cs" selected="True" />
                     </Node>
                   </Node>
                 </Node>
               </Node>
-              <Node name="Equipment" expanded="True">
-                <Node name="Luminary.cs" selected="True" />
-              </Node>
-              <Node name="FileSystem" expanded="True" />
-              <Node name="Pseudo Classes" expanded="True" />
-              <Node name="Tools" expanded="True">
-                <Node name="TileEditor" expanded="True" />
-              </Node>
-              <Node name="UI" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="Assembly-UnityScript-firstpass" expanded="True">
-            <Node name="Standard Assets" expanded="True">
-              <Node name="Particles" expanded="True">
-                <Node name="Legacy Particles" expanded="True" />
-              </Node>
+              <Node name="Equipment" expanded="True" />
             </Node>
           </Node>
         </State>

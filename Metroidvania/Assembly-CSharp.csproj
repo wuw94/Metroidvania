@@ -56,11 +56,12 @@
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Button\Button.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\DependantPlatform\DependantPlatform.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Immobile.cs" />
+     <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Ladder\Ladder.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Lever\Lever.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Spike\Spike.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\AI\AI.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\AI\Goo\UpdraftGoo.cs" />
-     <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Controllable.cs" />
+     <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Control.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Player\PlayerClone.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Mobile\Controllable\Player\PlayerRecordingIndicator.cs" />
@@ -73,8 +74,10 @@
      <Compile Include="Assets\Scripts\Equipment\Equipment.cs" />
      <Compile Include="Assets\Scripts\Equipment\EquipmentManager.cs" />
      <Compile Include="Assets\Scripts\Equipment\EquipmentType.cs" />
+     <Compile Include="Assets\Scripts\Equipment\Integrator.cs" />
      <Compile Include="Assets\Scripts\Equipment\Luminary.cs" />
      <Compile Include="Assets\Scripts\Equipment\Parachute.cs" />
+     <Compile Include="Assets\Scripts\Equipment\TimeZone.cs" />
      <Compile Include="Assets\Scripts\FileSystem\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\DataManager.cs" />
      <Compile Include="Assets\Scripts\FileSystem\GameManager.cs" />

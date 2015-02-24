@@ -43,24 +43,14 @@ public class Animating : Recordable
 	{
 		transform.localScale = new Vector3(this_info.facingRight ? Mathf.Abs(transform.localScale.x) : -Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
 	}
-
+	
 	public override void NormalUpdate()
 	{
 		UpdateFacing();
+		AnimationLogic();
 	}
-	
-	public override void Record()
+
+	public virtual void AnimationLogic()
 	{
-		UpdateFacing();
-	}
-	
-	public override void Rewind()
-	{
-		UpdateFacing();
-	}
-	
-	public override void Playback()
-	{
-		UpdateFacing();
 	}
 }

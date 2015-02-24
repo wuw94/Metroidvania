@@ -14,7 +14,8 @@ public static class ResourceDirectory
 		{typeof(TextGeneratorEntity), new ResourceData("Prefabs/Effects/TextGenerator", 5)},
 		{typeof(Item), new ResourceData("Prefabs/Item", 6)},
 		{typeof(PointLight), new ResourceData("Prefabs/Effects/PointLight", 7)},
-		{typeof(SpecificSprite), new ResourceData("Prefabs/SpecificSprite", 8)}
+		{typeof(SpecificSprite), new ResourceData("Prefabs/SpecificSprite", 8)},
+		{typeof(Ladder), new ResourceData("Prefabs/Immobiles/Ladder/Ladder", 9)}
 	};
 
 }

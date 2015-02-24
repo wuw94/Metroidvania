@@ -26,7 +26,7 @@ using System.Collections.Generic;
  * max - maintain a constant movement speed if x exceeds max or else move at max's speed
  * accel_g - movement speed while on ground
  * accel_a - movement speed while in the air (slightly slower than accel_g)
- * jumpspeed - when player jumps (grounded == true), increase y based on jumpspeed
+ * jump_speed - when player jumps (grounded == true), increase y based on jump_speed
  * 
  * Functions:
  * OnCollisionEnter2D - sent when an incoming collider makes contact with this object's collider
@@ -38,7 +38,7 @@ using System.Collections.Generic;
  * jump - y (jumping) movement when player hits jump key
  */
 
-public class Mobile : Animating
+public class Mobile : Control
 {
 	public EquipmentManager equipment;
 
@@ -46,11 +46,7 @@ public class Mobile : Animating
 	protected bool is_attacking = false;
 	protected bool control_enabled = true;
 	bool velocity_assigned = false;
-	protected bool isPlayer;
-
-	public bool abc = true;
-	public int def = 5;
-
+	
 	// for collision type checking
 	public bool accurate_check;
 	private float check_radius = 0.1f;
@@ -58,7 +54,7 @@ public class Mobile : Animating
 
 	public Transform ground_check_left;
 	public Transform ground_check_right;
-	protected bool grounded = false;
+	public bool grounded = false;
 
 	public Transform wall_check_top;
 	public Transform wall_check_bottom;
@@ -68,7 +64,29 @@ public class Mobile : Animating
 
 	public bool updraft_contact = false;
 	public bool parachute_use = false;
+	public bool on_ladder = false;
+	public bool time_zone_contact = false;
 
+	public float move_speed;
+	public float jump_speed;
+
+	public List<Collider2D> current_collisions = new List<Collider2D>();
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (!current_collisions.Contains(col))
+		{
+			current_collisions.Add(col);
+		}
+	}
+	
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (current_collisions.Contains(col))
+		{
+			current_collisions.Remove(col);
+		}
+	}
 
 	public void Start()
 	{
@@ -80,260 +98,19 @@ public class Mobile : Animating
 		}
 	}
 
-	public void noInput()
+	public IEnumerator DisableControl(float time, KeyCode k)
 	{
-		OnNoInput();
-		if (grounded && parachute_use)
+		control_enabled = false;
+		for (int i = 0; i < time * 50; i++)
 		{
-			parachute_use = false;
-		}
-		if (parachute_use)
-		{
-			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-		}
-		if (updraft_contact)
-		{
-			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-		}
-		else
-		{
-			if (front_contact)
+			if (Input.GetKey(k))
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : rigidbody2D.velocity.y));
+				control_enabled = true;
 			}
-			if (grounded)
-			{
-				rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
-			}
+			yield return new WaitForFixedUpdate();
+			//yield return new WaitForSeconds(time);
 		}
-	}
-
-	public void moveLeft(float max, float accel_g, float accel_a)
-	{
-		OnMoveLeft();
-		this_info.facingRight = false;
-
-		if (grounded && parachute_use)
-		{
-			parachute_use = false;
-		}
-		if (control_enabled)
-		{
-			if (parachute_use)
-			{
-				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-			}
-			if (updraft_contact)
-			{
-				rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 1)?1:0));
-			}
-			else
-			{
-				if (grounded)
-				{
-					rigidbody2D.velocity = new Vector2(-max, rigidbody2D.velocity.y);
-				}
-				else
-				{
-					if (rigidbody2D.velocity.x > -max)
-					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x - accel_a, rigidbody2D.velocity.y);
-					}
-					if (front_contact)
-					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : 0));
-					}
-				}
-			}
-		}
-	}
-
-	public void moveRight(float max, float accel_g, float accel_a)
-	{
-		OnMoveRight();
-		this_info.facingRight = true;
-
-		if (grounded && parachute_use)
-		{
-			parachute_use = false;
-		}
-		if (control_enabled)
-		{
-			if (parachute_use)
-			{
-				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-			}
-			if (updraft_contact)
-			{
-				rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 1)?1:0));
-			}
-			else
-			{
-				if (grounded)
-				{
-					rigidbody2D.velocity = new Vector2(max, rigidbody2D.velocity.y);
-				}
-				else
-				{
-					if (rigidbody2D.velocity.x < max)
-					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x + accel_a, rigidbody2D.velocity.y);
-					}
-					if (front_contact)
-					{
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, (rigidbody2D.velocity.y > 0 ? rigidbody2D.velocity.y : 0));
-					}
-				}
-			}
-		}
-	}
-
-	public void moveUp(float max, float accel_g, float accel_a)
-	{
-		OnMoveUp();
-		if (grounded && parachute_use)
-		{
-			parachute_use = false;
-		}
-		if (control_enabled)
-		{
-			if (parachute_use)
-			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-			}
-			if (updraft_contact)
-			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < 2)?2:0));
-			}
-			else
-			{
-				if (front_contact)
-				{
-					rigidbody2D.velocity = new Vector2(this_info.facingRight ? 1 : -1, max);
-				}
-			}
-		}
-	}
-
-	public void moveDown(float max, float accel_g, float accel_a)
-	{
-		OnMoveDown();
-		if (grounded && parachute_use)
-		{
-			parachute_use = false;
-		}
-		if (control_enabled)
-		{
-			if (parachute_use)
-			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + ((rigidbody2D.velocity.y < -1)?1:0));
-			}
-			if (updraft_contact)
-			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, rigidbody2D.velocity.y + 0.3f);
-			}
-			else
-			{
-				if (front_contact)
-				{
-					rigidbody2D.velocity = new Vector2(this_info.facingRight ? 1 : -1, -max);
-				}
-			}
-		}
-	}
-
-	public void Attack(float max, float accel_g, float accel_a)
-	{
-		//animate(attack_frames, attack_frame_delay);
-
-	}
-
-	public void jump(float jumpspeed)
-	{
-		if (updraft_contact)
-		{
-		}
-		if (!grounded && equipment.Contains(EquipmentType.Parachute))
-		{
-			parachute_use = !parachute_use;
-		}
-		else
-		{
-			if (grounded)
-			{
-				if (rigidbody2D.velocity.y < jumpspeed)
-				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpspeed);
-				}
-			}
-			else
-			{
-				if (front_contact && !this_info.facingRight)
-				{
-					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
-					rigidbody2D.velocity = new Vector2(jumpspeed/1.5f, jumpspeed/2);
-				}
-				else if (front_contact && this_info.facingRight)
-				{
-					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
-					rigidbody2D.velocity = new Vector2(-jumpspeed/1.5f, jumpspeed/2);
-				}
-				else if (back_contact && this_info.facingRight)
-				{
-					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_RIGHT));
-					rigidbody2D.velocity = new Vector2(jumpspeed/1.5f, jumpspeed/2);
-				}
-				else if (back_contact && !this_info.facingRight)
-				{
-					StartCoroutine(DisableControl(0.2f, GameManager.current_game.preferences.IN_LEFT));
-					rigidbody2D.velocity = new Vector2(-jumpspeed/1.5f, jumpspeed/2);
-				}
-			}
-		}
-	}
-
-	private void manageGravityScale()
-	{
-		if (updraft_contact)
-		{
-			rigidbody2D.gravityScale = 0;
-		}
-		else
-		{
-			rigidbody2D.gravityScale = grav_scale;
-		}
-	}
-
-	private void manageVelocity()
-	{
-		if (isPlayer)
-		{
-			assignVelocity(0,3);
-		}
-		else
-		{
-			assignVelocity(1,0);
-		}
-	}
-
-	private void assignVelocity(int save_mode, int load_mode)
-	{
-		if (operation_mode == save_mode || operation_mode == load_mode)
-		{
-			if (!velocity_assigned)
-			{
-				transform.rigidbody2D.velocity = savedVelocity;
-				velocity_assigned = true;
-			}
-			else
-			{
-				savedVelocity = transform.rigidbody2D.velocity;
-			}
-		}
-		else
-		{
-			velocity_assigned = false;
-		}
+		control_enabled = true;
 	}
 
 	private void checkCollisions()
@@ -359,45 +136,52 @@ public class Mobile : Animating
 		}
 
 	}
-
-	public IEnumerator DisableControl(float time, KeyCode k)
+	
+	private void manageGravity()
 	{
-		control_enabled = false;
-		for (int i = 0; i < time * 50; i++)
+		if (on_ladder)
 		{
-			if (Input.GetKey(k))
-			{
-				control_enabled = true;
-			}
-			yield return new WaitForFixedUpdate();
-			//yield return new WaitForSeconds(time);
+			rigidbody2D.gravityScale = 0;
 		}
-		control_enabled = true;
+		else if (time_zone_contact)
+		{
+			rigidbody2D.gravityScale = grav_scale/10;
+		}
+		else
+		{
+			rigidbody2D.gravityScale = grav_scale;
+		}
 	}
 
-
-	public virtual void OnNoInput()
+	// Normal Movement
+	private void Movement()
 	{
-	}
+		if (updraft_contact || parachute_use || on_ladder || time_zone_contact){return;}
 
-	public virtual void OnMoveRight()
-	{
-	}
+		if (IN_JUMP)
+		{
+			IN_JUMP = false;
+			if (grounded)
+			{
+				if (rigidbody2D.velocity.y < jump_speed)
+				{
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jump_speed);
+				}
+			}
+		}
+		if (IN_LEFT)
+		{
+			rigidbody2D.velocity = new Vector2(-move_speed, rigidbody2D.velocity.y);
+		}
+		if (IN_RIGHT)
+		{
+			rigidbody2D.velocity = new Vector2(move_speed, rigidbody2D.velocity.y);
+		}
 
-	public virtual void OnMoveLeft()
-	{
-	}
-
-	public virtual void OnMoveUp()
-	{
-	}
-
-	public virtual void OnMoveDown()
-	{
-	}
-
-	public virtual void OnJump()
-	{
+		if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_UP && !IN_DOWN && !IN_ATTACK)
+		{
+			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
+		}
 	}
 
 	public void Equip(GameObject equipment)
@@ -408,32 +192,9 @@ public class Mobile : Animating
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
-		manageGravityScale();
 		checkCollisions();
-		manageVelocity();
-	}
-	
-	public override void Record()
-	{
-		base.Record();
-		manageGravityScale();
-		manageVelocity();
-		recordInfo();
+		manageGravity();
+		Movement();
 	}
 
-	public override void Rewind()
-	{
-		base.Rewind();
-		manageGravityScale();
-		manageVelocity();
-		readInfo();
-	}
-	
-	public override void Playback()
-	{
-		base.Playback();
-		manageGravityScale();
-		manageVelocity();
-		readInfo();
-	}
 }

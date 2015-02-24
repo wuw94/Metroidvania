@@ -13,7 +13,7 @@ using System.Collections;
  * 
  */
 
-public class Player : Controllable
+public class Player : Mobile
 {
 	// Animating
 	public Sprite[] still_sprites;
@@ -28,12 +28,14 @@ public class Player : Controllable
 	void Start()
 	{
 		base.Start();
-		//GameManager.current_game = new GameManager();
 		GameManager.SetGameAll();
-
-
-		isPlayer = GetType() == typeof(Player);
 	}
+
+	void OnGUI()
+	{
+		Check();
+	}
+
 
 
 	public override void Damage(float amount)
@@ -41,97 +43,184 @@ public class Player : Controllable
 		GameManager.current_game.progression.player.changeHealth(-amount);
 	}
 
-	public override void OnNoInput()
-	{
-		if (grounded)
-		{
-			ChangeLoop(still_sprites);
-		}
-		else
-		{
-			ChangeLoop(jump_sprites);
-		}
-	}
-	
-	public override void OnMoveLeft()
-	{
-		if (grounded)
-		{
-			ChangeLoop(move_sprites);
-		}
-		else
-		{
-			ChangeLoop(jump_sprites);
-		}
-	}
 
-	public override void OnMoveRight()
-	{
-		if (grounded)
-		{
-			ChangeLoop(move_sprites);
-		}
-		else
-		{
-			ChangeLoop(jump_sprites);
-		}
-	}
-	
-	public override void OnMoveUp()
-	{
-	}
-	
-	public override void OnMoveDown()
-	{
-	}
-	
-	public override void OnJump()
-	{
-	}
-	
 	public override void NormalUpdate()
 	{
 		base.NormalUpdate();
 		indicator_created = false;
-		checkAction();
-		checkTimeShift();
-		checkMovementInputs(GameManager.current_game.progression.player);
 		GameManager.current_game.progression.player.changeHealth(heal);
 	}
 
-	public override void Record()
+	public void checkAction()
 	{
-		base.Record();
-		clone_created = false;
-		checkAction();
-		checkTimeShift();
-		checkMovementInputs(GameManager.current_game.progression.player);
-		GameManager.current_game.progression.player.changeHealth(heal);
-
-		if (!indicator_created)
+		if (IN_ACTION)
 		{
-			indicator_created = true;
-			GameObject indicator = (GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/PlayerRecordingIndicator", typeof(GameObject)));
-			indicator.transform.position = transform.position;
-			indicator.GetComponent<PlayerRecordingIndicator>().this_info.animState = this_info.animState;
+			IN_ACTION = false;
+			for (int i = 0; i < current_collisions.Count; i++)
+			{
+				if (current_collisions[i].gameObject.GetComponent<Recordable>() != null)
+				{
+					current_collisions[i].gameObject.GetComponent<Recordable>().Action();
+				}
+			}
 		}
 	}
 	
-	public override void Rewind()
+	public void checkTimeShift()
 	{
-		base.Rewind();
-		GameManager.current_game.progression.player.changeHealth(heal);
-	}
-
-	public override void Playback()
-	{
-		NormalUpdate();
-		if (!clone_created)
+		if (Recordable.operation_mode == 0)
 		{
-			clone_created = true;
-			GameObject clone = (GameObject)Instantiate(Resources.Load("Prefabs/Mobiles/Player/PlayerClone", typeof(GameObject)));
-			clone.GetComponent<PlayerClone>().setRecordedStates(recorded_states);
+			if (IN_TIME_SHIFT)
+			{
+				if (Time.timeScale > 0.3f)
+				{
+					Time.timeScale-= 0.02f;
+				}
+				else
+				{
+					Time.timeScale = 1;
+					IN_TIME_SHIFT = false;
+					ChangeOperationMode();
+				}
+			}
+			else if (Time.timeScale < 1)
+			{
+				Time.timeScale += 0.1f;
+			}
+			else if (Time.timeScale > 1)
+			{
+				Time.timeScale = 1;
+			}
+		}
+		else
+		{
+			if (IN_TIME_SHIFT)
+			{
+				if (Recordable.change_mode_cd == 0)
+				{
+					ChangeOperationMode();
+				}
+			}
 		}
 	}
 	
+
+
+	private void Check()
+	{
+		if (Event.current.type == EventType.KeyDown)
+		{
+			if (Event.current.keyCode == GameManager.current_game.preferences.IN_ACTION && can_check_action)
+			{
+				IN_ACTION = true;
+				can_check_action = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_TIME_SHIFT && can_check_time_shift)
+			{
+				IN_TIME_SHIFT = true;
+				can_check_time_shift = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_LEFT)
+			{
+				IN_LEFT = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_RIGHT)
+			{
+				IN_RIGHT = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_UP)
+			{
+				IN_UP = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_DOWN)
+			{
+				IN_DOWN = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP && can_check_jump)
+			{
+				IN_JUMP = true;
+				can_check_jump = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
+			{
+				IN_ATTACK = true;
+			}
+		}
+		else if (Event.current.type == EventType.KeyUp)
+		{
+			if (Event.current.keyCode == GameManager.current_game.preferences.IN_ACTION)
+			{
+				IN_ACTION = false;
+				can_check_action = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_TIME_SHIFT)
+			{
+				IN_TIME_SHIFT = false;
+				can_check_time_shift = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_LEFT)
+			{
+				IN_LEFT = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_RIGHT)
+			{
+				IN_RIGHT = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_UP)
+			{
+				IN_UP = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_DOWN)
+			{
+				IN_DOWN = false;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_JUMP)
+			{
+				IN_JUMP = false;
+				can_check_jump = true;
+			}
+			else if (Event.current.keyCode == GameManager.current_game.preferences.IN_ATTACK)
+			{
+				IN_ATTACK = false;
+			}
+		}
+	}
+
+
+	public override void AnimationLogic()
+	{
+		if (IN_LEFT)
+		{
+			if (grounded)
+			{
+				ChangeLoop(move_sprites);
+			}
+			else
+			{
+				ChangeLoop(jump_sprites);
+			}
+		}
+		if (IN_RIGHT)
+		{
+			if (grounded)
+			{
+				ChangeLoop(move_sprites);
+			}
+			else
+			{
+				ChangeLoop(jump_sprites);
+			}
+		}
+		if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_UP && !IN_DOWN && !IN_ATTACK)
+		{
+			if (grounded)
+			{
+				ChangeLoop(still_sprites);
+			}
+			else
+			{
+				ChangeLoop(jump_sprites);
+			}
+		}
+	}
 }
