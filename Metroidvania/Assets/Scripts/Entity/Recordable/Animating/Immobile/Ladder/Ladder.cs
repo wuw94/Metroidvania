@@ -2,8 +2,8 @@
 using System.Collections;
 
 //Function will be moved to Controllable
-public class Ladder : Controllable
-{
+public class Ladder : MonoBehaviour //Controllable
+{/*
 	public bool on_ladder;
 	public GameObject Player;
 	// Use this for initialization
@@ -13,11 +13,13 @@ public class Ladder : Controllable
 	
 	// Update is called once per frame
 	void Update () {
-		if (Player near ladder orr Player on ladder){
+		if (Player near ladder orr Player on ladder)
+		{
 			Touch_the_ladder();
 			Ladder_controls();
 		}
-		if(Player Attribute the endd offff Ladder){
+		if(Player Attribute the endd offff Ladder)
+		{
 			At_the_end_of_ladder();
 		}
 	}
@@ -53,5 +55,4 @@ public class Ladder : Controllable
 			//controls will be for when on stationary ground
 		}
 	}
-}
-
+*/}
