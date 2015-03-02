@@ -96,7 +96,7 @@ public class Map : ISerializable
 			tiles[i] = new TileInfo[default_tile_y];
 			for (short j = 0; j < default_tile_y; j++)
 			{
-				tiles[i][j] = new TileInfo(true, 0);
+				tiles[i][j] = new TileInfo(true, 0, true);
 			}
 		}
 	}

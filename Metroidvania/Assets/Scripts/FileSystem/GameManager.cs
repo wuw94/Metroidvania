@@ -54,6 +54,7 @@ public sealed class GameManager
 	/// </summary>
 	public GameManager()
 	{
+		Debug.Log("Created a new GameManager instance.");
 		this.progression = new ProgressionManager();
 		this.preferences = new PreferenceManager();
 	}
@@ -69,6 +70,5 @@ public sealed class GameManager
 		current_game.progression.player.move_speed_accel_air = 3;
 		current_game.progression.player.jump_speed = 12;
 
-		current_game.progression.player.equipped.Add(EquipmentType.Parachute);
 	}
 }

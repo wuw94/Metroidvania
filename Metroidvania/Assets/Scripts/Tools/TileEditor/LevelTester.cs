@@ -14,6 +14,7 @@ public class LevelTester : MonoBehaviour {
 			try
 			{
 				GameManager.current_game.progression.AddMap("LevelTesterMap", new Map(PlayerPrefs.GetString("Map Name")));
+
 			}
 			catch
 			{
@@ -21,6 +22,7 @@ public class LevelTester : MonoBehaviour {
 				throw;
 			}
 			camera_manager.player = (Player)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0];
+			camera_manager.player.transform.position = new Vector3(PlayerPrefs.GetFloat("Arrive X"), PlayerPrefs.GetFloat("Arrive Y")+1, camera_manager.player.transform.position.z);
 			camera_manager.returnToPlayer();
 		}
 

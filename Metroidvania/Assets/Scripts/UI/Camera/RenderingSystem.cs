@@ -41,6 +41,10 @@ public class RenderingSystem : MonoBehaviour
 		{
 			gameObject.AddComponent("TileEditor");
 		}
+		if (Application.loadedLevelName == "GameTester")
+		{
+			gameObject.AddComponent("GameTester");
+		}
 
 		BeginChecks();
 	}

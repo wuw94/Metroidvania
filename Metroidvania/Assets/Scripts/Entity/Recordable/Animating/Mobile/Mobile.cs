@@ -49,7 +49,7 @@ public class Mobile : Control
 	
 	// for collision type checking
 	public bool accurate_check;
-	private float check_radius = 0.1f;
+	private float check_radius = 0.05f;
 	public LayerMask foreground;
 
 	public Transform ground_check_left;
@@ -67,8 +67,10 @@ public class Mobile : Control
 	public bool on_ladder = false;
 	public bool time_zone_contact = false;
 
-	public float move_speed;
-	public float jump_speed;
+	public float move_speed_base;
+	public float jump_speed_base;
+	public float move_speed_mut;
+	public float jump_speed_mut;
 
 	public List<Collider2D> current_collisions = new List<Collider2D>();
 
@@ -96,6 +98,8 @@ public class Mobile : Control
 		{
 			rigidbody2D.isKinematic = true;
 		}
+		move_speed_mut = move_speed_base;
+		jump_speed_mut = jump_speed_base;
 	}
 
 	public IEnumerator DisableControl(float time, KeyCode k)
@@ -117,9 +121,24 @@ public class Mobile : Control
 	{
 		if (accurate_check)
 		{
-			Collider2D gL = Physics2D.OverlapCircle(ground_check_left.position, check_radius, foreground);
-			Collider2D gR = Physics2D.OverlapCircle(ground_check_right.position, check_radius, foreground);
-			grounded = 	(gL != null && gL.tag == "Ground") || (gR != null && gR.tag == "Ground");
+			grounded = false;
+			Collider2D[] gL = Physics2D.OverlapCircleAll(ground_check_left.position, check_radius, foreground);
+			foreach (Collider2D c in gL)
+			{
+				if (c.tag == "Ground" || c.tag == "Ground")
+				{
+					grounded = true;
+				}
+			}
+			Collider2D[] gR = Physics2D.OverlapCircleAll(ground_check_right.position, check_radius, foreground);
+			foreach (Collider2D c in gR)
+			{
+				if (c.tag == "Ground" || c.tag == "Ground")
+				{
+					grounded = true;
+				}
+			}
+
 			Collider2D wT = Physics2D.OverlapCircle(wall_check_top.position, check_radius, foreground);
 			Collider2D wB = Physics2D.OverlapCircle(wall_check_bottom.position, check_radius, foreground);
 			front_contact = (wT != null && wT.tag == "Ground") || (wB != null && wB.tag == "Ground");
@@ -145,7 +164,7 @@ public class Mobile : Control
 		}
 		else if (time_zone_contact)
 		{
-			rigidbody2D.gravityScale = grav_scale/10;
+
 		}
 		else
 		{
@@ -156,26 +175,23 @@ public class Mobile : Control
 	// Normal Movement
 	private void Movement()
 	{
-		if (updraft_contact || parachute_use || on_ladder || time_zone_contact){return;}
+		if (updraft_contact || parachute_use || on_ladder){return;}
 
 		if (IN_JUMP)
 		{
 			IN_JUMP = false;
 			if (grounded)
 			{
-				if (rigidbody2D.velocity.y < jump_speed)
-				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jump_speed);
-				}
+				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jump_speed_mut);
 			}
 		}
 		if (IN_LEFT)
 		{
-			rigidbody2D.velocity = new Vector2(-move_speed, rigidbody2D.velocity.y);
+			rigidbody2D.velocity = new Vector2(-move_speed_mut, rigidbody2D.velocity.y);
 		}
 		if (IN_RIGHT)
 		{
-			rigidbody2D.velocity = new Vector2(move_speed, rigidbody2D.velocity.y);
+			rigidbody2D.velocity = new Vector2(move_speed_mut, rigidbody2D.velocity.y);
 		}
 
 		if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_UP && !IN_DOWN && !IN_ATTACK)

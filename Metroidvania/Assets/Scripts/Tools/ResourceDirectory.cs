@@ -15,7 +15,8 @@ public static class ResourceDirectory
 		{typeof(Item), new ResourceData("Prefabs/Item", 6)},
 		{typeof(PointLight), new ResourceData("Prefabs/Effects/PointLight", 7)},
 		{typeof(SpecificSprite), new ResourceData("Prefabs/SpecificSprite", 8)},
-		{typeof(Ladder), new ResourceData("Prefabs/Immobiles/Ladder/Ladder", 9)}
+		{typeof(Ladder), new ResourceData("Prefabs/Immobiles/Ladder/Ladder", 9)},
+		{typeof(Portal), new ResourceData("Prefabs/Immobiles/Portal/Portal", 10)}
 	};
 
 }

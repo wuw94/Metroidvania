@@ -28,8 +28,13 @@ public sealed class TileEditor : MonoBehaviour
 		public sealed class TerrainTool : Tool
 		{
 			public TileTool tile_tool = new TileTool();
+			public LightingTool lighting_tool = new LightingTool();
 		
 			public sealed class TileTool : Tool
+			{
+			}
+
+			public sealed class LightingTool : Tool
 			{
 			}
 		}
@@ -300,8 +305,9 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				tools.terrain_tool.index = 0;
 			}
-			if (GUI.Button(new Rect(140,280,100,20), "n/a"))
+			if (GUI.Button(new Rect(140,280,100,20), "Lighting"))
 			{
+				tools.terrain_tool.index = 1;
 			}
 			if (tools.terrain_tool.index == 0)
 			{
@@ -319,6 +325,7 @@ public sealed class TileEditor : MonoBehaviour
 				}
 				GUI.Label(new Rect(250,260+20*tools.terrain_tool.tile_tool.index,10, 20), "x");
 			}
+
 			GUI.Label(new Rect(130,260+20*tools.terrain_tool.index,10, 20), "x");
 		}
 		else if (tools.index == 1)
@@ -566,6 +573,7 @@ public sealed class TileEditor : MonoBehaviour
 
 			Tool_Selection(mouse);
 			Tool_Tile(mouse);
+			Tool_Lighting(mouse);
 			Tool_Spawn(mouse, ResourceDirectory.resource[typeof(Player)].index);
 			Tool_Lever(mouse, ResourceDirectory.resource[typeof(Lever)].index);
 			Tool_Updraft_Goo(mouse, ResourceDirectory.resource[typeof(UpdraftGoo)].index);
@@ -655,19 +663,45 @@ public sealed class TileEditor : MonoBehaviour
 	
 	private void Tool_Tile(Vector2 mouse)
 	{
-		if (tools.index == 0 && tools.terrain_tool.tile_tool.index == 0) // Tile tool
+		if (tools.index == 0 && tools.terrain_tool.index == 0) // Tile tool
 		{
 			if (Input.GetKey(KeyCode.Q))
 			{
 				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].type = (byte)tools.terrain_tool.tile_tool.index;
 					GetComponent<TileManager>().UpdateTiles(mouse, true);
 				}
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
 				GetComponent<TileManager>().UpdateTiles(mouse, false);
+			}
+		}
+	}
+
+	private void Tool_Lighting(Vector2 mouse)
+	{
+		if (tools.index == 0 && tools.terrain_tool.index == 1) // Lighting tool
+		{
+			if (Input.GetKey(KeyCode.Q))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<Tile>() != null)
+				{
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].outdoor = true;
+					GetComponent<TileManager>().UpdateTiles(mouse, true);
+				}
+			}
+			if (Input.GetKey(KeyCode.W))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform != null && hit.transform.gameObject.GetComponent<Tile>() != null)
+				{
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].outdoor = false;
+					GetComponent<TileManager>().UpdateTiles(mouse, true);
+				}
 			}
 		}
 	}
@@ -683,6 +717,8 @@ public sealed class TileEditor : MonoBehaviour
 				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).renderer.material.color = new Color(1,1,1,0.5f);
 			}
 		}
+		PlayerPrefs.SetFloat("Arrive X", ((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).transform.position.x);
+		PlayerPrefs.SetFloat("Arrive Y", ((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).transform.position.y);
 	}
 
 	private void Tool_Lever(Vector2 mouse, int type_index)

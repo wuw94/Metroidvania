@@ -38,17 +38,17 @@ public sealed class CharacterManager
 	/// <summary>
 	/// These are the equipments currently owned by player.
 	/// </summary>
-	public HashSet<EquipmentType> equipments = new HashSet<EquipmentType>();
+	public List<EquipmentType> equipments = new List<EquipmentType>();
 
 	/// <summary>
 	/// These are the equipments currently equipped on player.
 	/// </summary>
-	public HashSet<EquipmentType> equipped = new HashSet<EquipmentType>();
+	public List<EquipmentType> equipped = new List<EquipmentType>();
 
 	/// <summary>
 	/// These are the upgrades currently owned by player.
 	/// </summary>
-	public HashSet<Upgrade> upgrades = new HashSet<Upgrade>();
+	public List<Upgrade> upgrades = new List<Upgrade>();
 
 
 	/// <summary>
