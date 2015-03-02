@@ -4,25 +4,22 @@ using System.Collections.Generic;
 
 public class TimeZone : MonoBehaviour
 {
-	List<Collider2D> collisions = new List<Collider2D>();
+	public List<GameObject> collisions = new List<GameObject>();
+	float ratio = 0.5f;
 
 	void Start()
 	{
-		Invoke("DestroyThis", 3);
+		Invoke("DestroyThis", 20);
 	}
-	
 
-	void OnTriggerStay2D(Collider2D col)
+	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.GetComponent<Mobile>() != null)
 		{
-			col.GetComponent<Mobile>().time_zone_contact = true;
-			Movement(col.GetComponent<Mobile>());
-			if (!collisions.Contains(col))
+			if (!collisions.Contains(col.gameObject))
 			{
-				col.GetComponent<Mobile>().rigidbody2D.velocity =
-					new Vector2(col.GetComponent<Mobile>().rigidbody2D.velocity.x, col.GetComponent<Mobile>().rigidbody2D.velocity.y/2);
-				collisions.Add(col);
+				Enter(col.GetComponent<Mobile>());
+				collisions.Add(col.gameObject);
 			}
 		}
 	}
@@ -31,48 +28,40 @@ public class TimeZone : MonoBehaviour
 	{
 		if (col.GetComponent<Mobile>() != null)
 		{
-			col.GetComponent<Mobile>().time_zone_contact = false;
-			if (collisions.Contains(col))
+			if (collisions.Contains(col.gameObject))
 			{
-				collisions.Remove(col);
+				Leave(col.GetComponent<Mobile>());
+				collisions.Remove(col.gameObject);
 			}
 		}
 	}
 
 	void DestroyThis()
 	{
-		foreach (Collider2D c in collisions)
+		foreach (GameObject c in collisions)
 		{
-			c.GetComponent<Mobile>().time_zone_contact = false;
+			Leave(c.GetComponent<Mobile>());
 		}
 		Destroy(gameObject);
 	}
 
-	void Movement(Mobile mob)
+	void Enter(Mobile mob)
 	{
-		if (mob.IN_JUMP)
-		{
-			mob.IN_JUMP = false;
-			if (mob.grounded)
-			{
-				if (mob.rigidbody2D.velocity.y < mob.jump_speed/5)
-				{
-					mob.rigidbody2D.velocity = new Vector2(mob.rigidbody2D.velocity.x, mob.jump_speed/5);
-				}
-			}
-		}
-		if (mob.IN_LEFT)
-		{
-			mob.rigidbody2D.velocity = new Vector2(-mob.move_speed/5, mob.rigidbody2D.velocity.y);
-		}
-		if (mob.IN_RIGHT)
-		{
-			mob.rigidbody2D.velocity = new Vector2(mob.move_speed/5, mob.rigidbody2D.velocity.y);
-		}
-		
-		if (!mob.IN_JUMP && !mob.IN_LEFT && !mob.IN_RIGHT && !mob.IN_UP && !mob.IN_DOWN && !mob.IN_ATTACK)
-		{
-			mob.rigidbody2D.velocity = new Vector2(0, mob.rigidbody2D.velocity.y);
-		}
+		mob.time_zone_contact = true;
+		mob.rigidbody2D.velocity = new Vector2(mob.rigidbody2D.velocity.x * ratio, mob.rigidbody2D.velocity.y * ratio);
+		mob.rigidbody2D.gravityScale = mob.grav_scale * Mathf.Pow(ratio, 2);
+		mob.move_speed_mut = mob.move_speed_base * ratio;
+		mob.jump_speed_mut = mob.jump_speed_base * ratio;
 	}
+
+	void Leave(Mobile mob)
+	{
+		mob.time_zone_contact = false;
+		mob.rigidbody2D.velocity = new Vector2(mob.rigidbody2D.velocity.x / ratio, mob.rigidbody2D.velocity.y / ratio);
+		mob.rigidbody2D.gravityScale = mob.grav_scale;
+		mob.move_speed_mut = mob.move_speed_base;
+		mob.jump_speed_mut = mob.jump_speed_base;
+	}
+
+
 }

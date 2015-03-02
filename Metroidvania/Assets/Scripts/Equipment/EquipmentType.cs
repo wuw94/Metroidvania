@@ -1,4 +1,5 @@
-﻿public enum EquipmentType
+﻿[System.Serializable]
+public enum EquipmentType
 {
 	Integrator,
 	Goosplosives,

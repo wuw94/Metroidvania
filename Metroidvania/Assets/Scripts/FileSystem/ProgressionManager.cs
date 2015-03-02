@@ -41,6 +41,20 @@ public sealed class ProgressionManager
 	{
 		this.player = new CharacterManager();
 		this.maps = new Dictionary<string, Map>();
+		//AddMaps();
+	}
+
+	/// <summary>
+	/// Sets up all the game's maps for a new game. These will be changed during gameplay and serialized during save
+	/// </summary>
+	public void AddMaps()
+	{
+		foreach (string name in new string[]{"map2"})
+		{
+			maps.Add(name, new Map(name));
+		}
+		loaded_map = "map2";
+		UnityEngine.Camera.main.GetComponent<TileManager>().BeginChecks();
 	}
 
 
@@ -54,4 +68,5 @@ public sealed class ProgressionManager
 		maps.Add(name, map);
 		UnityEngine.Camera.main.GetComponent<TileManager>().BeginChecks();
 	}
+	
 }

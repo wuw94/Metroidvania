@@ -44,12 +44,26 @@ public sealed class Tile : MonoBehaviour
 		return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
 	}
 
+	public void SetIndoor()
+	{
+		gameObject.layer = LayerMask.NameToLayer("Foreground (Indoor)");
+	}
+
+	public void SetOutdoor()
+	{
+		gameObject.layer = LayerMask.NameToLayer("Foreground (Outdoor)");
+	}
+
 	public void updateAll()
 	{
 		if (is_active)
 		{
+			byte t = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)transform.position.x][(int)transform.position.y].type;
+			gameObject.layer = (GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)transform.position.x][(int)transform.position.y].outdoor)
+				? LayerMask.NameToLayer("Foreground (Outdoor)") : LayerMask.NameToLayer("Foreground (Indoor)");
+
 			string c = ((neighbors[0]) ? "C" : "O") + ((neighbors[6]) ? "C" : "O") + ((neighbors[2]) ? "C" : "O") + ((neighbors[4]) ? "C" : "O");
-			GetComponent<SpriteRenderer>().sprite = TileManager.tile_sprite["TestTile"][(TileCombination)System.Enum.Parse(typeof(TileCombination), c)];
+			GetComponent<SpriteRenderer>().sprite = TileManager.tile_sprite[TileManager.tile_types[t]][(TileCombination)System.Enum.Parse(typeof(TileCombination), c)];
 		}
 		else
 		{

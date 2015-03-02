@@ -1,5 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Equipment\Luminary.cs">
     <Files>
       <File FileName="Assets\Scripts\Equipment\Luminary.cs" Line="1" Column="1" />
@@ -12,6 +13,17 @@
       <File FileName="Assets\Scripts\Equipment\Parachute.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Entity\Recordable\Animating\Mobile\Mobile.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Equipment\TimeZone.cs" Line="1" Column="1" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UI/Camera/RenderingSystem.cs">
+    <Files>
+      <File FileName="Assets/Scripts/FileSystem/GameManager.cs" Line="67" Column="1" />
+      <File FileName="Assets/Scripts/FileSystem/DataManager.cs" Line="43" Column="1" />
+      <File FileName="Assets/Scripts/FileSystem/ProgressionManager.cs" Line="57" Column="1" />
+      <File FileName="Assets/Scripts/Tools/TileEditor/LevelTester.cs" Line="41" Column="2" />
+      <File FileName="Assets/Scripts/FileSystem/CharacterManager.cs" Line="51" Column="42" />
+      <File FileName="Assets/Scripts/Entity/Recordable/Animating/Mobile/Mobile.cs" Line="151" Column="1" />
+      <File FileName="Assets/Scripts/UI/Camera/RenderingSystem.cs" Line="47" Column="4" />
+>>>>>>> d9133f67934f507950d535b8c1f0bdc2893eb4ed
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,6 +34,11 @@
                 <Node name="Recordable" expanded="True">
                   <Node name="Animating" expanded="True">
                     <Node name="Immobile" expanded="True">
+<<<<<<< HEAD
+=======
+                      <Node name="Bomb" expanded="True" />
+                      <Node name="Button" expanded="True" />
+>>>>>>> d9133f67934f507950d535b8c1f0bdc2893eb4ed
                       <Node name="Ladder" expanded="True" />
                     </Node>
                     <Node name="Mobile" expanded="True">
@@ -32,10 +49,22 @@
                   </Node>
                 </Node>
               </Node>
+<<<<<<< HEAD
               <Node name="Equipment" expanded="True">
                 <Node name="Luminary.cs" selected="True" />
+=======
+              <Node name="Equipment" expanded="True" />
+              <Node name="FileSystem" expanded="True" />
+              <Node name="TileEngine" expanded="True" />
+              <Node name="Tools" expanded="True">
+                <Node name="TileEditor" expanded="True" />
+              </Node>
+              <Node name="UI" expanded="True">
+                <Node name="Camera" expanded="True" />
+>>>>>>> d9133f67934f507950d535b8c1f0bdc2893eb4ed
               </Node>
             </Node>
+            <Node name="GameStarter.cs" selected="True" />
           </Node>
         </State>
       </Pad>

@@ -35,7 +35,7 @@ public sealed class TileManager : RenderingSystem
 	/// All the different types of tiles we have in their string form.
 	/// These names are used when searching the Resources folder for artwork.
 	/// </summary>
-	public static readonly string[] tile_types = new string[]{"TestTile"};
+	public static readonly string[] tile_types = new string[]{"TestTile", "LabGround"};
 
 	/// <summary>
 	/// A sprite with no art on it
@@ -73,7 +73,6 @@ public sealed class TileManager : RenderingSystem
 	/// Folder to keep tiles organized inside the Unity Editor.
 	/// </summary>
 	private GameObject tile_folder;
-
 
 
 	//helper
@@ -129,6 +128,7 @@ public sealed class TileManager : RenderingSystem
 				tile_sprite[type].Add(c, BuildSprite(c, type));
 			}
 		}
+
 	}
 
 
@@ -142,79 +142,80 @@ public sealed class TileManager : RenderingSystem
 	{
 		string code = combination.ToString();
 
-		Texture2D tex = new Texture2D(400,400);
+		Texture2D sampletex = (Texture2D)Resources.Load("Tiles/" + type + "/CCC");
+		Texture2D tex = new Texture2D(2*sampletex.width,2*sampletex.height);
 
 		//Top left
 		if (code[0].Equals('C') && code[1].Equals('C'))
 		{
-			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.CCC],200,200));
+			tex.SetPixels(0,sampletex.height,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.CCC],sampletex.width,sampletex.height));
 		}
 		else if (code[0].Equals('C') && code[1].Equals('O'))
 		{
-			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.COC],200,200));
+			tex.SetPixels(0,sampletex.height,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.COC],sampletex.width,sampletex.height));
 		}
 		else if (code[0].Equals('O') && code[1].Equals('C'))
 		{
-			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.OCC],200,200));
+			tex.SetPixels(0,sampletex.height,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.OCC],sampletex.width,sampletex.height));
 		}
 		else if (code[0].Equals('O') && code[1].Equals('O'))
 		{
-			tex.SetPixels(0,200,200,200,Flip(tile_corner[type][CornerCombination.OOC],200,200));
+			tex.SetPixels(0,sampletex.height,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.OOC],sampletex.width,sampletex.height));
 		}
 
 
 		//Top right
 		if (code[0].Equals('C') && code[2].Equals('C'))
 		{
-			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.CCC]);
+			tex.SetPixels(sampletex.width,sampletex.height,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.CCC]);
 		}
 		else if (code[0].Equals('C') && code[2].Equals('O'))
 		{
-			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.COC]);
+			tex.SetPixels(sampletex.width,sampletex.height,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.COC]);
 		}
 		else if (code[0].Equals('O') && code[2].Equals('C'))
 		{
-			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.OCC]);
+			tex.SetPixels(sampletex.width,sampletex.height,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.OCC]);
 		}
 		else if (code[0].Equals('O') && code[2].Equals('O'))
 		{
-			tex.SetPixels(200,200,200,200,tile_corner[type][CornerCombination.OOC]);
+			tex.SetPixels(sampletex.width,sampletex.height,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.OOC]);
 		}
 
 		//Bottom left
 		if (code[3].Equals('C') && code[1].Equals('C'))
 		{
-			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.CCC],200,200));
+			tex.SetPixels(0,0,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.CCC],sampletex.width,sampletex.height));
 		}
 		else if (code[3].Equals('C') && code[1].Equals('O'))
 		{
-			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.COC],200,200));
+			tex.SetPixels(0,0,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.COC],sampletex.width,sampletex.height));
 		}
 		else if (code[3].Equals('O') && code[1].Equals('C'))
 		{
-			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.CCO],200,200));
+			tex.SetPixels(0,0,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.CCO],sampletex.width,sampletex.height));
 		}
 		else if (code[3].Equals('O') && code[1].Equals('O'))
 		{
-			tex.SetPixels(0,0,200,200,Flip(tile_corner[type][CornerCombination.COO],200,200));
+			tex.SetPixels(0,0,sampletex.width,sampletex.height,Flip(tile_corner[type][CornerCombination.COO],sampletex.width,sampletex.height));
 		}
 
 		//Bottom right
 		if (code[3].Equals('C') && code[2].Equals('C'))
 		{
-			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.CCC]);
+			tex.SetPixels(sampletex.width,0,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.CCC]);
 		}
 		else if (code[3].Equals('C') && code[2].Equals('O'))
 		{
-			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.COC]);
+			tex.SetPixels(sampletex.width,0,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.COC]);
 		}
 		else if (code[3].Equals('O') && code[2].Equals('C'))
 		{
-			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.CCO]);
+			tex.SetPixels(sampletex.width,0,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.CCO]);
 		}
 		else if (code[3].Equals('O') && code[2].Equals('O'))
 		{
-			tex.SetPixels(200,0,200,200,tile_corner[type][CornerCombination.COO]);
+			tex.SetPixels(sampletex.width,0,sampletex.width,sampletex.height,tile_corner[type][CornerCombination.COO]);
 		}
 
 
@@ -387,6 +388,14 @@ public sealed class TileManager : RenderingSystem
 			}
 		}
 		catch{}
+	}
+
+	public void UpdateAll()
+	{
+		foreach (Vector2 v in displayed_tiles.Keys)
+		{
+			displayed_tiles[v].updateAll();
+		}
 	}
 }
 
