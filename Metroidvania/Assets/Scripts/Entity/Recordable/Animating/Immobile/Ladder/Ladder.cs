@@ -2,6 +2,27 @@
 using System.Collections;
 
 //Function will be moved to Controllable
+<<<<<<< HEAD
+public class Ladder : MonoBehaviour //Controllable
+{/*
+	public bool on_ladder;
+	public GameObject Player;
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (Player near ladder orr Player on ladder)
+		{
+			Touch_the_ladder();
+			Ladder_controls();
+		}
+		if(Player Attribute the endd offff Ladder)
+		{
+			At_the_end_of_ladder();
+=======
 public class Ladder : MonoBehaviour
 {
 	public bool top;
@@ -18,6 +39,7 @@ public class Ladder : MonoBehaviour
 				GetOnLadder(col.GetComponent<Mobile>());
 				Movement(col.GetComponent<Mobile>());
 			}
+>>>>>>> d9133f67934f507950d535b8c1f0bdc2893eb4ed
 		}
 	}
 		
@@ -70,6 +92,10 @@ public class Ladder : MonoBehaviour
 		{
 			mob.rigidbody2D.velocity = new Vector2(0, 0);
 		}
+<<<<<<< HEAD
+	}
+*/}
+=======
 
 		if (!mob.IN_UP && mob.grounded)
 		{
@@ -77,3 +103,4 @@ public class Ladder : MonoBehaviour
 		}
 	}
 }
+>>>>>>> d9133f67934f507950d535b8c1f0bdc2893eb4ed
