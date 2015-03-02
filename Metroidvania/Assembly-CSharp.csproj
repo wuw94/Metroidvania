@@ -92,6 +92,7 @@
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoGameObject.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoVector2.cs" />
      <Compile Include="Assets\Scripts\Pseudo Classes\PseudoVector3.cs" />
+     <Compile Include="Assets\Scripts\ReturnToGame.cs" />
      <Compile Include="Assets\Scripts\TileEngine\Tile.cs" />
      <Compile Include="Assets\Scripts\TileEngine\TileInfo.cs" />
      <Compile Include="Assets\Scripts\TileEngine\TileManager.cs" />
