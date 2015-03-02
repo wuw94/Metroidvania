@@ -57,6 +57,7 @@ public class Lever : Immobile
 	{
 		base.Action ();
 
+		Debug.Log ("Action Received");
 		if (this_info.eventState == 0)
 		{
 

@@ -48,6 +48,7 @@ public class Player : Mobile
 	{
 		base.NormalUpdate();
 		indicator_created = false;
+		checkAction ();
 		GameManager.current_game.progression.player.changeHealth(heal);
 	}
 
