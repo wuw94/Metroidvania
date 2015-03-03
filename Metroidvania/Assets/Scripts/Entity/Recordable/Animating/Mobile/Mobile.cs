@@ -72,10 +72,13 @@ public class Mobile : Control
 	public float move_speed_mut;
 	public float jump_speed_mut;
 
+
+	
 	public List<Collider2D> current_collisions = new List<Collider2D>();
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
+		if (Application.loadedLevelName == "TileEditor"){return;}
 		if (!current_collisions.Contains(col))
 		{
 			current_collisions.Add(col);
@@ -84,6 +87,7 @@ public class Mobile : Control
 	
 	void OnTriggerExit2D(Collider2D col)
 	{
+		if (Application.loadedLevelName == "TileEditor"){return;}
 		if (current_collisions.Contains(col))
 		{
 			current_collisions.Remove(col);

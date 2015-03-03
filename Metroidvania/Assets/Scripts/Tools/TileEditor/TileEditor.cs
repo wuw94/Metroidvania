@@ -929,6 +929,15 @@ public sealed class TileEditor : MonoBehaviour
 					Destroy(((MonoBehaviour)obj).gameObject);
 				}
 			}
+			if (Input.GetKey(KeyCode.E))
+			{
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				if (hit.transform == null || hit.transform.gameObject.GetComponent(System.Type.GetType(type_name)) == null)
+				{
+					object obj = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[System.Type.GetType(type_name)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent(System.Type.GetType(type_name));
+					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index].Add(obj);
+				}
+			}
 		}
 
 	}
