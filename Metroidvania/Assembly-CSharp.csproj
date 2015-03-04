@@ -53,6 +53,7 @@
      <Compile Include="Assets\Scripts\Entity\Entity.cs" />
      <Compile Include="Assets\Scripts\Entity\IndoorTile.cs" />
      <Compile Include="Assets\Scripts\Entity\Item.cs" />
+     <Compile Include="Assets\Scripts\Entity\Keypress.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Animating.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Bomb\Bomb.cs" />
      <Compile Include="Assets\Scripts\Entity\Recordable\Animating\Immobile\Bomb\Explosion.cs" />

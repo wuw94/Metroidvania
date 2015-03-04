@@ -10,5 +10,10 @@ public class test : MonoBehaviour
 {
 	void Start()
 	{
+		if (PlayerPrefs.GetString("Map Name") == "map2")
+		{
+			Debug.Log("destroy");
+			Destroy(gameObject);
+		}
 	}
 }

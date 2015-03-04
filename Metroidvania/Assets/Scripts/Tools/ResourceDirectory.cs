@@ -17,7 +17,8 @@ public static class ResourceDirectory
 		{typeof(SpecificSprite), new ResourceData("Prefabs/SpecificSprite", 8)},
 		{typeof(Ladder), new ResourceData("Prefabs/Immobiles/Ladder/Ladder", 9)},
 		{typeof(Portal), new ResourceData("Prefabs/Immobiles/Portal/Portal", 10)},
-		{typeof(IndoorTile), new ResourceData("Prefabs/Immobiles/Tiles/IndoorTile", 11)}
+		{typeof(IndoorTile), new ResourceData("Prefabs/Immobiles/Tiles/IndoorTile", 11)},
+		{typeof(Keypress), new ResourceData("Prefabs/Effects/Keypress", 12)}
 	};
 
 }

@@ -626,7 +626,7 @@ public sealed class TileEditor : MonoBehaviour
 					if (possible_selection.Contains(hit.collider.gameObject.name))
 					{
 						selection = hit.collider.gameObject;
-						UnityEditor.Selection.objects = new GameObject[]{selection};
+						//UnityEditor.Selection.objects = new GameObject[]{selection};
 					}
 				}
 				if (is_dragging)
@@ -656,7 +656,7 @@ public sealed class TileEditor : MonoBehaviour
 			else
 			{
 				selection = null;
-				UnityEditor.Selection.objects = new GameObject[0];
+				//UnityEditor.Selection.objects = new GameObject[0];
 			}
 		}
 	}

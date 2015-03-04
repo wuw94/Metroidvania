@@ -12,6 +12,7 @@ public class Lever : Immobile
 	public List<int> platforms = new List<int>();
 
 
+	/*
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.tag == "Player")
@@ -39,6 +40,7 @@ public class Lever : Immobile
 			UnityEditor.Selection.objects = objects.ToArray();
 		}
 	}
+	*/
 
 	void Start()
 	{
@@ -57,7 +59,6 @@ public class Lever : Immobile
 	{
 		base.Action ();
 
-		Debug.Log ("Action Received");
 		if (this_info.eventState == 0)
 		{
 
