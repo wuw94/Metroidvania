@@ -11,9 +11,9 @@ public class PlayerClone : Recordable
 {
 	void Start()
 	{
-		renderer.material.color = new Vector4(renderer.material.color.r,
-		                                      renderer.material.color.g,
-		                                      renderer.material.color.b,
+		GetComponent<Renderer>().material.color = new Vector4(GetComponent<Renderer>().material.color.r,
+		                                      GetComponent<Renderer>().material.color.g,
+		                                      GetComponent<Renderer>().material.color.b,
 		                                      0.5f);
 	}
 	

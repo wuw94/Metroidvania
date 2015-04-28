@@ -100,7 +100,7 @@ public class Mobile : Control
 		equipment = new EquipmentManager(gameObject);
 		if (Application.loadedLevelName == "TileEditor")
 		{
-			rigidbody2D.isKinematic = true;
+			GetComponent<Rigidbody2D>().isKinematic = true;
 		}
 		move_speed_mut = move_speed_base;
 		jump_speed_mut = jump_speed_base;
@@ -152,10 +152,10 @@ public class Mobile : Control
 		else
 		{
 		}
-		if (GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)transform.position.x][(int)(collider2D.bounds.min.y)].active)
+		if (GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)transform.position.x][(int)(GetComponent<Collider2D>().bounds.min.y)].active)
 		{
-			rigidbody2D.gravityScale = 0;
-			rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+			GetComponent<Rigidbody2D>().gravityScale = 0;
+			GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
 		}
 
 	}
@@ -164,7 +164,7 @@ public class Mobile : Control
 	{
 		if (on_ladder)
 		{
-			rigidbody2D.gravityScale = 0;
+			GetComponent<Rigidbody2D>().gravityScale = 0;
 		}
 		else if (time_zone_contact)
 		{
@@ -172,7 +172,7 @@ public class Mobile : Control
 		}
 		else
 		{
-			rigidbody2D.gravityScale = grav_scale;
+			GetComponent<Rigidbody2D>().gravityScale = grav_scale;
 		}
 	}
 
@@ -186,21 +186,21 @@ public class Mobile : Control
 			IN_JUMP = false;
 			if (grounded)
 			{
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jump_speed_mut);
+				GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jump_speed_mut);
 			}
 		}
 		if (IN_LEFT)
 		{
-			rigidbody2D.velocity = new Vector2(-move_speed_mut, rigidbody2D.velocity.y);
+			GetComponent<Rigidbody2D>().velocity = new Vector2(-move_speed_mut, GetComponent<Rigidbody2D>().velocity.y);
 		}
 		if (IN_RIGHT)
 		{
-			rigidbody2D.velocity = new Vector2(move_speed_mut, rigidbody2D.velocity.y);
+			GetComponent<Rigidbody2D>().velocity = new Vector2(move_speed_mut, GetComponent<Rigidbody2D>().velocity.y);
 		}
 
 		if (!IN_JUMP && !IN_LEFT && !IN_RIGHT && !IN_UP && !IN_DOWN && !IN_ATTACK)
 		{
-			rigidbody2D.velocity = new Vector2(0, rigidbody2D.velocity.y);
+			GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
 		}
 	}
 

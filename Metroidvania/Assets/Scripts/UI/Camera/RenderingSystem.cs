@@ -31,19 +31,19 @@ public class RenderingSystem : MonoBehaviour
 
 	void Start()
 	{
-		gameObject.AddComponent("TileManager");
-		gameObject.AddComponent("TextGenerator");
+		gameObject.AddComponent<TileManager>();
+		gameObject.AddComponent<TextGenerator>();
 		if (Application.loadedLevelName == "LevelTester")
 		{
-			gameObject.AddComponent("LevelTester");
+			gameObject.AddComponent<LevelTester>();
 		}
 		if (Application.loadedLevelName == "TileEditor")
 		{
-			gameObject.AddComponent("TileEditor");
+			gameObject.AddComponent<TileEditor>();
 		}
 		if (Application.loadedLevelName == "GameTester")
 		{
-			gameObject.AddComponent("GameTester");
+			gameObject.AddComponent<GameTester>();
 		}
 
 		BeginChecks();

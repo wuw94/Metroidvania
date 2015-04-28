@@ -11,7 +11,7 @@ public class Atmosphere : MonoBehaviour
 
 	void Update ()
 	{
-		transform.FindChild("Sky").renderer.material.color = new Color(0.6f + time/10 - time/1.2f, 0.7f - time/10 - time/1.2f, 0.9f - time/1.2f);
+		transform.FindChild("Sky").GetComponent<Renderer>().material.color = new Color(0.6f + time/10 - time/1.2f, 0.7f - time/10 - time/1.2f, 0.9f - time/1.2f);
 		transform.FindChild("Sun").localPosition = new Vector3(-1,5-15*time,transform.FindChild("Sun").localPosition.z);
 		//transform.FindChild("Sun").GetComponent<Light>().intensity = 8-8*time;
 		transform.FindChild("Sun").GetComponent<Light>().color = new Color(1,1-time/1.2f,0.2f, 1-time);

@@ -25,6 +25,6 @@ public class IndoorTile : MonoBehaviour {
 	
 	void Update()
 	{
-		OrderInLayer = renderer.sortingOrder;
+		OrderInLayer = GetComponent<Renderer>().sortingOrder;
 	}
 }

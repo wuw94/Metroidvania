@@ -26,7 +26,7 @@ public class AI : Mobile
 	void Start()
 	{
 		// Get this gameObject's initial rigidbody position when starting up game
-		initialPosition = rigidbody2D.position.x;
+		initialPosition = GetComponent<Rigidbody2D>().position.x;
 	}
 
 	// Update is called once per frame
@@ -44,7 +44,7 @@ public class AI : Mobile
 
 		if (collision)
 			IN_JUMP = true;
-		if (rigidbody2D.velocity.x < 0)
+		if (GetComponent<Rigidbody2D>().velocity.x < 0)
 			transform.localScale = new Vector3 (-1, 1, 1);
 		else
 			transform.localScale = new Vector3 (1, 1, 1);
@@ -52,7 +52,7 @@ public class AI : Mobile
 		if (operation_mode == 1)
 		{
 			// Calculate the x distance between the enemy and the player
-			enemyDistance = Mathf.Abs(player.rigidbody2D.position.x) - Mathf.Abs(this.gameObject.rigidbody2D.position.x);
+			enemyDistance = Mathf.Abs(player.GetComponent<Rigidbody2D>().position.x) - Mathf.Abs(this.gameObject.GetComponent<Rigidbody2D>().position.x);
 			enemyDistance = Mathf.Abs(enemyDistance);
 
 			if (enemyDistance > 30f) 
@@ -66,15 +66,15 @@ public class AI : Mobile
 			}
 			else 
 			{
-				if (rigidbody2D.position.x <= initialPosition + .1f && rigidbody2D.position.x >= initialPosition - .1f)
+				if (GetComponent<Rigidbody2D>().position.x <= initialPosition + .1f && GetComponent<Rigidbody2D>().position.x >= initialPosition - .1f)
 				{
 					StopMoving();
 				}
-				else if (rigidbody2D.position.x <= initialPosition)
+				else if (GetComponent<Rigidbody2D>().position.x <= initialPosition)
 				{
 					IN_RIGHT = true;
 				}
-				else if (rigidbody2D.position.x > initialPosition)
+				else if (GetComponent<Rigidbody2D>().position.x > initialPosition)
 				{
 					IN_LEFT = true;
 				}
@@ -106,7 +106,7 @@ public class AI : Mobile
 
 	void ChasePlayer()
 	{
-		if (rigidbody2D.position.x <= player.rigidbody2D.position.x) 
+		if (GetComponent<Rigidbody2D>().position.x <= player.GetComponent<Rigidbody2D>().position.x) 
 		{
 			IN_RIGHT = true;
 		}
@@ -124,6 +124,6 @@ public class AI : Mobile
 
 	void StopMoving()
 	{
-		rigidbody2D.velocity = new Vector2(0, 0);
+		GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
 	}
 }

@@ -21,14 +21,14 @@ public class Bomb : Immobile
 
 	void Start()
 	{
-		new_color = renderer.material.color;
+		new_color = GetComponent<Renderer>().material.color;
 		this_info.eventState = delay_time;
 	}
 
 	void Update()
 	{
 		new_color.a = (this_info.eventState == delay_time)?1:0.5f;
-		renderer.material.color = new_color;
+		GetComponent<Renderer>().material.color = new_color;
 	}
 
 	private void doExplosion()

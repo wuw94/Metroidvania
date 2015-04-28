@@ -24,15 +24,15 @@ public class Parachute : Equipment
 
 		if (mob.IN_LEFT)
 		{
-			mob.rigidbody2D.velocity = new Vector2(-mob.move_speed_mut, mob.rigidbody2D.velocity.y + ((mob.rigidbody2D.velocity.y < -1)?1:0));
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(-mob.move_speed_mut, mob.GetComponent<Rigidbody2D>().velocity.y + ((mob.GetComponent<Rigidbody2D>().velocity.y < -1)?1:0));
 		}
 		else if (mob.IN_RIGHT)
 		{
-			mob.rigidbody2D.velocity = new Vector2(mob.move_speed_mut, mob.rigidbody2D.velocity.y + ((mob.rigidbody2D.velocity.y < -1)?1:0));
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(mob.move_speed_mut, mob.GetComponent<Rigidbody2D>().velocity.y + ((mob.GetComponent<Rigidbody2D>().velocity.y < -1)?1:0));
 		}
 		else
 		{
-			mob.rigidbody2D.velocity = new Vector2(0, mob.rigidbody2D.velocity.y + ((mob.rigidbody2D.velocity.y < -1)?1:0));
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(0, mob.GetComponent<Rigidbody2D>().velocity.y + ((mob.GetComponent<Rigidbody2D>().velocity.y < -1)?1:0));
 		}
 	}
 }

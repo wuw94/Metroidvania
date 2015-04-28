@@ -12,7 +12,7 @@ public class Item : MonoBehaviour
 	{
 		if (other.tag == "Player")
 		{
-			other.GetComponent<Player>().current_collisions.Remove(gameObject.collider2D);
+			other.GetComponent<Player>().current_collisions.Remove(gameObject.GetComponent<Collider2D>());
 			GameObject eq = (GameObject)Instantiate(Resources.Load(source));
 			other.GetComponent<Player>().Equip(eq);
 			Destroy(gameObject);

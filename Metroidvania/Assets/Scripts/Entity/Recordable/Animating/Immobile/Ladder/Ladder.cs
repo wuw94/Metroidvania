@@ -29,8 +29,8 @@ public class Ladder : MonoBehaviour
 			if (mob.IN_UP && !mob.parachute_use)
 			{
 				mob.on_ladder = true;
-				mob.rigidbody2D.gravityScale = 0;
-				mob.transform.position = new Vector2(transform.position.x + 0.5f, mob.rigidbody2D.position.y);
+				mob.GetComponent<Rigidbody2D>().gravityScale = 0;
+				mob.transform.position = new Vector2(transform.position.x + 0.5f, mob.GetComponent<Rigidbody2D>().position.y);
 				
 			}
 		}
@@ -39,7 +39,7 @@ public class Ladder : MonoBehaviour
 	private void GetOffLadder(Mobile mob)
 	{
 		mob.on_ladder = false;
-		mob.rigidbody2D.gravityScale = mob.grav_scale;
+		mob.GetComponent<Rigidbody2D>().gravityScale = mob.grav_scale;
 	}
 				
 	private void Movement(Mobile mob)
@@ -49,27 +49,27 @@ public class Ladder : MonoBehaviour
 
 		if (mob.IN_UP)
 		{
-			mob.rigidbody2D.velocity = new Vector2(0,mob.move_speed_mut/1.5f);
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(0,mob.move_speed_mut/1.5f);
 		}
 		else if (mob.IN_DOWN)
 		{
-			mob.rigidbody2D.velocity = new Vector2(0,-mob.move_speed_mut/1.5f);
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(0,-mob.move_speed_mut/1.5f);
 		}
 		else if (mob.IN_JUMP && mob.IN_LEFT)
 		{
 			mob.IN_JUMP = false;
 			GetOffLadder(mob);
-			mob.rigidbody2D.velocity = new Vector2(mob.jump_speed_mut,mob.jump_speed_mut/2);
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(mob.jump_speed_mut,mob.jump_speed_mut/2);
 		}
 		else if (mob.IN_JUMP && mob.IN_RIGHT)
 		{
 			mob.IN_JUMP = false;
 			GetOffLadder(mob);
-			mob.rigidbody2D.velocity = new Vector2(mob.jump_speed_mut,mob.jump_speed_mut/2);
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(mob.jump_speed_mut,mob.jump_speed_mut/2);
 		}
 		else
 		{
-			mob.rigidbody2D.velocity = new Vector2(0, 0);
+			mob.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
 		}
 
 		if (!mob.IN_UP && mob.grounded)

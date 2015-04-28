@@ -1,44 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Tools/ResourceDirectory.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Checkpoint\FinalCheckpoint.cs">
     <Files>
-      <File FileName="Assets/Scripts/Entity/Keypress.cs" Line="22" Column="40" />
-      <File FileName="Assets/Scripts/Tools/ResourceDirectory.cs" Line="21" Column="69" />
+      <File FileName="Assets\Scripts\Entity\Keypress.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Tools\ResourceDirectory.cs" Line="1" Column="1" />
+      <File FileName="Assets\Checkpoint\FinalCheckpoint.cs" Line="13" Column="67" />
+      <File FileName="Assets\Checkpoint\Checkpoint.cs" Line="14" Column="55" />
+      <File FileName="Assets\Checkpoint\RespawnPlayer.cs" Line="6" Column="44" />
+      <File FileName="Assets\Scripts\Entity\Recordable\Animating\Immobile\Button\Button.cs" Line="5" Column="14" />
+      <File FileName="Assets\Checkpoint\GameOverGUI.cs" Line="20" Column="20" />
+      <File FileName="Assets\Scripts\Tools\TileEditor\TileEditor.cs" Line="476" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="Entity" expanded="True">
-                <Node name="Recordable" expanded="True">
-                  <Node name="Animating" expanded="True">
-                    <Node name="Immobile" expanded="True">
-                      <Node name="Bomb" expanded="True" />
-                      <Node name="Ladder" expanded="True" />
-                      <Node name="Lever" expanded="True" />
-                    </Node>
-                    <Node name="Mobile" expanded="True">
-                      <Node name="Controllable" expanded="True">
-                        <Node name="Player" expanded="True" />
-                      </Node>
-                    </Node>
-                  </Node>
-                </Node>
-              </Node>
-              <Node name="FileSystem" expanded="True" />
-              <Node name="Pseudo Classes" expanded="True" />
-              <Node name="TileEngine" expanded="True" />
-              <Node name="Tools" expanded="True">
-                <Node name="TileEditor" expanded="True" />
-                <Node name="ResourceDirectory.cs" selected="True" />
-              </Node>
-              <Node name="UI" expanded="True">
-                <Node name="Camera" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

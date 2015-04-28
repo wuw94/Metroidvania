@@ -48,8 +48,8 @@ public class TimeZone : MonoBehaviour
 	void Enter(Mobile mob)
 	{
 		mob.time_zone_contact = true;
-		mob.rigidbody2D.velocity = new Vector2(mob.rigidbody2D.velocity.x * ratio, mob.rigidbody2D.velocity.y * ratio);
-		mob.rigidbody2D.gravityScale = mob.grav_scale * Mathf.Pow(ratio, 2);
+		mob.GetComponent<Rigidbody2D>().velocity = new Vector2(mob.GetComponent<Rigidbody2D>().velocity.x * ratio, mob.GetComponent<Rigidbody2D>().velocity.y * ratio);
+		mob.GetComponent<Rigidbody2D>().gravityScale = mob.grav_scale * Mathf.Pow(ratio, 2);
 		mob.move_speed_mut = mob.move_speed_base * ratio;
 		mob.jump_speed_mut = mob.jump_speed_base * ratio;
 	}
@@ -57,8 +57,8 @@ public class TimeZone : MonoBehaviour
 	void Leave(Mobile mob)
 	{
 		mob.time_zone_contact = false;
-		mob.rigidbody2D.velocity = new Vector2(mob.rigidbody2D.velocity.x / ratio, mob.rigidbody2D.velocity.y / ratio);
-		mob.rigidbody2D.gravityScale = mob.grav_scale;
+		mob.GetComponent<Rigidbody2D>().velocity = new Vector2(mob.GetComponent<Rigidbody2D>().velocity.x / ratio, mob.GetComponent<Rigidbody2D>().velocity.y / ratio);
+		mob.GetComponent<Rigidbody2D>().gravityScale = mob.grav_scale;
 		mob.move_speed_mut = mob.move_speed_base;
 		mob.jump_speed_mut = mob.jump_speed_base;
 	}

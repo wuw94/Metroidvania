@@ -45,7 +45,7 @@ public class AudioManager : MonoBehaviour {
 
 	void AnalyzeRMS()
 	{
-		audio.GetOutputData(samples, 0); // fill array with samples
+		GetComponent<AudioSource>().GetOutputData(samples, 0); // fill array with samples
 		int i;
 		float sum = 0;
 		for (i=0; i < qSamples; i++){
@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour {
 
 	void AnalyzeSound()
 	{
-		audio.GetOutputData(samples, 0); // fill array with samples
+		GetComponent<AudioSource>().GetOutputData(samples, 0); // fill array with samples
 		int i;
 		float sum = 0;
 		for (i=0; i < qSamples; i++){
@@ -66,7 +66,7 @@ public class AudioManager : MonoBehaviour {
 		dbValue = 20*Mathf.Log10(rmsValue/refValue); // calculate dB
 		if (dbValue < -160) dbValue = -160; // clamp it to -160dB min
 		// get sound spectrum
-		audio.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+		GetComponent<AudioSource>().GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
 		float maxV = 0;
 		int maxN = 0;
 		for (i=0; i < qSamples; i++){ // find max 

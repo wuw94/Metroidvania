@@ -30,10 +30,10 @@ public class Keypress : MonoBehaviour
 	void Update()
 	{
 		layerbits = gameObject.layer;
-		renderer.material.color = new Color(renderer.material.color.r,
-		                                    renderer.material.color.g,
-		                                    renderer.material.color.b,
-		                                    Mathf.Lerp(renderer.material.color.a,lerp_to,Time.deltaTime * 10));
+		GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r,
+		                                    GetComponent<Renderer>().material.color.g,
+		                                    GetComponent<Renderer>().material.color.b,
+		                                    Mathf.Lerp(GetComponent<Renderer>().material.color.a,lerp_to,Time.deltaTime * 10));
 	}
 
 	void OnTriggerEnter2D(Collider2D col)

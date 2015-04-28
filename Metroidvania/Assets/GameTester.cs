@@ -8,7 +8,7 @@ public class GameTester : MonoBehaviour
 	void Start()
 	{
 		ReformatGame();
-		camera_manager = (CameraManager)gameObject.AddComponent("CameraManager");
+		camera_manager = (CameraManager)gameObject.AddComponent<CameraManager>();
 		camera_manager.player = (Player)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[0][0];
 		camera_manager.returnToPlayer();
 

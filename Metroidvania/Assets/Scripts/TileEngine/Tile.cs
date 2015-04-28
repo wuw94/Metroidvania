@@ -41,7 +41,7 @@ public sealed class Tile : MonoBehaviour
 
 	public bool IsVisible()
 	{
-		return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), renderer.bounds);
+		return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), GetComponent<Renderer>().bounds);
 	}
 
 	public void SetIndoor()

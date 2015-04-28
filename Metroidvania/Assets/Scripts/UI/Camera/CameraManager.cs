@@ -29,7 +29,7 @@ public class CameraManager : MonoBehaviour
 	void Start()
 	{
 		returnToPlayer();
-		camera.fieldOfView = 110;
+		GetComponent<Camera>().fieldOfView = 110;
 	}
 
 	void FixedUpdate()

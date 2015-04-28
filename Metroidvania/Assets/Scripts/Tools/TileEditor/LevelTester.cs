@@ -8,7 +8,7 @@ public class LevelTester : MonoBehaviour {
 	void Start()
 	{
 		ReformatGame();
-		camera_manager = (CameraManager)gameObject.AddComponent("CameraManager");
+		camera_manager = (CameraManager)gameObject.AddComponent<CameraManager>();
 		if (PlayerPrefs.GetString("Map Name") != "")
 		{
 			try

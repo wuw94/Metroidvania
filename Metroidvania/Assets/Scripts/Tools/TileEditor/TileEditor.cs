@@ -132,7 +132,7 @@ public sealed class TileEditor : MonoBehaviour
 	{
 		ReformatGame();
 		grid_highlight = (GameObject)Instantiate(Resources.Load("Prefabs/TileEditor/GridHighlight", typeof(GameObject)), new Vector3(0,0,0), transform.rotation);
-		grid_highlight.renderer.material.color = new Color(1,1,1,0.1f);
+		grid_highlight.GetComponent<Renderer>().material.color = new Color(1,1,1,0.1f);
 
 
 		StartCoroutine(UpdateFPS());
@@ -595,7 +595,7 @@ public sealed class TileEditor : MonoBehaviour
 	{
 		if (Input.GetMouseButton(0))
 		{
-			RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+			RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 
 			if (tools.interactive_tool.lever_tool.adding)
 			{
@@ -667,7 +667,7 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.Q))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
 					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].type = (byte)tools.terrain_tool.tile_tool.index;
@@ -687,7 +687,7 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.Q))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<Tile>() != null)
 				{
 					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].outdoor = true;
@@ -696,7 +696,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<Tile>() != null)
 				{
 					GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].tiles[(int)mouse.x][(int)mouse.y].outdoor = false;
@@ -708,13 +708,13 @@ public sealed class TileEditor : MonoBehaviour
 
 	private void Tool_Spawn(Vector2 mouse, int type_index)
 	{
-		((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).renderer.material.color = new Color(1,1,1,1);
+		((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).GetComponent<Renderer>().material.color = new Color(1,1,1,1);
 		if (tools.index == 1) // Spawn tool
 		{
 			if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.W))
 			{
 				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).transform.position = mouse;
-				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).renderer.material.color = new Color(1,1,1,0.5f);
+				((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).GetComponent<Renderer>().material.color = new Color(1,1,1,0.5f);
 			}
 		}
 		PlayerPrefs.SetFloat("Arrive X", ((MonoBehaviour)GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index][0]).transform.position.x);
@@ -729,7 +729,7 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				if (mouse.x >= 0 && mouse.y >= 0)
 				{
-					RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+					RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 					if (hit.transform == null)
 					{
 						Lever lever = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[System.Type.GetType("Lever")].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Lever>();
@@ -739,7 +739,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{		
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<Lever>() != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -757,7 +757,7 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
 					UpdraftGoo updraft_goo = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(UpdraftGoo)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<UpdraftGoo>();
@@ -766,7 +766,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{		
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<UpdraftGoo>() != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -785,7 +785,7 @@ public sealed class TileEditor : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null)
 				{
 					DependantPlatform dependant_platform = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(DependantPlatform)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<DependantPlatform>();
@@ -795,7 +795,7 @@ public sealed class TileEditor : MonoBehaviour
 		}
 		if (Input.GetKey(KeyCode.W))
 		{		
-			RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+			RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 			if (hit.transform != null && hit.transform.gameObject.GetComponent<DependantPlatform>() != null)
 			{
 				ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -839,7 +839,7 @@ public sealed class TileEditor : MonoBehaviour
 			{
 				if (mouse.x >= 0 && mouse.y >= 0)
 				{
-					RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+					RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 					if (hit.transform == null)
 					{
 						Button button = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[typeof(Button)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent<Button>();
@@ -849,7 +849,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{		
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<Button>() != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -873,7 +873,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<TextGeneratorEntity>() != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -897,7 +897,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent<Item>() != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -920,7 +920,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.W))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform != null && hit.transform.gameObject.GetComponent(System.Type.GetType(type_name)) != null)
 				{
 					ArrayList interactives = GameManager.current_game.progression.maps[GameManager.current_game.progression.loaded_map].entities[type_index];
@@ -931,7 +931,7 @@ public sealed class TileEditor : MonoBehaviour
 			}
 			if (Input.GetKey(KeyCode.E))
 			{
-				RaycastHit2D hit = Physics2D.Raycast(new Vector2(camera.ScreenToWorldPoint(Input.mousePosition).x,camera.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
+				RaycastHit2D hit = Physics2D.Raycast(new Vector2(GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).x,GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0f);
 				if (hit.transform == null || hit.transform.gameObject.GetComponent(System.Type.GetType(type_name)) == null)
 				{
 					object obj = ((GameObject)Instantiate(Resources.Load(ResourceDirectory.resource[System.Type.GetType(type_name)].path, typeof(GameObject)), new Vector3(mouse.x,mouse.y, -9), transform.rotation)).GetComponent(System.Type.GetType(type_name));

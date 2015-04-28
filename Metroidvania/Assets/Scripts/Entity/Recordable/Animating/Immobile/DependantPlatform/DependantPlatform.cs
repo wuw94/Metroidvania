@@ -20,23 +20,23 @@ public class DependantPlatform : Immobile
 	void Start()
 	{
 		this_info.facingRight = true;
-		transform.collider2D.enabled = start;
-		renderer.enabled = start;
+		transform.GetComponent<Collider2D>().enabled = start;
+		GetComponent<Renderer>().enabled = start;
 	}
 	
 	void Update()
 	{
 		if (Application.loadedLevelName == "TileEditor")
 		{
-			transform.collider2D.enabled = true;
+			transform.GetComponent<Collider2D>().enabled = true;
 		}
 	}
 
 	public void changeCollisions()
 	{
-		bool c = transform.collider2D.enabled;
-		transform.collider2D.enabled = !c;
-		renderer.enabled = !c;
+		bool c = transform.GetComponent<Collider2D>().enabled;
+		transform.GetComponent<Collider2D>().enabled = !c;
+		GetComponent<Renderer>().enabled = !c;
 	}
 
 }
